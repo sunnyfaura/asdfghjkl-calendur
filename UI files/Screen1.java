@@ -3,7 +3,7 @@
 */
 
 //alternative page
-//preferably a separate window so user can see the pinboard and calendar at the same time
+//preferably a separate window so user can see the pinboard and calendar at the same time -done
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -21,7 +21,8 @@ public class Screen1
 	static JPanel panel;
 	static JScrollPane todoscroll, doingscroll;
 	
-	public static void main( String[] args )
+	//public static void main( String[] args )
+	public Screen1()
 	{
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
@@ -46,11 +47,17 @@ public class Screen1
 		doingscroll = new JScrollPane(doing);
 		
 		//frame stuff
-		frmMain = new JFrame( "Life Planner" );
+		frmMain = new JFrame( "Pinboard" );
 		frmMain.setSize( 325, 450 );
 		pane = frmMain.getContentPane();
 		pane.setLayout(null);
-		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmMain.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		//added so that there may only be one pinboard frame
+		frmMain.addWindowListener(new java.awt.event.WindowAdapter() {
+    		public void windowClosing(WindowEvent winEvt) {
+    			Screen0.pinboardOpen++;
+       		}
+		});
 		frmMain.setResizable(false);
 		frmMain.setVisible(true);
 		

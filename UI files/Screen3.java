@@ -81,7 +81,7 @@ public class Screen3
 		frmMain.setSize( 325, 450 );
 		pane = frmMain.getContentPane();
 		pane.setLayout(null);
-		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmMain.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmMain.setResizable(false);
 		frmMain.setVisible(true);
 		

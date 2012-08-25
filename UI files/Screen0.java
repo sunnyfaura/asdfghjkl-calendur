@@ -1,14 +1,14 @@
 /*
 	Screen0 is Calendar screen
+	home page
 */
-
-//home page
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.awt.event.WindowAdapter;
 
 public class Screen0
 {
@@ -22,6 +22,8 @@ public class Screen0
 	static JScrollPane stblCalendar; //The scrollpane
 	static JPanel pnlCalendar;
 	static int realYear, realMonth, realDay, currentYear, currentMonth;
+	public static int pinboardOpen = 0;
+	static Screen1 pinboard_frame;
 
 	public static void main (String args[]){
 		//Look and feel
@@ -36,7 +38,7 @@ public class Screen0
 		frmMain.setSize(325, 450); //Set size to 400x400 pixels
 		pane = frmMain.getContentPane(); //Get content pane
 		pane.setLayout(null); //Apply null layout
-		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Close when X is clicked
+		frmMain.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Close when X is clicked
 
 		//Create controls
 		lblMonth = new JLabel ("January");
@@ -58,6 +60,9 @@ public class Screen0
 		btnPrev.addActionListener(new btnPrev_Action());
 		btnNext.addActionListener(new btnNext_Action());
 		cmbYear.addActionListener(new cmbYear_Action());
+
+		pinboard.addActionListener(new pinboardAction());
+		//moodboard.addActionListener(new moodboardAction());
 		
 		//Add controls to pane
 		pane.add(pnlCalendar);
@@ -212,6 +217,15 @@ public class Screen0
 				String b = cmbYear.getSelectedItem().toString();
 				currentYear = Integer.parseInt(b);
 				refreshCalendar(currentMonth, currentYear);
+			}
+		}
+	}
+
+	static class pinboardAction implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			if(pinboardOpen%2==0){
+				pinboard_frame = new Screen1();
+				pinboardOpen++;
 			}
 		}
 	}
