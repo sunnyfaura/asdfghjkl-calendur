@@ -1,5 +1,5 @@
 /*
-	Screen3 is View/Edit Task screen
+	AddingTask is Add Task screen
 */
 
 //make this pop-up
@@ -10,19 +10,19 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class Screen3
+public class AddingTask
 {
-	static JButton save, back;
-	static JLabel namelabel, date, description, status;
-	static JTextField name;
-	static JComboBox month, day, year, hour, minute, ampm;
-	static JTextArea descriptionarea;
-	static Container pane;
-	static JPanel panel;
-	static JFrame frmMain;
-	static JScrollPane desc;
+	private JButton addtask;
+	private JLabel namelabel, date, description, status;
+	private JTextField name;
+	private JComboBox month, day, year, hour, minute, ampm;
+	private JTextArea descriptionarea;
+	private Container pane;
+	private JPanel panel;
+	private JFrame frmMain;
+	private JScrollPane desc;
 	
-	public static void main ( String[] args )
+	public AddingTask()
 	{
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
@@ -32,8 +32,7 @@ public class Screen3
 		catch (UnsupportedLookAndFeelException e) {}
 		
 		//instantiate components
-		save = new JButton( "Save Changes" );
-		back = new JButton( "Back" );
+		addtask = new JButton( "Add Task" );
 		namelabel = new JLabel( "Task Name" );
 		date = new JLabel( "Deadline" );
 		description = new JLabel( "Description" );
@@ -77,7 +76,7 @@ public class Screen3
 		panel = new JPanel(null);
 		
 		//frame stuff
-		frmMain = new JFrame( "Life Planner" );
+		frmMain = new JFrame( "Adding Task" );
 		frmMain.setSize( 325, 450 );
 		pane = frmMain.getContentPane();
 		pane.setLayout(null);
@@ -99,8 +98,7 @@ public class Screen3
 		panel.add(hour);
 		panel.add(minute);
 		panel.add(ampm);
-		panel.add(save);
-		panel.add(back);
+		panel.add(addtask);
 		
 		//set bounds
 		panel.setBounds(0, 0, 500, 500);
@@ -115,7 +113,14 @@ public class Screen3
 		hour.setBounds(100, 310, 40, 20);
 		minute.setBounds( 150, 310, 40, 20);
 		ampm.setBounds(200, 310, 40, 20);
-		save.setBounds(10, 350, 300, 25);
-		back.setBounds(10, 380, 300, 25);
+		addtask.setBounds(10, 350, 300, 25);
+	}
+
+	private class addtask_Action implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			//nextScreen = 1;
+			frmMain.dispose();
+			Pinboard pinboard = new Pinboard();
+		}
 	}
 }

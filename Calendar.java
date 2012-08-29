@@ -1,5 +1,5 @@
 /*
-	Screen0 is Calendar screen
+	Calendar is Calendar screen
 	home page
 */
 import javax.swing.*;
@@ -10,22 +10,22 @@ import java.awt.event.*;
 import java.util.*;
 import java.awt.event.WindowAdapter;
 
-public class Screen0
+public class Calendar extends JFrame
 {
-	static JLabel lblMonth, lblYear;
-	static JButton btnPrev, btnNext, pinboard, moodboard;
-	static JTable tblCalendar;
-	static JComboBox cmbYear;
-	static JFrame frmMain;
-	static Container pane;
-	static DefaultTableModel mtblCalendar; //Table model
-	static JScrollPane stblCalendar; //The scrollpane
-	static JPanel pnlCalendar;
-	static int realYear, realMonth, realDay, currentYear, currentMonth;
-	public static int pinboardOpen = 0;
-	static Screen1 pinboard_frame;
+	private JLabel lblMonth, lblYear;
+	private JButton btnPrev, btnNext, pinboard;//, moodboard;
+	private JTable tblCalendar;
+	private JComboBox cmbYear;
+	private Container pane;
+	private DefaultTableModel mtblCalendar; //Table model
+	private JScrollPane stblCalendar; //The scrollpane
+	private JPanel pnlCalendar;
+	private int realYear, realMonth, realDay, currentYear, currentMonth;
+	public static int pinboardOpen = 0, calendarOpen = 1;
+	public Pinboard pinboard_frame;
 
-	public static void main (String args[]){
+	public Calendar()
+	{
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
 		catch (ClassNotFoundException e) {}
@@ -34,11 +34,16 @@ public class Screen0
 		catch (UnsupportedLookAndFeelException e) {}
 
 		//Prepare frame
-		frmMain = new JFrame ("Life Planner"); //Create frame
-		frmMain.setSize(325, 450); //Set size to 400x400 pixels
-		pane = frmMain.getContentPane(); //Get content pane
+		this.setTitle("Calendar");
+		this.setSize(325, 450); //Set size to 400x400 pixels
+		pane = this.getContentPane(); //Get content pane
 		pane.setLayout(null); //Apply null layout
-		frmMain.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Close when X is clicked
+		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE); //Close when X is clicked
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+    		public void windowClosing(WindowEvent winEvt) {
+    			calendarOpen++;
+       		}
+		});
 
 		//Create controls
 		lblMonth = new JLabel ("January");
@@ -51,7 +56,7 @@ public class Screen0
 		stblCalendar = new JScrollPane(tblCalendar);
 		pnlCalendar = new JPanel(null);
 		pinboard = new JButton("Pin Board");
-		moodboard = new JButton("Mood Board");
+		//moodboard = new JButton("Mood Board");
 
 		//Set border
 		//pnlCalendar.setBorder(BorderFactory.createTitledBorder("Calendar"));
@@ -73,7 +78,7 @@ public class Screen0
 		pnlCalendar.add(btnNext);
 		pnlCalendar.add(stblCalendar);
 		pnlCalendar.add(pinboard);
-		pnlCalendar.add(moodboard);
+		//pnlCalendar.add(moodboard);
 
 		
 		//Set bounds
@@ -84,12 +89,12 @@ public class Screen0
 		btnPrev.setBounds(10, 25, 50, 25);
 		btnNext.setBounds(260, 25, 50, 25);
 		pinboard.setBounds(10, 340, 300, 25);
-		moodboard.setBounds(10, 380, 300, 25);
+		//moodboard.setBounds(10, 380, 300, 25);
 		stblCalendar.setBounds(10, 50, 300, 250);
 		
 		//Make frame visible
-		frmMain.setResizable(false);
-		frmMain.setVisible(true);
+		this.setResizable(false);
+		this.setVisible(true);
 		
 		//Get real month/year
 		GregorianCalendar cal = new GregorianCalendar(); //Create calendar
@@ -130,7 +135,7 @@ public class Screen0
 		refreshCalendar (realMonth, realYear); //Refresh calendar
 	}
 	
-	public static void refreshCalendar(int month, int year){
+	public void refreshCalendar(int month, int year){
 		//Variables
 		String[] months =  {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 		int nod, som; //Number Of Days, Start Of Month
@@ -167,7 +172,14 @@ public class Screen0
 		tblCalendar.setDefaultRenderer(tblCalendar.getColumnClass(0), new tblCalendarRenderer());
 	}
 
-	static class tblCalendarRenderer extends DefaultTableCellRenderer{
+	public void closeCalendar(){
+		setVisible(false);
+		dispose();
+		System.exit(0);
+	}
+
+	//Inner classes
+	private class tblCalendarRenderer extends DefaultTableCellRenderer{
 		public Component getTableCellRendererComponent (JTable table, Object value, boolean selected, boolean focused, int row, int column){
 			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
 			if (column == 0 || column == 6){ //Week-end
@@ -187,7 +199,7 @@ public class Screen0
 		}
 	}
 
-	static class btnPrev_Action implements ActionListener{
+	private class btnPrev_Action implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			if (currentMonth == 0){ //Back one year
 				currentMonth = 11;
@@ -199,7 +211,7 @@ public class Screen0
 			refreshCalendar(currentMonth, currentYear);
 		}
 	}
-	static class btnNext_Action implements ActionListener{
+	private class btnNext_Action implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			if (currentMonth == 11){ //Foward one year
 				currentMonth = 0;
@@ -211,7 +223,7 @@ public class Screen0
 			refreshCalendar(currentMonth, currentYear);
 		}
 	}
-	static class cmbYear_Action implements ActionListener{
+	private class cmbYear_Action implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			if (cmbYear.getSelectedItem() != null){
 				String b = cmbYear.getSelectedItem().toString();
@@ -221,10 +233,10 @@ public class Screen0
 		}
 	}
 
-	static class pinboardAction implements ActionListener{
+	private class pinboardAction implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			if(pinboardOpen%2==0){
-				pinboard_frame = new Screen1();
+				pinboard_frame = new Pinboard();
 				pinboardOpen++;
 			}
 		}
