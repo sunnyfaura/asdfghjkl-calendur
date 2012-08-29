@@ -40,9 +40,8 @@ public class SysTray {
                     item = new MenuItem("Open Calendar..      ");
                     item.addActionListener(new ActionListener() {
                         public void actionPerformed (ActionEvent e){
-                            if(calendar.pinboardOpen%2==0){
+                            if(calendar.calendarOpen%2==0){
                                 calendar.setVisible(true);
-                                //calendar.setState(JFrame.NORMAL);
                                 calendar.calendarOpen++;
                             }
                         }
