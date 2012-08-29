@@ -65,7 +65,6 @@ public class Calendar extends JFrame
 		btnPrev.addActionListener(new btnPrev_Action());
 		btnNext.addActionListener(new btnNext_Action());
 		cmbYear.addActionListener(new cmbYear_Action());
-
 		pinboard.addActionListener(new pinboardAction());
 		//moodboard.addActionListener(new moodboardAction());
 		

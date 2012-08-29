@@ -13,7 +13,7 @@ import java.util.*;
 
 public class Pinboard
 {
-	private JButton viewdates, addtask, viewtask, deletetask; //moodboard,  calendar,
+	private JButton viewdates, addtask, viewtask, deletetask, calendar; //moodboard,  
 	private JLabel todolabel, doinglabel;
 	private JList todo, doing;
 	private JFrame frmMain;
@@ -35,7 +35,7 @@ public class Pinboard
 		addtask = new JButton( "Add Task" );
 		viewtask = new JButton( "View Task" ); //disable if a task is not selected
 		deletetask = new JButton( "Delete Task" ); //disable if a task is not selected
-		//calendar = new JButton( "Calendar" );
+		calendar = new JButton( "Calendar" );
 		//moodboard = new JButton( "Mood Board" );
 		todolabel = new JLabel( "To Do" );
 		doinglabel = new JLabel( "Doing" );
@@ -74,7 +74,7 @@ public class Pinboard
 		panel.add(doinglabel);
 		panel.add(doingscroll);
 		panel.add(viewtask);
-		//panel.add(calendar);
+		panel.add(calendar);
 		//panel.add(moodboard);
 		panel.add(deletetask);
 		panel.add(viewdates);
@@ -89,7 +89,7 @@ public class Pinboard
 		doingscroll.setBounds(10, 200, 300, 100);
 		deletetask.setBounds(10, 310, 300, 25);
 		viewtask.setBounds(10, 340, 300, 25);
-		//calendar.setBounds(10, 370, 300, 25);
+		calendar.setBounds(10, 370, 300, 25);
 		//moodboard.setBounds(10, 400, 300, 25);
 	}
 	
