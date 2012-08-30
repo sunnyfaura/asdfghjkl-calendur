@@ -1,8 +1,6 @@
 /*
 	Screen3 is View/Edit Task screen
 */
-
-//make this pop-up
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -13,16 +11,16 @@ import java.util.*;
 public class Screen3
 {
 	static JButton save, back;
-	static JLabel namelabel, date, description, status;
+	static JLabel namelabel, date, description, status, prt;
 	static JTextField name;
-	static JComboBox month, day, year, hour, minute, ampm;
+	static JComboBox month, day, year, hour, minute, ampm, priority;
 	static JTextArea descriptionarea;
 	static Container pane;
 	static JPanel panel;
 	static JFrame frmMain;
 	static JScrollPane desc;
 	
-	public static void main ( String[] args )
+	public Screen3()
 	{
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
@@ -38,7 +36,11 @@ public class Screen3
 		date = new JLabel( "Deadline" );
 		description = new JLabel( "Description" );
 		status = new JLabel( "Status" );
+		prt = new JLabel("Priority");
 		name = new JTextField();
+		
+		save.addActionListener(new save_Action());
+		back.addActionListener(new back_Action());
 		
 		String[] months = { "January", "February", "March","April","May","June","July","August","September","October","November","December"};
 		month = new JComboBox(months);
@@ -70,6 +72,9 @@ public class Screen3
 		String[] time = { "AM", "PM"};
 		ampm = new JComboBox(time);
 		
+		String[] pr = {"High", "Normal", "Low"};
+		priority = new JComboBox(pr);
+		
 		descriptionarea = new JTextArea();
 		descriptionarea.setLineWrap(true);
 		desc = new JScrollPane(descriptionarea);
@@ -81,7 +86,7 @@ public class Screen3
 		frmMain.setSize( 325, 450 );
 		pane = frmMain.getContentPane();
 		pane.setLayout(null);
-		frmMain.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMain.setResizable(false);
 		frmMain.setVisible(true);
 		
@@ -101,6 +106,8 @@ public class Screen3
 		panel.add(ampm);
 		panel.add(save);
 		panel.add(back);
+		panel.add(priority);
+		panel.add(prt);
 		
 		//set bounds
 		panel.setBounds(0, 0, 500, 500);
@@ -115,7 +122,30 @@ public class Screen3
 		hour.setBounds(100, 310, 40, 20);
 		minute.setBounds( 150, 310, 40, 20);
 		ampm.setBounds(200, 310, 40, 20);
-		save.setBounds(10, 350, 300, 25);
-		back.setBounds(10, 380, 300, 25);
+		save.setBounds(10, 365, 300, 25);
+		back.setBounds(10, 395, 300, 25);
+		prt.setBounds(10, 340, 60, 20);
+		priority.setBounds(75, 340, 60, 20);
 	}
+	
+	static class save_Action implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			//nextScreen = 1;
+			frmMain.dispose();
+			Screen1 screen1 = new Screen1(true);
+		}
+	}
+	
+	static class back_Action implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			//nextScreen = 1;
+			frmMain.dispose();
+			Screen1 screen1 = new Screen1(true);
+		}
+	}
+	
+	// public static void main ( String[] args )
+	// {
+		// Screen3 screen3 = new Screen3();
+	// }
 }

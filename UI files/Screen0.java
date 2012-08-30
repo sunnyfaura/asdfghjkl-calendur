@@ -1,6 +1,5 @@
 /*
 	Screen0 is Calendar screen
-	home page
 */
 import javax.swing.*;
 import javax.swing.event.*;
@@ -8,7 +7,6 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.awt.event.WindowAdapter;
 
 public class Screen0
 {
@@ -22,23 +20,26 @@ public class Screen0
 	static JScrollPane stblCalendar; //The scrollpane
 	static JPanel pnlCalendar;
 	static int realYear, realMonth, realDay, currentYear, currentMonth;
-	public static int pinboardOpen = 0;
-	static Screen1 pinboard_frame;
+	static boolean current;
+	static int nextScreen;
 
-	public static void main (String args[]){
+	public Screen0(boolean c)
+	{
 		//Look and feel
+		current = c;
+		nextScreen = 0;
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
 		catch (ClassNotFoundException e) {}
 		catch (InstantiationException e) {}
 		catch (IllegalAccessException e) {}
 		catch (UnsupportedLookAndFeelException e) {}
-
+		
 		//Prepare frame
 		frmMain = new JFrame ("Life Planner"); //Create frame
 		frmMain.setSize(325, 450); //Set size to 400x400 pixels
 		pane = frmMain.getContentPane(); //Get content pane
 		pane.setLayout(null); //Apply null layout
-		frmMain.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Close when X is clicked
+		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Close when X is clicked
 
 		//Create controls
 		lblMonth = new JLabel ("January");
@@ -60,9 +61,8 @@ public class Screen0
 		btnPrev.addActionListener(new btnPrev_Action());
 		btnNext.addActionListener(new btnNext_Action());
 		cmbYear.addActionListener(new cmbYear_Action());
-
-		pinboard.addActionListener(new pinboardAction());
-		//moodboard.addActionListener(new moodboardAction());
+		pinboard.addActionListener(new pinboard_Action());
+		moodboard.addActionListener(new moodboard_Action());
 		
 		//Add controls to pane
 		pane.add(pnlCalendar);
@@ -89,8 +89,7 @@ public class Screen0
 		
 		//Make frame visible
 		frmMain.setResizable(false);
-		frmMain.setVisible(true);
-		
+		frmMain.setVisible(current);
 		//Get real month/year
 		GregorianCalendar cal = new GregorianCalendar(); //Create calendar
 		realDay = cal.get(GregorianCalendar.DAY_OF_MONTH); //Get day
@@ -166,6 +165,10 @@ public class Screen0
 		//Apply renderers
 		tblCalendar.setDefaultRenderer(tblCalendar.getColumnClass(0), new tblCalendarRenderer());
 	}
+	
+	//public static void main (String args[]){
+	//	Screen0 screen0 = new Screen0();
+	//}
 
 	static class tblCalendarRenderer extends DefaultTableCellRenderer{
 		public Component getTableCellRendererComponent (JTable table, Object value, boolean selected, boolean focused, int row, int column){
@@ -199,6 +202,7 @@ public class Screen0
 			refreshCalendar(currentMonth, currentYear);
 		}
 	}
+	
 	static class btnNext_Action implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			if (currentMonth == 11){ //Foward one year
@@ -211,6 +215,7 @@ public class Screen0
 			refreshCalendar(currentMonth, currentYear);
 		}
 	}
+	
 	static class cmbYear_Action implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			if (cmbYear.getSelectedItem() != null){
@@ -220,13 +225,22 @@ public class Screen0
 			}
 		}
 	}
-
-	static class pinboardAction implements ActionListener{
+	
+	static class pinboard_Action implements ActionListener{
 		public void actionPerformed (ActionEvent e){
-			if(pinboardOpen%2==0){
-				pinboard_frame = new Screen1();
-				pinboardOpen++;
-			}
+			current = false;
+			//nextScreen = 1;
+			frmMain.dispose();
+			Screen1 screen1 = new Screen1(true);
+		}
+	}
+	
+	static class moodboard_Action implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			current = false;
+			//nextScreen = 1;
+			frmMain.dispose();
+			Screen7 screen7 = new Screen7();
 		}
 	}
 }

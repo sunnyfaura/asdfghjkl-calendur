@@ -1,9 +1,6 @@
 /*
 	Screen1 is Pin Board screen
 */
-
-//alternative page
-//preferably a separate window so user can see the pinboard and calendar at the same time -done
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -20,10 +17,12 @@ public class Screen1
 	static Container pane;
 	static JPanel panel;
 	static JScrollPane todoscroll, doingscroll;
+	static boolean current;
 	
-	//public static void main( String[] args )
-	public Screen1()
+	public Screen1(boolean c)
 	{
+		current = c;
+	
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
 		catch (ClassNotFoundException e) {}
@@ -46,20 +45,22 @@ public class Screen1
 		todoscroll = new JScrollPane(todo);
 		doingscroll = new JScrollPane(doing);
 		
+		viewdates.addActionListener(new viewdates_Action());
+		addtask.addActionListener(new addtask_Action());
+		viewtask.addActionListener(new viewtask_Action());
+		deletetask.addActionListener(new deletetask_Action());
+		calendar.addActionListener(new calendar_Action());
+		moodboard.addActionListener(new moodboard_Action());
+		
+		
 		//frame stuff
-		frmMain = new JFrame( "Pinboard" );
+		frmMain = new JFrame( "Life Planner" );
 		frmMain.setSize( 325, 450 );
 		pane = frmMain.getContentPane();
 		pane.setLayout(null);
-		frmMain.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		//added so that there may only be one pinboard frame
-		frmMain.addWindowListener(new java.awt.event.WindowAdapter() {
-    		public void windowClosing(WindowEvent winEvt) {
-    			Screen0.pinboardOpen++;
-       		}
-		});
+		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMain.setResizable(false);
-		frmMain.setVisible(true);
+		frmMain.setVisible(current);
 		
 		//add contents to pane
 		pane.add(panel);
@@ -87,4 +88,59 @@ public class Screen1
 		calendar.setBounds(10, 370, 300, 25);
 		moodboard.setBounds(10, 400, 300, 25);
 	}
+	
+	static class viewdates_Action implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			current = false;
+			//nextScreen = 1;
+			frmMain.dispose();
+			Screen4 screen4 = new Screen4();
+		}
+	}
+	
+	static class addtask_Action implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			current = false;
+			//nextScreen = 1;
+			frmMain.dispose();
+			Screen2 screen2 = new Screen2();
+		}
+	}
+	
+	static class viewtask_Action implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			current = false;
+			//nextScreen = 1;
+			frmMain.dispose();
+			Screen3 screen3 = new Screen3();
+		}
+	}
+	
+	static class deletetask_Action implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+
+		}
+	}
+	
+	static class calendar_Action implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			current = false;
+			//nextScreen = 1;
+			frmMain.dispose();
+			Screen0 screen0 = new Screen0(true);
+		}
+	}
+	
+	static class moodboard_Action implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			current = false;
+			//nextScreen = 1;
+			frmMain.dispose();
+			Screen7 screen7 = new Screen7();
+		}
+	}
+	//public static void main( String[] args )
+	//{
+	//	Screen1 screen1 = new Screen1();
+	//}
 }
