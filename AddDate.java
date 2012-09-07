@@ -1,5 +1,5 @@
 /*
-	AddingDate is Add Date screen
+	AddDate is Add Date screen
 */
 
 //same as add task except less features
@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class AddingDate
+public class AddDate
 {
 	private JButton adddate;
 	private JLabel date, description, repeatlabel;
@@ -21,7 +21,7 @@ public class AddingDate
 	private JFrame frmMain;
 	static JScrollPane desc;
 	
-	public AddingDate()
+	public AddDate()
 	{
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}

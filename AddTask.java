@@ -1,5 +1,5 @@
 /*
-	AddingTask is Add Task screen
+	AddTask is Add Task screen
 */
 
 //make this pop-up
@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class AddingTask
+public class AddTask
 {
 	private JButton addtask;
 	private JLabel namelabel, date, description, status;
@@ -22,7 +22,7 @@ public class AddingTask
 	private JFrame frmMain;
 	private JScrollPane desc;
 	
-	public AddingTask()
+	public AddTask()
 	{
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
