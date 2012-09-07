@@ -10,7 +10,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.awt.event.WindowAdapter;
 
-public class Screen0
+public class Calendar
 {
 	static JLabel lblMonth, lblYear;
 	static JButton btnPrev, btnNext, pinboard, moodboard;
@@ -23,7 +23,7 @@ public class Screen0
 	static JPanel pnlCalendar;
 	static int realYear, realMonth, realDay, currentYear, currentMonth;
 	public static int pinboardOpen = 0;
-	static Screen1 pinboard_frame;
+	static Pinboard pinboard_frame;
 
 	public static void main (String args[]){
 		//Look and feel
@@ -34,7 +34,7 @@ public class Screen0
 		catch (UnsupportedLookAndFeelException e) {}
 
 		//Prepare frame
-		frmMain = new JFrame ("Life Planner"); //Create frame
+		frmMain = new JFrame ("Calendar"); //Create frame
 		frmMain.setSize(325, 450); //Set size to 400x400 pixels
 		pane = frmMain.getContentPane(); //Get content pane
 		pane.setLayout(null); //Apply null layout
@@ -224,7 +224,7 @@ public class Screen0
 	static class pinboardAction implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			if(pinboardOpen%2==0){
-				pinboard_frame = new Screen1();
+				pinboard_frame = new Pinboard();
 				pinboardOpen++;
 			}
 		}

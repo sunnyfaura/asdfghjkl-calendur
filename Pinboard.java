@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class Screen1
+public class Pinboard
 {
 	static JButton viewdates, addtask, viewtask, calendar, moodboard, deletetask;
 	static JLabel todolabel, doinglabel;
@@ -22,7 +22,7 @@ public class Screen1
 	static JScrollPane todoscroll, doingscroll;
 	
 	//public static void main( String[] args )
-	public Screen1()
+	public Pinboard()
 	{
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
@@ -55,7 +55,7 @@ public class Screen1
 		//added so that there may only be one pinboard frame
 		frmMain.addWindowListener(new java.awt.event.WindowAdapter() {
     		public void windowClosing(WindowEvent winEvt) {
-    			Screen0.pinboardOpen++;
+    			Calendar.pinboardOpen++;
        		}
 		});
 		frmMain.setResizable(false);

@@ -1,9 +1,8 @@
 /*
-	Screen6 is Edit Date screen
+	Screen5 is Add Date screen
 */
 
-//exactly the same as edit task
-//in fact, edit date is subset of edit task
+//same as add task except less features
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -11,9 +10,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class Screen6
+public class AddDate
 {
-	static JButton save, back;
+	static JButton adddate;
 	static JLabel date, description, repeatlabel;
 	static JComboBox month, day, year, repeat;
 	static JTextArea descriptionarea;
@@ -32,8 +31,7 @@ public class Screen6
 		catch (UnsupportedLookAndFeelException e) {}
 		
 		//instantiate components
-		save = new JButton( "Save Changes" );
-		back = new JButton( "Back" );
+		adddate = new JButton( "Add Important Date" );
 		date = new JLabel( "Date" );
 		description = new JLabel( "Description" );
 		repeatlabel = new JLabel( "Repeat" );
@@ -75,8 +73,7 @@ public class Screen6
 		panel.add(month);
 		panel.add(day);
 		panel.add(year);
-		panel.add(save);
-		panel.add(back);
+		panel.add(adddate);
 		panel.add(repeat);
 		panel.add(repeatlabel);
 		panel.add(desc);
@@ -90,8 +87,7 @@ public class Screen6
 		month.setBounds( 75, 30, 90, 20);
 		day.setBounds( 180, 30, 40, 20);
 		year.setBounds( 230, 30, 60, 20);
-		save.setBounds(10, 350, 300, 25);
-		back.setBounds(10, 380, 300, 25);
+		adddate.setBounds(10, 350, 300, 25);
 		repeatlabel.setBounds(10, 300, 80, 20);
 		repeat.setBounds(75, 300, 80, 20);
 	}

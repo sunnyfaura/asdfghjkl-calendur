@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class Screen4
+public class ViewImportantDate
 {
 	static Container pane;
 	static JPanel panel;
@@ -31,7 +31,7 @@ public class Screen4
 		catch (UnsupportedLookAndFeelException e) {}
 		
 		//frame stuff
-		frmMain = new JFrame( "Life Planner" );
+		frmMain = new JFrame( "View Important Date" );
 		frmMain.setSize( 325, 450 );
 		pane = frmMain.getContentPane();
 		pane.setLayout(null);

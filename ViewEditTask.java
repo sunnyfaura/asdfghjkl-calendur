@@ -1,8 +1,8 @@
 /*
-	Screen5 is Add Date screen
+	Screen3 is View/Edit Task screen
 */
 
-//same as add task except less features
+//make this pop-up
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -10,11 +10,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class Screen5
+public class ViewEditTask
 {
-	static JButton adddate;
-	static JLabel date, description, repeatlabel;
-	static JComboBox month, day, year, repeat;
+	static JButton save, back;
+	static JLabel namelabel, date, description, status;
+	static JTextField name;
+	static JComboBox month, day, year, hour, minute, ampm;
 	static JTextArea descriptionarea;
 	static Container pane;
 	static JPanel panel;
@@ -31,13 +32,13 @@ public class Screen5
 		catch (UnsupportedLookAndFeelException e) {}
 		
 		//instantiate components
-		adddate = new JButton( "Add Important Date" );
-		date = new JLabel( "Date" );
+		save = new JButton( "Save Changes" );
+		back = new JButton( "Back" );
+		namelabel = new JLabel( "Task Name" );
+		date = new JLabel( "Deadline" );
 		description = new JLabel( "Description" );
-		repeatlabel = new JLabel( "Repeat" );
-		
-		String[] repeats = { "Daily", "Weekly", "Monthly", "Yearly"};
-		repeat = new JComboBox(repeats);
+		status = new JLabel( "Status" );
+		name = new JTextField();
 		
 		String[] months = { "January", "February", "March","April","May","June","July","August","September","October","November","December"};
 		month = new JComboBox(months);
@@ -52,6 +53,23 @@ public class Screen5
 			years[i] = 2012+i;
 		year = new JComboBox(years);
 		
+		Integer[] hours = new Integer[12];
+		for( int i=0; i<12; i++)
+			hours[i] = i+1;
+		hour = new JComboBox(hours);
+		
+		String[] minutes = new String[60];
+		for( int i=0; i<60; i++ )
+		{	if( i > 9 )
+			minutes[i] = Integer.toString(i);
+			else
+			minutes[i] = "0"+Integer.toString(i);
+		}
+		minute = new JComboBox(minutes);
+		
+		String[] time = { "AM", "PM"};
+		ampm = new JComboBox(time);
+		
 		descriptionarea = new JTextArea();
 		descriptionarea.setLineWrap(true);
 		desc = new JScrollPane(descriptionarea);
@@ -59,7 +77,7 @@ public class Screen5
 		panel = new JPanel(null);
 		
 		//frame stuff
-		frmMain = new JFrame( "Life Planner" );
+		frmMain = new JFrame( "Edit Task" );
 		frmMain.setSize( 325, 450 );
 		pane = frmMain.getContentPane();
 		pane.setLayout(null);
@@ -69,26 +87,35 @@ public class Screen5
 		
 		//add contents to pane
 		pane.add(panel);
+		panel.add(namelabel);
 		panel.add(date);
+		panel.add(description);
+		panel.add(status);
+		panel.add(name);
 		panel.add(month);
 		panel.add(day);
 		panel.add(year);
-		panel.add(adddate);
-		panel.add(repeat);
-		panel.add(repeatlabel);
 		panel.add(desc);
-		panel.add(description);
+		panel.add(hour);
+		panel.add(minute);
+		panel.add(ampm);
+		panel.add(save);
+		panel.add(back);
 		
 		//set bounds
 		panel.setBounds(0, 0, 500, 500);
-		description.setBounds(10, 80, 80, 20);
-		desc.setBounds(75, 83, 200, 200);
-		date.setBounds( 10, 30, 80, 20);
-		month.setBounds( 75, 30, 90, 20);
-		day.setBounds( 180, 30, 40, 20);
-		year.setBounds( 230, 30, 60, 20);
-		adddate.setBounds(10, 350, 300, 25);
-		repeatlabel.setBounds(10, 300, 80, 20);
-		repeat.setBounds(75, 300, 80, 20);
+		namelabel.setBounds(10, 25, 80, 20);
+		name.setBounds( 80, 27, 200, 20);
+		description.setBounds(10, 60, 80, 20);
+		desc.setBounds(80, 63, 200, 200);
+		date.setBounds( 10, 280, 80, 20);
+		month.setBounds( 75, 280, 90, 20);
+		day.setBounds( 180, 280, 40, 20);
+		year.setBounds( 230, 280, 60, 20);
+		hour.setBounds(100, 310, 40, 20);
+		minute.setBounds( 150, 310, 40, 20);
+		ampm.setBounds(200, 310, 40, 20);
+		save.setBounds(10, 350, 300, 25);
+		back.setBounds(10, 380, 300, 25);
 	}
 }

@@ -1,5 +1,5 @@
 /*
-	Screen3 is View/Edit Task screen
+	Screen2 is Add Task screen
 */
 
 //make this pop-up
@@ -10,9 +10,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class Screen3
+public class AddTask
 {
-	static JButton save, back;
+	static JButton addtask;
 	static JLabel namelabel, date, description, status;
 	static JTextField name;
 	static JComboBox month, day, year, hour, minute, ampm;
@@ -32,8 +32,7 @@ public class Screen3
 		catch (UnsupportedLookAndFeelException e) {}
 		
 		//instantiate components
-		save = new JButton( "Save Changes" );
-		back = new JButton( "Back" );
+		addtask = new JButton( "Add Task" );
 		namelabel = new JLabel( "Task Name" );
 		date = new JLabel( "Deadline" );
 		description = new JLabel( "Description" );
@@ -99,8 +98,7 @@ public class Screen3
 		panel.add(hour);
 		panel.add(minute);
 		panel.add(ampm);
-		panel.add(save);
-		panel.add(back);
+		panel.add(addtask);
 		
 		//set bounds
 		panel.setBounds(0, 0, 500, 500);
@@ -115,7 +113,6 @@ public class Screen3
 		hour.setBounds(100, 310, 40, 20);
 		minute.setBounds( 150, 310, 40, 20);
 		ampm.setBounds(200, 310, 40, 20);
-		save.setBounds(10, 350, 300, 25);
-		back.setBounds(10, 380, 300, 25);
+		addtask.setBounds(10, 350, 300, 25);
 	}
 }
