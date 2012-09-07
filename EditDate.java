@@ -2,8 +2,6 @@
 	Screen6 is Edit Date screen
 */
 
-//exactly the same as edit task
-//in fact, edit date is subset of edit task
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;

@@ -2,7 +2,6 @@
 	Screen2 is Add Task screen
 */
 
-//make this pop-up
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -12,17 +11,17 @@ import java.util.*;
 
 public class AddTask
 {
-	static JButton addtask;
-	static JLabel namelabel, date, description, status;
-	static JTextField name;
-	static JComboBox month, day, year, hour, minute, ampm;
-	static JTextArea descriptionarea;
-	static Container pane;
-	static JPanel panel;
-	static JFrame frmMain;
-	static JScrollPane desc;
+	private JButton addtask;
+	private JLabel namelabel, date, description, status;
+	private JTextField name;
+	private JComboBox month, day, year, hour, minute, ampm;
+	private JTextArea descriptionarea;
+	private Container pane;
+	private JPanel panel;
+	private JFrame frmMain;
+	private JScrollPane desc;
 	
-	public static void main ( String[] args )
+	public AddTask()
 	{
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
@@ -76,7 +75,7 @@ public class AddTask
 		panel = new JPanel(null);
 		
 		//frame stuff
-		frmMain = new JFrame( "Life Planner" );
+		frmMain = new JFrame( "Adding Task" );
 		frmMain.setSize( 325, 450 );
 		pane = frmMain.getContentPane();
 		pane.setLayout(null);
@@ -114,5 +113,13 @@ public class AddTask
 		minute.setBounds( 150, 310, 40, 20);
 		ampm.setBounds(200, 310, 40, 20);
 		addtask.setBounds(10, 350, 300, 25);
+	}
+
+	private class addtask_Action implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			//nextScreen = 1;
+			frmMain.dispose();
+			Pinboard pinboard = new Pinboard();
+		}
 	}
 }

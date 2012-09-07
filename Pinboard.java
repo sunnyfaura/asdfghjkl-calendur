@@ -1,9 +1,7 @@
 /*
-	Screen1 is Pin Board screen
+	Screen1 is PinBoard screen
 */
 
-//alternative page
-//preferably a separate window so user can see the pinboard and calendar at the same time -done
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -13,13 +11,13 @@ import java.util.*;
 
 public class Pinboard
 {
-	static JButton viewdates, addtask, viewtask, calendar, moodboard, deletetask;
-	static JLabel todolabel, doinglabel;
-	static JList todo, doing;
-	static JFrame frmMain;
-	static Container pane;
-	static JPanel panel;
-	static JScrollPane todoscroll, doingscroll;
+	private JButton viewdates, addtask, viewtask, deletetask, calendar; //moodboard,  
+	private JLabel todolabel, doinglabel;
+	private JList todo, doing;
+	private JFrame frmMain;
+	private Container pane;
+	private JPanel panel;
+	private JScrollPane todoscroll, doingscroll;
 	
 	//public static void main( String[] args )
 	public Pinboard()
@@ -37,7 +35,8 @@ public class Pinboard
 		viewtask = new JButton( "View Task" ); //disable if a task is not selected
 		deletetask = new JButton( "Delete Task" ); //disable if a task is not selected
 		calendar = new JButton( "Calendar" );
-		moodboard = new JButton( "Mood Board" );
+		//moodboard = new JButton( "Mood Board" );
+
 		todolabel = new JLabel( "To Do" );
 		doinglabel = new JLabel( "Doing" );
 		todo = new JList();
@@ -45,6 +44,12 @@ public class Pinboard
 		panel = new JPanel(null);
 		todoscroll = new JScrollPane(todo);
 		doingscroll = new JScrollPane(doing);
+
+		//action listeners
+		//viewdates.addActionListener(new viewdates_Action());
+		addtask.addActionListener(new addtask_Action());
+		//viewtask.addActionListener(new viewtask_Action());
+		//deletetask.addActionListener(new deletetask_Action());
 		
 		//frame stuff
 		frmMain = new JFrame( "Pinboard" );
@@ -70,7 +75,7 @@ public class Pinboard
 		panel.add(doingscroll);
 		panel.add(viewtask);
 		panel.add(calendar);
-		panel.add(moodboard);
+		//panel.add(moodboard);
 		panel.add(deletetask);
 		panel.add(viewdates);
 		
@@ -85,6 +90,12 @@ public class Pinboard
 		deletetask.setBounds(10, 310, 300, 25);
 		viewtask.setBounds(10, 340, 300, 25);
 		calendar.setBounds(10, 370, 300, 25);
-		moodboard.setBounds(10, 400, 300, 25);
+		//moodboard.setBounds(10, 400, 300, 25);
+	}
+	
+	private class addtask_Action implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			
+		}
 	}
 }

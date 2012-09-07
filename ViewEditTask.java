@@ -2,7 +2,6 @@
 	Screen3 is View/Edit Task screen
 */
 
-//make this pop-up
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;

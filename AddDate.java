@@ -12,16 +12,16 @@ import java.util.*;
 
 public class AddDate
 {
-	static JButton adddate;
-	static JLabel date, description, repeatlabel;
-	static JComboBox month, day, year, repeat;
-	static JTextArea descriptionarea;
-	static Container pane;
-	static JPanel panel;
-	static JFrame frmMain;
+	private JButton adddate;
+	private JLabel date, description, repeatlabel;
+	private JComboBox month, day, year, repeat;
+	private JTextArea descriptionarea;
+	private Container pane;
+	private JPanel panel;
+	private JFrame frmMain;
 	static JScrollPane desc;
 	
-	public static void main ( String[] args )
+	public AddDate()
 	{
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
@@ -59,7 +59,7 @@ public class AddDate
 		panel = new JPanel(null);
 		
 		//frame stuff
-		frmMain = new JFrame( "Life Planner" );
+		frmMain = new JFrame( "Adding Date" );
 		frmMain.setSize( 325, 450 );
 		pane = frmMain.getContentPane();
 		pane.setLayout(null);
@@ -90,5 +90,13 @@ public class AddDate
 		adddate.setBounds(10, 350, 300, 25);
 		repeatlabel.setBounds(10, 300, 80, 20);
 		repeat.setBounds(75, 300, 80, 20);
+	}
+
+	private class adddate_Action implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+			//nextScreen = 1;
+			frmMain.dispose();
+			Pinboard pinboard = new Pinboard();
+		}
 	}
 }
