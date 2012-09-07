@@ -33,12 +33,6 @@ public class Calendar extends JFrame
 		catch (UnsupportedLookAndFeelException e) {}
 
 		//Prepare frame
-		frmMain = new JFrame ("Calendar"); //Create frame
-		frmMain.setSize(325, 450); //Set size to 400x400 pixels
-		pane = frmMain.getContentPane(); //Get content pane
-		pane.setLayout(null); //Apply null layout
-		frmMain.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Close when X is clicked
-
 		this.setTitle("Calendar");
 		this.setSize(325, 450); //Set size to 400x400 pixels
 		pane = this.getContentPane(); //Get content pane
@@ -96,12 +90,6 @@ public class Calendar extends JFrame
 		stblCalendar.setBounds(10, 50, 300, 250);
 		
 		//Make frame visible
-		frmMain.setResizable(false);
-		frmMain.setVisible(true);
-		//moodboard.setBounds(10, 380, 300, 25);
-		stblCalendar.setBounds(10, 50, 300, 250);
-		
-		//Make frame visible
 		this.setResizable(false);
 		this.setVisible(true);
 		
@@ -144,7 +132,7 @@ public class Calendar extends JFrame
 		refreshCalendar (realMonth, realYear); //Refresh calendar
 	}
 
-	public void refreshCalendar(int month, int year)
+	public void refreshCalendar(int month, int year){
 		//Variables
 		String[] months =  {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 		int nod, som; //Number Of Days, Start Of Month
@@ -233,6 +221,7 @@ public class Calendar extends JFrame
 			}
 			refreshCalendar(currentMonth, currentYear);
 		}
+	}
 
 	private class cmbYear_Action implements ActionListener{
 		public void actionPerformed (ActionEvent e){
