@@ -1,4 +1,4 @@
-To compile using 'javac'
+Instructions on Compiling and Running the Database Prototype
 
 To compile: javac -cp perst.jar *.java
 
