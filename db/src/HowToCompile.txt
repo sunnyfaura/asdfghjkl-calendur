@@ -1,0 +1,10 @@
+To compile using 'javac'
+
+To compile: javac -cp perst.jar *.java
+
+To run:
+    In Windows:
+        java -cp .;perst.jar Interface
+
+    In Ubuntu/Mac:
+        java -cp .:perst.jar Interface
