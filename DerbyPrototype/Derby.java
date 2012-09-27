@@ -90,7 +90,7 @@ public class Derby
             eventDelete = conn.prepareStatement("DELETE FROM event WHERE E_id=?");
             statements.add(eventDelete);
             
-            eventQuery = conn.prepareStatement("SELECT * FROM entry LEFT JOIN event ON entry.E_id=event.E_id WHERE entry.date = ?");
+            eventQuery = conn.prepareStatement("SELECT entry.name, entry.description, entry.date, entry.time, event.isAllDay, event.endTime, event.repeating FROM entry LEFT JOIN event ON entry.E_id=event.E_id WHERE entry.date = ?");
             statements.add(eventQuery);
             
             taskInsert = conn.prepareStatement("INSERT INTO task (E_id, status, priority) VALUES (?, ?, ?)");
@@ -102,7 +102,7 @@ public class Derby
             taskDelete = conn.prepareStatement("DELETE from task WHERE E_id=?");
             statements.add(taskDelete);
             
-            taskQuery = conn.prepareStatement("SELECT * FROM entry LEFT JOIN task ON entry.E_id=event.E_id");
+            taskQuery = conn.prepareStatement("SELECT entry.name, entry.description, entry.date, entry.time, task.status, task.priority FROM entry LEFT JOIN task ON entry.E_id=task.E_id");
 
 
             /* 
@@ -236,10 +236,30 @@ public class Derby
     	}
     }
     
-    public void queryEvent(String date) {
+    public ArrayList<Event> queryEvent(String dateIn) {
     	try {
-    		eventQuery.setString(1, date);
-    		eventQuery.executeUpdate();
+    		eventQuery.setString(1, dateIn);
+    		
+    		ResultSet rs = eventQuery.executeQuery();
+    		
+    		ArrayList<Event> list = new ArrayList<Event>();
+    		
+    		while(rs.next()) { //This will iterate through the query list
+    			
+    			//The following are values obtained from each iteration from the query list. 
+    			//UNOPTIMIZED. Please shove these values into the parameter code instead 
+    			String name = rs.getString(1);
+    			String desc = rs.getString(2);
+    			String date = rs.getString(3);
+    			String time = rs.getString(4);
+    			boolean isAllDay = rs.getBoolean(5);
+    			String endTime = rs.getString(6);
+    			int repeating = rs.getInt(7);
+    			 
+    			list.add(new Event(/*Insert Parameter Code Here*/));
+    		}
+    		
+    		return list;
     		
     	} catch(SQLException e) {
     		printSQLException(e);
@@ -303,10 +323,27 @@ public class Derby
     	}
     }
     
-    public void queryTask(String date) {
+    public ArrayList<Task> queryTask(String dateIn) {
     	try {
-    		taskQuery.setString(1, date);
-    		taskQuery.executeUpdate();
+    		taskQuery.setString(1, dateIn);
+    		
+    		ResultSet rs = taskQuery.executeQuery();
+    		
+    		ArrayList<Task> list = new ArrayList<Task>();
+    		
+    		while(rs.next()) { //This will iterate through the query list
+    			
+    			//The following are values obtained from each iteration from the query list. 
+    			//UNOPTIMIZED. Please shove these values into the parameter code instead 
+    			String name = rs.getString(1);
+    			String desc = rs.getString(2);
+    			String date = rs.getString(3);
+    			String time = rs.getString(4);
+    			int status = rs.getInt(5);
+    			int priority = rs.getInt(6);
+    			 
+    			list.add(new Task(/*Insert Parameter Code Here*/));
+    		}
     		
     	} catch(SQLException e) {
     		printSQLException(e);
@@ -324,7 +361,7 @@ public class Derby
     		handle();
     	}
     }
-
+    
     public void closeDatabase() {
 		/*
          * In embedded mode, an application should shut down the database.
