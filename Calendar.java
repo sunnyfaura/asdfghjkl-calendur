@@ -242,7 +242,10 @@ public class Calendar extends JFrame
 			if(clicked)
 			{
 				//this is what happens when a cell is clicked
-				JOptionPane.showMessageDialog( button, "Column with Value: "+table.getValueAt(row,col)+" - Clicked!\n Row: "+row+" Column: "+col);
+				//JOptionPane.showMessageDialog( button, "Column with Value: "+table.getValueAt(row,col)+" - Clicked!\n Row: "+row+" Column: "+col);
+				String temp = table.getValueAt(row,col).toString();
+				int date = Integer.parseInt(temp);
+				new DayView(col, currMonth, date, currYear);
 			}
 			clicked = false;
 			return new String(label);
@@ -319,6 +322,7 @@ public class Calendar extends JFrame
 		public void actionPerformed (ActionEvent e){
 			if(pinboardOpen%2==0){
 				pinboard_frame = new Pinboard();
+				pinboard_frame.createAndShowGUI();
 				pinboardOpen++;
 			}
 		}
