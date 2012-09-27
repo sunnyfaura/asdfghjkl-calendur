@@ -177,18 +177,6 @@ public class Calendar extends JFrame
 			table.setValueAt(i, row, column);
 		}
 		
-		
-		for(int i = 0; i < 6; i++)
-		{
-			for(int j = 0; j < 7; j++)
-			{
-				if(days[i][j] == null) System.out.print(" ");
-				else System.out.print(days[i][j]+"");
-				System.out.print("\t");
-			}
-			System.out.println();
-		}
-		
 		scroll.validate();
 		scroll.repaint();
 		pnlCalendar.repaint();
@@ -246,6 +234,10 @@ public class Calendar extends JFrame
 				String temp = table.getValueAt(row,col).toString();
 				int date = Integer.parseInt(temp);
 				new DayView(col, currMonth, date, currYear);
+
+				/*
+					A check might be done to prevent multiple windows of the same date popping up
+				*/
 			}
 			clicked = false;
 			return new String(label);
