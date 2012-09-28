@@ -51,7 +51,7 @@ public class SysTray {
                     item.addActionListener(new ActionListener() {
                         public void actionPerformed (ActionEvent e){
                             if(calendar.pinboardOpen%2==0){
-                                calendar.pinboard_frame = new Pinboard();
+                                calendar.pinboard_frame.createAndShowGUI();
                                 calendar.pinboardOpen++;
                             }
                         }

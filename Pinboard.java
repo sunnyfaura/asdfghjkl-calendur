@@ -1,15 +1,3 @@
-import javax.swing.JTabbedPane;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JFrame;
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.KeyEvent;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -25,7 +13,7 @@ public class Pinboard extends JPanel {
 	
 	
     public Pinboard() {
-super(new GridLayout(1, 1));
+    super(new GridLayout(1, 1));
 
 		todolabel = new JLabel("To Do");
 		doinglabel = new JLabel("Doing");
@@ -115,7 +103,12 @@ super(new GridLayout(1, 1));
     public static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("Pinboard");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE); //Close when X is clicked
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(WindowEvent winEvt) {
+                Calendar.pinboardOpen++;
+            }
+        });
         
         //Add content to the window.
         frame.add(new Pinboard(), BorderLayout.CENTER);
