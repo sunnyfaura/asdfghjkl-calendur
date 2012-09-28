@@ -112,7 +112,7 @@ super(new GridLayout(1, 1));
      * this method should be invoked from
      * the event dispatch thread.
      */
-    private static void createAndShowGUI() {
+    public static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("Pinboard");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
