@@ -32,8 +32,6 @@ public class Calendar extends JFrame
 	public static int pinboardOpen = 0, calendarOpen = 1;
 	public Pinboard pinboard_frame;
 
-
-
 	public Calendar()
 	{
 		realDay = calx.get(GregorianCalendar.DAY_OF_MONTH);
@@ -231,6 +229,7 @@ public class Calendar extends JFrame
 				//JOptionPane.showMessageDialog( button, "Column with Value: "+table.getValueAt(row,col)+" - Clicked!\n Row: "+row+" Column: "+col);
 				String temp = table.getValueAt(row,col).toString();
 				int date = Integer.parseInt(temp);
+
 				new DayView(col, currMonth, date, currYear);
 
 				/*

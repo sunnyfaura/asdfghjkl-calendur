@@ -45,12 +45,6 @@ public class DayView
 		pane = frmMain.getContentPane();
 		pane.setLayout(new BorderLayout());
 		frmMain.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		//added so that there may only be one pinboard frame
-		frmMain.addWindowListener(new java.awt.event.WindowAdapter() {
-    		public void windowClosing(WindowEvent winEvt) {
-    			//Calendar.pinboardOpen++;
-       		}
-		});
 		frmMain.setResizable(false);
 		frmMain.setVisible(true);
 		frmMain.setAlwaysOnTop(true);
