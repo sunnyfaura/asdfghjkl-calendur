@@ -8,3 +8,7 @@ To run:
 
     In Ubuntu/Mac:
         java -cp .:perst.jar Interface
+
+To set classpath:
+	Windows: set CLASSPATH=$asdf-calendar/DerbyPrototype.
+	Unix: export CLASSPATH=$asdf-calendar/DerbyPrototype.

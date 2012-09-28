@@ -29,8 +29,9 @@ public class Calendar extends JFrame
 	GregorianCalendar cal;
 	TableModel model;
 
-	public static int pinboardOpen = 0, calendarOpen = 1;
+	public static int pinboardOpen = 0, calendarOpen = 1, addEntryOpen = 0;
 	public Pinboard pinboard_frame;
+	public AddEntry addentry_frame;
 
 	public Calendar()
 	{
@@ -115,6 +116,7 @@ public class Calendar extends JFrame
 		btnNext.addActionListener( new btnNext_Action() );
 		cmbYear.addActionListener( new cmbYear_Action() );
 		pinBoard.addActionListener(new pinBoardAction());
+		addEntry.addActionListener(new addEntryAction());
 		
 		//add controls to pane
 		pane.add(pnlCalendar);
@@ -313,6 +315,29 @@ public class Calendar extends JFrame
 				pinboard_frame = new Pinboard();
 				pinboard_frame.createAndShowGUI();
 				pinboardOpen++;
+			}
+		}
+	}
+
+	private class addEntryAction implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+		/** Well, I tried to make multiple Add Tasks possible, 
+		*** but PERFECTIVE MAINTENANCE na lang yun hahaha
+
+			if(addEntryOpen==0){
+				addentry_frame[addEntryOpen%7].createAndShowGUI();
+				addEntryOpen++;
+			} else if(addEntryOpen%7==0){
+				System.out.println("There's too many Add Entry windows already!");
+			} else{
+				addentry_frame[addEntryOpen%7].createAndShowGUI();
+				addEntryOpen++;
+			}
+
+		**/
+			if(addEntryOpen%2==0){
+				addentry_frame.createAndShowGUI();
+				addEntryOpen++;
 			}
 		}
 	}

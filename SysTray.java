@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 public class SysTray {
     public static void main(String[] asdf) {
         final Calendar calendar =new Calendar();
+        Derby database = new Derby();
+        DatabaseRW.setDatabase(database);
         Runnable runner = new Runnable() {
              public void run() {
                 if (SystemTray.isSupported()) {
