@@ -53,6 +53,7 @@ public class DayView
 		});
 		frmMain.setResizable(false);
 		frmMain.setVisible(true);
+		frmMain.setAlwaysOnTop(true);
 		//frmMain.setLayout(new GridLayout(2, 1));
 		
 		//panel.setLayout(new GridLayout(2,1));
