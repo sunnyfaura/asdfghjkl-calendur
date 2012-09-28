@@ -11,162 +11,176 @@ import java.awt.event.WindowAdapter;
 
 public class Calendar extends JFrame
 {
+	private Object[] colNames = {"Sun","Mon","Tue","Wed","Thurs","Fri","Sat"};
+	private Object[][] days = new Object[6][7];
+
 	private JLabel lblMonth, lblYear;
-	private JButton btnPrev, btnNext, pinboard;//, moodboard;
-	private JTable tblCalendar;
+	private JButton btnPrev, btnNext, pinBoard, addEntry;
+	private JTable table;
 	private JComboBox cmbYear;
 	private Container pane;
 	private DefaultTableModel mtblCalendar; //Table model
-	private JScrollPane stblCalendar; //The scrollpane
+	private JScrollPane scroll; //The scrollpane
 	private JPanel pnlCalendar;
-	private int realYear, realMonth, realDay, currentYear, currentMonth;
+	private int realYear, realMonth, realDay, currYear, currMonth;
+
+	int row, column;
+	GregorianCalendar calx = new GregorianCalendar();
+	GregorianCalendar cal;
+	TableModel model;
+
 	public static int pinboardOpen = 0, calendarOpen = 1;
 	public Pinboard pinboard_frame;
 
+
+
 	public Calendar()
 	{
-		//Look and feel
-		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
-		catch (ClassNotFoundException e) {}
-		catch (InstantiationException e) {}
-		catch (IllegalAccessException e) {}
-		catch (UnsupportedLookAndFeelException e) {}
+		realDay = calx.get(GregorianCalendar.DAY_OF_MONTH);
+		realMonth = calx.get(GregorianCalendar.MONTH);
+		realYear = calx.get(GregorianCalendar.YEAR);
+		cal = new GregorianCalendar(realYear, realMonth+1, realDay);
 
-		//Prepare frame
+		GregorianCalendar cald = new GregorianCalendar(realYear, realMonth, realDay);
+
+		int nod = cald.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
+		int som = cal.get(GregorianCalendar.DAY_OF_WEEK);
+
+
+		System.out.println(realYear + " " + realMonth + " " + realDay);
+		currYear = realYear;
+		currMonth = realMonth;
+		for( int i=1; i<=nod; i++ )
+		{
+			row = new Integer((i+som-2)/7);
+			column = (i+som-2)%7;
+			days[row][column] = new Integer(i);
+		}
+
+		model = new DefaultTableModel(days, colNames)
+		{
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int row, int column)
+			{
+				return days[row][column] != null;
+			}
+		};
+
+		table = new JTable(model);
+		table.setRowHeight(38);
+		table.setColumnSelectionAllowed(true);
+		table.setRowSelectionAllowed(true);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		for(int i=0; i<7; i++)
+		{
+			table.getColumnModel().getColumn(i).setCellEditor(new ClientsTableRenderer(new JCheckBox()));
+		}
+
+		table.getTableHeader().setReorderingAllowed(false);
+
+		table.setPreferredScrollableViewportSize(table.getPreferredSize());
+		table.setShowHorizontalLines(true);
+		table.setShowVerticalLines(true);
+
+		scroll = new JScrollPane(table);
+
 		this.setTitle("Calendar");
-		this.setSize(325, 450); //Set size to 400x400 pixels
-		pane = this.getContentPane(); //Get content pane
-		pane.setLayout(null); //Apply null layout
+		this.setSize(325,450);
+		pane = this.getContentPane();
+		pane.setLayout(null);
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE); //Close when X is clicked
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
     		public void windowClosing(WindowEvent winEvt) {
     			calendarOpen++;
        		}
 		});
+		this.setVisible(true);
+		this.setResizable(false);
 
-		//Create controls
-		lblMonth = new JLabel ("January");
-		lblYear = new JLabel ("Change year:");
+		//create controls
+		lblMonth = new JLabel("January");
+		lblYear = new JLabel("Change year: ");
 		cmbYear = new JComboBox();
-		btnPrev = new JButton ("<<");
-		btnNext = new JButton (">>");
-		mtblCalendar = new DefaultTableModel(){public boolean isCellEditable(int rowIndex, int mColIndex){return false;}};
-		tblCalendar = new JTable(mtblCalendar);
-		stblCalendar = new JScrollPane(tblCalendar);
+		btnPrev = new JButton("<<");
+		btnNext = new JButton(">>");
+		pinBoard = new JButton("Go to Pin Board");
+		addEntry = new JButton("Add Entry");
 		pnlCalendar = new JPanel(null);
-		pinboard = new JButton("Pin Board");
-		//moodboard = new JButton("Mood Board");
 
-		//Set border
-		//pnlCalendar.setBorder(BorderFactory.createTitledBorder("Calendar"));
-		
-		//Register action listeners
-		btnPrev.addActionListener(new btnPrev_Action());
-		btnNext.addActionListener(new btnNext_Action());
-		cmbYear.addActionListener(new cmbYear_Action());
+		for( int i=realYear-100; i<=realYear+100; i++)
+		{
+			cmbYear.addItem(String.valueOf(i));
+		}
 
-		pinboard.addActionListener(new pinboardAction());
-		//moodboard.addActionListener(new moodboardAction());
-		
-		//Add controls to pane
+		//register action listeners
+		btnPrev.addActionListener( new btnPrev_Action() );
+		btnNext.addActionListener( new btnNext_Action() );
+		cmbYear.addActionListener( new cmbYear_Action() );
+		pinBoard.addActionListener(new pinBoardAction());
+
+		//add controls to pane
 		pane.add(pnlCalendar);
+		pnlCalendar.add(scroll);
 		pnlCalendar.add(lblMonth);
 		pnlCalendar.add(lblYear);
 		pnlCalendar.add(cmbYear);
 		pnlCalendar.add(btnPrev);
 		pnlCalendar.add(btnNext);
-		pnlCalendar.add(stblCalendar);
-		pnlCalendar.add(pinboard);
-		//pnlCalendar.add(moodboard);
-	
-		//Set bounds
-		pnlCalendar.setBounds(0, 0, 500, 500);
-		lblMonth.setBounds(160-lblMonth.getPreferredSize().width/2, 25, 100, 25);
-		lblYear.setBounds(10, 305, 80, 20);
-		cmbYear.setBounds(230, 305, 80, 20);
-		btnPrev.setBounds(10, 25, 50, 25);
-		btnNext.setBounds(260, 25, 50, 25);
-		pinboard.setBounds(10, 340, 300, 25);
-		stblCalendar.setBounds(10, 50, 300, 250);
-		
-		//Make frame visible
-		this.setResizable(false);
-		this.setVisible(true);
-		
-		//Get real month/year
-		GregorianCalendar cal = new GregorianCalendar(); //Create calendar
-		realDay = cal.get(GregorianCalendar.DAY_OF_MONTH); //Get day
-		realMonth = cal.get(GregorianCalendar.MONTH); //Get month
-		realYear = cal.get(GregorianCalendar.YEAR); //Get year
-		currentMonth = realMonth; //Match month and year
-		currentYear = realYear;
-		
-		//Add headers
-		String[] headers = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"}; //All headers
-		for (int i=0; i<7; i++){
-			mtblCalendar.addColumn(headers[i]);
-		}
-		
-		tblCalendar.getParent().setBackground(tblCalendar.getBackground()); //Set background
+		pnlCalendar.add(pinBoard);
+		pnlCalendar.add(addEntry);
 
-		//No resize/reorder
-		tblCalendar.getTableHeader().setResizingAllowed(false);
-		tblCalendar.getTableHeader().setReorderingAllowed(false);
 
-		//Single cell selection
-		tblCalendar.setColumnSelectionAllowed(true);
-		tblCalendar.setRowSelectionAllowed(true);
-		tblCalendar.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-		//Set row/column count
-		tblCalendar.setRowHeight(38);
-		mtblCalendar.setColumnCount(7);
-		mtblCalendar.setRowCount(6);
-		
-		//Populate table
-		for (int i=realYear-100; i<=realYear+100; i++){
-			cmbYear.addItem(String.valueOf(i));
-		}
-		
-		//Refresh calendar
-		refreshCalendar (realMonth, realYear); //Refresh calendar
+		//set bounds
+		pnlCalendar.setBounds(0,0,500,500);
+		lblMonth.setBounds(160-lblMonth.getPreferredSize().width/2, 25, 100,25);
+		lblYear.setBounds(10,305,80,20);
+		cmbYear.setBounds(230,305,80,20);
+		btnPrev.setBounds(10,25,50,25);
+		btnNext.setBounds(260,25,50,25);
+		pinBoard.setBounds(10,340,300,25);
+		addEntry.setBounds(10,380, 300, 25);
+		scroll.setBounds(10,50,300,250);
+		refreshCalendar( currMonth, currYear); //refresh calendar
 	}
 
 	public void refreshCalendar(int month, int year){
-		//Variables
-		String[] months =  {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-		int nod, som; //Number Of Days, Start Of Month
-			
-		//Allow/disallow buttons
+		String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
+		int nod, som; //number of days, start of month
 		btnPrev.setEnabled(true);
 		btnNext.setEnabled(true);
-		if (month == 0 && year <= realYear-10){btnPrev.setEnabled(false);} //Too early
-		if (month == 11 && year >= realYear+100){btnNext.setEnabled(false);} //Too late
-		lblMonth.setText(months[month]); //Refresh the month label (at the top)
-		lblMonth.setBounds(160-lblMonth.getPreferredSize().width/2, 25, 180, 25); //Re-align label with calendar
-		cmbYear.setSelectedItem(String.valueOf(year)); //Select the correct year in the combo box
-		
+		days = new Object[6][7];
+		if( month == 0 && year <= realYear-100)
+			btnPrev.setEnabled(false);
+		if( month == 11 && year >= realYear+100 )
+			btnNext.setEnabled(false);
+		lblMonth.setText(months[month]); //refresh month label
+		lblMonth.setBounds(160-lblMonth.getPreferredSize().width/2, 25,180,25); //re-align label with calendar
+		cmbYear.setSelectedItem(String.valueOf(year));
+		cal = new GregorianCalendar(year, month, 1);
+		System.out.println("refreshed: " + year + " " + month + " 1");
+		nod = cal.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
+		som = cal.get(GregorianCalendar.DAY_OF_WEEK);
+
 		//Clear table
 		for (int i=0; i<6; i++){
 			for (int j=0; j<7; j++){
-				mtblCalendar.setValueAt(null, i, j);
+				table.setValueAt(null, i, j);
 			}
 		}
-		
-		//Get first day of month and number of days
-		GregorianCalendar cal = new GregorianCalendar(year, month, 1);
-		nod = cal.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
-		som = cal.get(GregorianCalendar.DAY_OF_WEEK);
-		
-		//Draw calendar
-		for (int i=1; i<=nod; i++){
-			int row = new Integer((i+som-2)/7);
-			int column  =  (i+som-2)%7;
-			mtblCalendar.setValueAt(i, row, column);
+
+		for( int i=1; i<=nod; i++ )
+		{
+			row = new Integer((i+som-2)/7);
+			column = (i+som-2)%7;
+			days[row][column] = new Integer(i);
+			table.setValueAt(i, row, column);
 		}
 
-		//Apply renderers
-		tblCalendar.setDefaultRenderer(tblCalendar.getColumnClass(0), new tblCalendarRenderer());
+		scroll.validate();
+		scroll.repaint();
+		pnlCalendar.repaint();
+		pane.repaint();
 	}
 
 	public void closeCalendar(){
@@ -176,67 +190,131 @@ public class Calendar extends JFrame
 	}
 
 	//Inner classes
-	private class tblCalendarRenderer extends DefaultTableCellRenderer{
+	private class ClientsTableRenderer extends DefaultCellEditor
+	{
+		private JButton button;
+		private String label;
+		private boolean clicked;
+		private int row, col;
+		private JTable table;
 
-		public Component getTableCellRendererComponent (JTable table, Object value, boolean selected, boolean focused, int row, int column){
-			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
-			if (column == 0 || column == 6){ //Week-end
-				setBackground(new Color(255, 220, 220));
-			}
-			else{ //Week
-				setBackground(new Color(255, 255, 255));
-			}
-			if (value != null){
-				if (Integer.parseInt(value.toString()) == realDay && currentMonth == realMonth && currentYear == realYear){ //Today
-					setBackground(new Color(220, 220, 255));
+		public ClientsTableRenderer(JCheckBox checkBox)
+		{
+			super(checkBox);
+			button = new JButton();
+			button.setOpaque(true);
+			button.addActionListener(new ActionListener()
+			{
+				public void actionPerformed( ActionEvent e )
+				{
+					fireEditingStopped();
 				}
+			});
+		}
+
+		public Component getTableCellEditorComponent( JTable table, Object value, boolean isSelected, int row, int column)
+		{
+			this.table = table;
+			this.row = row;
+			this.col = column;
+			button.setForeground(Color.black);
+			button.setBackground(UIManager.getColor("Button background"));
+			label = (value == null) ? "" : value.toString();
+			button.setText(label);
+			clicked = true;
+			return button;
+		}
+
+		public Object getCellEditorValue()
+		{
+			if(clicked)
+			{
+				//this is what happens when a cell is clicked
+				//JOptionPane.showMessageDialog( button, "Column with Value: "+table.getValueAt(row,col)+" - Clicked!\n Row: "+row+" Column: "+col);
+				String temp = table.getValueAt(row,col).toString();
+				int date = Integer.parseInt(temp);
+				new DayView(col, currMonth, date, currYear);
+
+				/*
+					A check might be done to prevent multiple windows of the same date popping up
+				*/
 			}
-			setBorder(null);
-			setForeground(Color.black);
-			return this;  
+			clicked = false;
+			return new String(label);
+		}
+
+		public boolean stopCellEditing()
+		{
+			clicked = false;
+			return super.stopCellEditing();
+		}
+
+		protected void fireEditingStopped()
+		{
+			super.fireEditingStopped();
 		}
 	}
 
-	private class btnPrev_Action implements ActionListener{
-		public void actionPerformed (ActionEvent e){
-			if (currentMonth == 0){ //Back one year
-				currentMonth = 11;
-				currentYear -= 1;
+	class btnPrev_Action implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			if( currMonth == 0 )
+			{
+				currMonth = 11;
+				currYear -= 1;
 			}
-			else{ //Back one month
-				currentMonth -= 1;
+			else
+			{
+				currMonth -= 1;
 			}
-			refreshCalendar(currentMonth, currentYear);
+
+			refreshCalendar(currMonth, currYear);
 		}
 	}
 
-	private class btnNext_Action implements ActionListener{
-		public void actionPerformed (ActionEvent e){
-			if (currentMonth == 11){ //Foward one year
-				currentMonth = 0;
-				currentYear += 1;
+	class btnNext_Action implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			if( currMonth == 11 )
+			{
+				currMonth = 0;
+				currYear += 1;
 			}
-			else{ //Foward one month
-				currentMonth += 1;
+			else
+			{
+				currMonth += 1;
 			}
-			refreshCalendar(currentMonth, currentYear);
+
+			refreshCalendar(currMonth, currYear);
 		}
 	}
 
-	private class cmbYear_Action implements ActionListener{
-		public void actionPerformed (ActionEvent e){
-			if (cmbYear.getSelectedItem() != null){
+	class cmbYear_Action implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			if( cmbYear.getSelectedItem() != null )
+			{
 				String b = cmbYear.getSelectedItem().toString();
-				currentYear = Integer.parseInt(b);
-				refreshCalendar(currentMonth, currentYear);
+				currYear = Integer.parseInt(b);
+				refreshCalendar(currMonth, currYear);
 			}
+			else
+			{
+				currMonth -= 1;
+			}
+
+			refreshCalendar(currMonth, currYear);
 		}
 	}
 
-	private class pinboardAction implements ActionListener{
+	private class pinBoardAction implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			if(pinboardOpen%2==0){
 				pinboard_frame = new Pinboard();
+				pinboard_frame.createAndShowGUI();
 				pinboardOpen++;
 			}
 		}
