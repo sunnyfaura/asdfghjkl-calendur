@@ -7,26 +7,20 @@ public abstract class Entry
 {
 	public String name;
 	public String desc;
-	public String date;
-	public String time;
+	public int year;
+	public int month;
+	public int day;
+	public int hour;
+	public int minute;
 	
-	public void editName(String n)
+	protected Entry(String n, String dsc, int y, int mo, int d, int h, int min)
 	{
 		name = n;
-	}
-	
-	public void editDesc(String d)
-	{
-		desc = d;
-	}
-	
-	public void editDate(Date d)
-	{
-		date = d;
-	}
-	
-	public void editTime(boolean b, Time t)
-	{
-		if(b) time = t;
+		desc = dsc;
+		year = y;
+		month = mo;
+		day = d;
+		hour = h;
+		minute = min;
 	}
 }

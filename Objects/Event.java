@@ -1,40 +1,23 @@
 public class Event extends Entry
 {
 	public boolean isAllDay;
-	public Time endTime;
+	public int endYear;
+	public int endMonth;
+	public int endDay;
+	public int endHour;
+	public int endMinute;
 	public int repeating; //0 = never, 1 = yearly, 2 = monthly, 3 = weekly, 4 = daily
-
-
 	
-	public Event( String n, String dsc, String dt, boolean b, String t, String t2, )
+	public Event( String n, String dsc, int y, int m, int d, int h, int min, boolean ad, int ey, int emo, int ed, int eh, int emin, int r )
 	{
-		name = n;
-		desc = dsc;
-		date = dt;
-		isAllDay = b;
-		if( b )
-		{
-			t = null; //12am
-			endTime = null;//12pm
-		}
-		else
-		{
-			time = t;
-			endTime = t2;
-		}
-	}
-	
-	public void editIsAllDay( boolean b )
-	{
-		isAllDay = b;
-	}
-	
-	public void editTime( Time t1, Time t2 )
-	{
-		if( !isAllDay )
-		{
-			time = t1;
-			endTime = t2;
-		}
+		super(n, dsc, y, m, d, h, min);
+		
+		isAllDay = ad;
+		endYear = ey;
+		endMonth = emo;
+		endDay = ed;
+		endHour = eh;
+		endMinute = emin;
+		repeating = r;
 	}
 }

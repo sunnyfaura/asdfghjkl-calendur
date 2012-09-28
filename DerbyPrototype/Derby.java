@@ -72,37 +72,37 @@ public class Derby
             
             createTables();       	
         	
-            entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, date, time) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, year, month, day, hour, minute) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             statements.add(entryInsert);
             
-            entryUpdate = conn.prepareStatement("UPDATE entry SET name=?, description=?, date=?, time=?", Statement.RETURN_GENERATED_KEYS);
+            entryUpdate = conn.prepareStatement("UPDATE entry SET name=?, description=?, year=?, month=?, day=?, hour=?, minute=? WHERE E_id=?");
             statements.add(entryUpdate);
             
             entryDelete = conn.prepareStatement("DELETE FROM entry WHERE E_id=?");
             statements.add(entryDelete);
 
-            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, endTime, repeating) VALUES (?, ?, ?, ?, ?)");
+            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, endYear, endMonth, endDay, endHour, endMinute, repeating) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             statements.add(eventInsert);
             
-            eventUpdate = conn.prepareStatement("UPDATE event SET isAllDay=?, endTime=?, repeating=?  where E_id=?");
+            eventUpdate = conn.prepareStatement("UPDATE event SET isAllDay=?, endYear=?, endMonth=?, endDay=?, endHour=?, endMinute=?, repeating=? WHERE E_id=?");
             statements.add(eventUpdate);       
             
             eventDelete = conn.prepareStatement("DELETE FROM event WHERE E_id=?");
             statements.add(eventDelete);
             
-            eventQuery = conn.prepareStatement("SELECT entry.name, entry.description, entry.date, entry.time, event.isAllDay, event.endTime, event.repeating FROM entry LEFT JOIN event ON entry.E_id=event.E_id WHERE entry.date = ?");
+            eventQuery = conn.prepareStatement("SELECT entry.name, entry.description, entry.year, entry.month, entry.day, entry.hour, entry.minute, event.isAllDay, event.endYear, event.endMonth, event.endDay, event.endHour, event.endMinute, event.repeating FROM entry JOIN event ON entry.E_id=event.E_id WHERE entry.date = ?");
             statements.add(eventQuery);
             
             taskInsert = conn.prepareStatement("INSERT INTO task (E_id, status, priority) VALUES (?, ?, ?)");
             statements.add(taskInsert);
             
-            taskUpdate = conn.prepareStatement("UPDATE task SET status=?, priority=?  where E_id=?");
+            taskUpdate = conn.prepareStatement("UPDATE task SET status=?, priority=? where E_id=?");
             statements.add(taskUpdate);       
             
             taskDelete = conn.prepareStatement("DELETE from task WHERE E_id=?");
             statements.add(taskDelete);
             
-            taskQuery = conn.prepareStatement("SELECT entry.name, entry.description, entry.date, entry.time, task.status, task.priority FROM entry LEFT JOIN task ON entry.E_id=task.E_id");
+            taskQuery = conn.prepareStatement("SELECT entry.name, entry.description, entry.year, entry.month, entry.day, entry.hour, entry.minute, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
 
 
             /* 
@@ -130,11 +130,11 @@ public class Derby
     private void createTables() { //If the tables already exist, this code block will NOT execute
     	System.out.println("Creating Tables");
     	try {
-    		s.execute("CREATE TABLE entry(E_id int NOT NULL AUTO_INCREMENT PRIMARY KEY, name varchar(255), description varchar(255), date varchar(255), time varchar(255)");
+    		s.execute("CREATE TABLE entry(E_id int NOT NULL AUTO_INCREMENT PRIMARY KEY, name varchar(255), description varchar(255), year int, month int, day int, hour int, minute int");
             System.out.println("Created table entry");
     	} catch (SQLException e) {}
     	try {
-    		s.execute("CREATE TABLE event(E_id int NOT NULL PRIMARY KEY, isAllDay boolean, endTime varchar(255), repeating smallint)");
+    		s.execute("CREATE TABLE event(E_id int NOT NULL PRIMARY KEY, isAllDay boolean, endYear int, endMonth int, endDay int, endHour int, endMinute int, repeating smallint)");
             System.out.println("Created table event");
     	} catch(SQLException e) {}
     	try {
@@ -179,22 +179,29 @@ public class Derby
         }
     }
     
-    public void addEvent(String name, String desc, String date, String time, boolean isAllDay, String endTime, int repeating) {
+    public void addEvent(String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating) {
     	try {
     		entryInsert.setString(1, name);
     		entryInsert.setString(2, desc);
-    		entryInsert.setString(3, date);
-    		entryInsert.setString(4,time);
+    		entryInsert.setInt(3, year);
+			entryInsert.setInt(4, month);
+			entryInsert.setInt(5, day);
+			entryInsert.setInt(6, hour);
+			entryInsert.setInt(7, minute);
     		entryInsert.executeUpdate();
     		
     		ResultSet id = entryInsert.getGeneratedKeys();
     		
-    		long E_id = id.getLong(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
+    		int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
     		
-    		eventInsert.setLong(1, E_id);
+    		eventInsert.setInt(1, E_id);
             eventInsert.setBoolean(2, isAllDay);
-            eventInsert.setString(3, endTime);
-            eventInsert.setInt(4, repeating);
+            entryInsert.setInt(3, endYear);
+			entryInsert.setInt(4, endMonth);
+			entryInsert.setInt(5, endDay);
+			entryInsert.setInt(6, endHour);
+			entryInsert.setInt(7, endMinute);
+            eventInsert.setInt(8, repeating);
             eventInsert.executeUpdate();
     	} catch (SQLException e) {
     		printSQLException(e);
@@ -203,18 +210,29 @@ public class Derby
     	}
     }
     
-    public void updateEvent(String name, String desc, String date, String time, boolean isAllDay, String endTime, int repeating, String toReplace) {
+    public void updateEvent(int id, String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endMinute, int repeating) {
     	try {
-    		eventUpdate.setString(1, name);
-            eventUpdate.setString(2, desc);
-            eventUpdate.setString(3, date);
-            eventUpdate.setString(4, time);
-            eventUpdate.setBoolean(5, isAllDay);
-            eventUpdate.setString(6, endTime);
-            eventUpdate.setInt(7, repeating);
-            eventUpdate.setString(8, toReplace);
-            eventUpdate.executeUpdate();
-    	} catch(SQLException e) {
+    		entryUpdate.setString(1, name);
+            entryUpdate.setString(2, desc);
+            entryUpdate.setInt(3, year);
+			entryUpdate.setInt(4, month);
+			entryUpdate.setInt(5, day);
+			entryUpdate.setInt(6, hour);
+			entryUpdate.setInt(7, minute);
+			entryUpdate.setInt(9, id);
+            entryUpdate.executeUpdate();
+			
+			eventUpdate.setBoolean(1, isAllDay);
+			eventUpdate.setInt(2, endYear);
+			eventUpdate.setInt(3, endMonth);
+			eventUpdate.setInt(4, endDay);
+			eventUpdate.setInt(5, endHour);
+			eventUpdate.setInt(6, endMinute);
+			eventUpdate.setInt(7, repeating);
+			eventUpdate.setInt(8, id);
+			eventUpdate.executeUpdate();
+			
+			} catch(SQLException e) {
     		printSQLException(e);
     	} finally {
     		handle();
@@ -250,13 +268,20 @@ public class Derby
     			//UNOPTIMIZED. Please shove these values into the parameter code instead 
     			String name = rs.getString(1);
     			String desc = rs.getString(2);
-    			String date = rs.getString(3);
-    			String time = rs.getString(4);
-    			boolean isAllDay = rs.getBoolean(5);
-    			String endTime = rs.getString(6);
-    			int repeating = rs.getInt(7);
+    			int year = rs.getInt(3);
+				int month = rs.getInt(4);
+				int day = rs.getInt(5);
+				int hour = rs.getInt(6);
+				int minute = rs.getInt(7);
+    			boolean isAllDay = rs.getBoolean(8);
+				int endYear = rs.getInt(9);
+				int endMonth = rs.getInt(10);
+				int endDay = rs.getInt(11);
+    			int endHour = rs.getInt(12);
+				int endMinute = rs.getInt(13);
+    			int repeating = rs.getInt(14);
     			 
-    			list.add(new Event(/*Insert Parameter Code Here*/));
+    			list.add(new Event(name, desc, year, month, day, hour, minute, isAllDay, endYear, endMonth, endDay, endHour, endMinute, repeating));
     		}
     		
     		return list;
@@ -268,22 +293,25 @@ public class Derby
     	}
     }
     
-    public void addTask(String name, String desc, String date, String time, int status, int priority) {
+    public void addTask(String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority) {
     	try {
-    		taskInsert.setString(1, name);
-    		taskInsert.setString(2, desc);
-    		taskInsert.setString(3, date);
-    		taskInsert.setString(4,time);
-    		taskInsert.executeUpdate();
+    		entryInsert.setString(1, name);
+    		entryInsert.setString(2, desc);
+    		entryInsert.setInt(3, year);
+			entryInsert.setInt(4, month);
+			entryInsert.setInt(5, day);
+			entryInsert.setInt(6, hour);
+			entryInsert.setInt(7, minute);
+    		entryInsert.executeUpdate();
     		
     		ResultSet id = entryInsert.getGeneratedKeys();
     		
-    		long E_id = id.getLong(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
+    		int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
     		
-    		taskInsert.setLong(1, E_id);
+    		taskInsert.setInt(1, E_id);
             taskInsert.setInt(2, status);
             taskInsert.setInt(3, priority);
-            eventInsert.executeUpdate();
+            taskInsert.executeUpdate();
     	} catch(SQLException e) {
     		printSQLException(e);
     	} finally {
@@ -291,16 +319,22 @@ public class Derby
     	}
     }
     
-    public void updateTask(String name, String desc, String date, String time, int status, int priority, String toReplace) {
+    public void updateTask(int id, String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority, String toReplace) {
     	try {
-    		taskUpdate.setString(1, name);
-            taskUpdate.setString(2, desc);
-            taskUpdate.setString(3, date);
-            taskUpdate.setString(4, time);
-            taskUpdate.setInt(5, status);
-            taskUpdate.setInt(6, priority);
-            taskUpdate.setString(7, toReplace);
-            taskUpdate.executeUpdate();
+    		entryUpdate.setString(1, name);
+            entryUpdate.setString(2, desc);
+            entryUpdate.setInt(3, year);
+			entryUpdate.setInt(4, month);
+			entryUpdate.setInt(5, day);
+			entryUpdate.setInt(6, hour);
+			entryUpdate.setInt(7, minute);
+			entryUpdate.setInt(9, id);
+            entryUpdate.executeUpdate();
+			
+			taskUpdate.setInt(1, endMinute);
+			taskUpdate.setInt(2, repeating);
+			taskUpdate.setInt(3, id);
+			taskUpdate.executeUpdate();
     	} catch(SQLException e) {
     		printSQLException(e);
     	} finally {
@@ -337,13 +371,18 @@ public class Derby
     			//UNOPTIMIZED. Please shove these values into the parameter code instead 
     			String name = rs.getString(1);
     			String desc = rs.getString(2);
-    			String date = rs.getString(3);
-    			String time = rs.getString(4);
-    			int status = rs.getInt(5);
-    			int priority = rs.getInt(6);
+    			int year = rs.getInt(3);
+				int month = rs.getInt(4);
+				int day = rs.getInt(5);
+				int hour = rs.getInt(6);
+				int minute = rs.getInt(7);
+    			int status = rs.getInt(8);
+    			int priority = rs.getInt(9);
     			 
-    			list.add(new Task(/*Insert Parameter Code Here*/));
+    			list.add(new Task(name, desc, year, month, day, hour, minute, status, priority));
     		}
+			
+			return list;
     		
     	} catch(SQLException e) {
     		printSQLException(e);
