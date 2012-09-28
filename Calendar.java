@@ -47,7 +47,6 @@ public class Calendar extends JFrame
 		int som = cal.get(GregorianCalendar.DAY_OF_WEEK);
 		
 		
-		System.out.println(realYear + " " + realMonth + " " + realDay);
 		currYear = realYear;
 		currMonth = realMonth;
 		for( int i=1; i<=nod; i++ )
@@ -158,7 +157,6 @@ public class Calendar extends JFrame
 		lblMonth.setBounds(160-lblMonth.getPreferredSize().width/2, 25,180,25); //re-align label with calendar
 		cmbYear.setSelectedItem(String.valueOf(year));
 		cal = new GregorianCalendar(year, month, 1);
-		System.out.println("refreshed: " + year + " " + month + " 1");
 		nod = cal.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
 		som = cal.get(GregorianCalendar.DAY_OF_WEEK);
 		
