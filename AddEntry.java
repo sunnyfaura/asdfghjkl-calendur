@@ -19,15 +19,15 @@ import java.util.*;
 
 public class AddEntry extends JPanel {
 
-	static private JLabel todolabel, doinglabel;
-	static private JList todo, doing, events;
-	static private JScrollPane todoscroll, doingscroll, eventscroll;
-	static private JTextField name, name1;
-	static private JTextArea desc, desc1;
-	static private JComboBox month, day, year, hour, minute, ampm, status;
-	static private JComboBox month1, day1, year1, hour1, minute1, ampm1, status1;
-	static JFrame frame;
-	
+	private static JLabel todolabel, doinglabel;
+	private static JList todo, doing, events;
+	private static JScrollPane todoscroll, doingscroll, eventscroll;
+	private static JTextField name, name1;
+	private static JTextArea desc, desc1;
+	private static JComboBox month, day, year, hour, minute, ampm, status;
+	private static JComboBox month1, day1, year1, hour1, minute1, ampm1, status1;
+	private static JFrame frame;
+
     public AddEntry() {
 		super(new GridLayout(1, 1));
 
@@ -289,6 +289,7 @@ public class AddEntry extends JPanel {
 			int hr = (int)hour.getSelectedIndex()+1; //returns exact hour
 			int mins = (int)minute.getSelectedIndex(); //returns exact minutes
 			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
+
 			frame.setVisible(false);
 			frame.dispose();
 			System.out.println(n);
