@@ -1,7 +1,15 @@
-/*
-	Screen1 is PinBoard screen
-*/
-
+import javax.swing.JTabbedPane;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JFrame;
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -9,15 +17,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class Pinboard extends JPanel
-{
+public class Pinboard extends JPanel {
+
 	private JLabel todolabel, doinglabel;
 	private JList todo, doing, events;
 	private JScrollPane todoscroll, doingscroll, eventscroll;
 	
 	
     public Pinboard() {
-        super(new GridLayout(1, 1));
+super(new GridLayout(1, 1));
 
 		todolabel = new JLabel("To Do");
 		doinglabel = new JLabel("Doing");
@@ -32,17 +40,48 @@ public class Pinboard extends JPanel
         ImageIcon icon = createImageIcon("tray.jpg");
         
         JComponent panel1 = makeTextPanel();
+		panel1.setLayout(new GridLayout(1,1));
         tabbedPane.addTab("Tasks", icon, panel1,
-                "Does nothing");
-		panel1.add(todolabel);
-		panel1.add(todoscroll);
-		panel1.add(doinglabel);
-		panel1.add(doingscroll);
+                "Tasks");
+		JPanel tasksPanelMain = new JPanel(new BorderLayout());
+			tasksPanelMain.add(new JLabel(" "), BorderLayout.PAGE_START);
+			tasksPanelMain.add(new JLabel(" "), BorderLayout.PAGE_END);
+			tasksPanelMain.add(new JLabel("   "), BorderLayout.LINE_START);
+			tasksPanelMain.add(new JLabel("   "), BorderLayout.LINE_END);
+			JPanel tasksPane = new JPanel(new GridLayout(2, 1));
+				JPanel toDoPanel = new JPanel(new BorderLayout());
+					JPanel toDoLabelPanel = new JPanel(new GridLayout(2, 1));
+						toDoLabelPanel.add(new JLabel(" "));
+						toDoLabelPanel.add(todolabel);
+					toDoPanel.add(toDoLabelPanel, BorderLayout.PAGE_START);
+					toDoPanel.add(todoscroll, BorderLayout.CENTER);
+				tasksPane.add(toDoPanel);
+				JPanel doingPanel = new JPanel(new BorderLayout());
+					JPanel doingLabelPanel = new JPanel(new GridLayout(2, 1));
+						doingLabelPanel.add(new JLabel(" "));
+						doingLabelPanel.add(doinglabel);
+					doingPanel.add(doingLabelPanel, BorderLayout.PAGE_START);
+					doingPanel.add(doingscroll, BorderLayout.CENTER);
+				tasksPane.add(doingPanel);
+			tasksPanelMain.add(tasksPane, BorderLayout.CENTER);
+		panel1.add(tasksPanelMain);
+		//panel1.add(todolabel);
+		//panel1.add(todoscroll);
+		//panel1.add(doinglabel);
+		//panel1.add(doingscroll);
         
         JComponent panel2 = makeTextPanel();
+		panel2.setLayout(new GridLayout(1,1));
         tabbedPane.addTab("Events", icon, panel2,
-                "Does twice as much nothing");
-        panel2.add(eventscroll);
+                "Events");
+		JPanel eventsPanel = new JPanel(new BorderLayout());
+			eventsPanel.add(new JLabel(" "), BorderLayout.PAGE_START);
+			eventsPanel.add(new JLabel(" "), BorderLayout.PAGE_END);
+			eventsPanel.add(new JLabel("   "), BorderLayout.LINE_START);
+			eventsPanel.add(new JLabel("   "), BorderLayout.LINE_END);
+			eventsPanel.add(eventscroll, BorderLayout.CENTER);
+		panel2.add(eventsPanel);
+        //panel2.add(eventscroll);
         
         //Add the tabbed pane to this panel.
         add(tabbedPane);
@@ -67,17 +106,16 @@ public class Pinboard extends JPanel
             return null;
         }
     }
-
-    public void createAndShowGUI() {
+    
+    /**
+     * Create the GUI and show it.  For thread safety,
+     * this method should be invoked from
+     * the event dispatch thread.
+     */
+    private static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("Pinboard");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		//added so that there may only be one pinboard frame
-		frame.addWindowListener(new java.awt.event.WindowAdapter() {
-    		public void windowClosing(WindowEvent winEvt) {
-    			Calendar.pinboardOpen++;
-       		}
-		});
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         //Add content to the window.
         frame.add(new Pinboard(), BorderLayout.CENTER);
@@ -87,5 +125,17 @@ public class Pinboard extends JPanel
         frame.setVisible(true);
 		frame.setSize(325,450);
 		frame.setResizable(false);
+    }
+    
+    public static void main(String[] args) {
+        //Schedule a job for the event dispatch thread:
+        //creating and showing this application's GUI.
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                //Turn off metal's use of bold fonts
+		UIManager.put("swing.boldMetal", Boolean.FALSE);
+		createAndShowGUI();
+            }
+        });
     }
 }
