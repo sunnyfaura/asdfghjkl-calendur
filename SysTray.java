@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 public class SysTray {
     public static void main(String[] asdf) {
         final Calendar calendar =new Calendar();
+        Derby database = new Derby();
+        DatabaseRW.setDatabase(database);
         Runnable runner = new Runnable() {
              public void run() {
                 if (SystemTray.isSupported()) {
@@ -51,7 +53,7 @@ public class SysTray {
                     item.addActionListener(new ActionListener() {
                         public void actionPerformed (ActionEvent e){
                             if(calendar.pinboardOpen%2==0){
-                                calendar.pinboard_frame = new Pinboard();
+                                calendar.pinboard_frame.createAndShowGUI();
                                 calendar.pinboardOpen++;
                             }
                         }
