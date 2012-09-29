@@ -12,13 +12,12 @@ import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.table.*;
+impo																																																											rt javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
 public class AddEntry extends JPanel {
-
 	private static JLabel todolabel, doinglabel;
 	private static JList todo, doing, events;
 	private static JScrollPane todoscroll, doingscroll, eventscroll;
@@ -27,18 +26,11 @@ public class AddEntry extends JPanel {
 	private static JComboBox month, day, year, hour, minute, ampm, status;
 	private static JComboBox month1, day1, year1, hour1, minute1, ampm1, status1;
 	private static JFrame frame;
+	JRadioButtonMenuItem allDay, timeSelection;
+	JCheckBox repeatingLabel;
 
     public AddEntry() {
 		super(new GridLayout(1, 1));
-
-		todolabel = new JLabel("To Do");
-		doinglabel = new JLabel("Doing");
-		todo = new JList();
-		doing = new JList();
-		events = new JList();
-		todoscroll = new JScrollPane(todo);
-		doingscroll = new JScrollPane(doing);
-		eventscroll = new JScrollPane(events);
 		name = new JTextField();
 		desc = new JTextArea();
 		name1 = new JTextField();
@@ -82,7 +74,13 @@ public class AddEntry extends JPanel {
 		
 		String[] status0 = { "To Do", "Doing", "Done" };
 		status = new JComboBox(status0);
-		status1 = new JComboBox(status0);
+		
+		String[] priority0 = { "Very High", "High", "Normal", "Low", "Very Low" };
+		priority = new JComboBox(priority0);
+		
+		String[] repeating0 = { "Daily", "Weekly", "Monthly", "Yearly" };
+		repeating = new JComboBox(repeating0);
+		repeating.setEnabled(false);
         
         JTabbedPane tabbedPane = new JTabbedPane();
         ImageIcon icon = createImageIcon("tray.jpg");
@@ -98,7 +96,6 @@ public class AddEntry extends JPanel {
 			tasksPanelMain.add(new JLabel("   "), BorderLayout.LINE_END);
 			JPanel taskPane = new JPanel(new BorderLayout());
 				JPanel taskHead = new JPanel(new GridLayout(1,1));
-					//taskHead.add(new JLabel(" "));
 					JPanel taskNameLabel = new JPanel(new BorderLayout());
 						taskNameLabel.add(new JLabel("Task Name:   \t"), BorderLayout.LINE_START);
 						taskNameLabel.add(name, BorderLayout.CENTER);
@@ -131,24 +128,17 @@ public class AddEntry extends JPanel {
 							JPanel taskStatusMain = new JPanel( new BorderLayout());
 								taskStatusMain.add(new JLabel("Status:   \t"), BorderLayout.LINE_START);
 								taskStatusMain.add(status, BorderLayout.CENTER);
-								//taskStatusMain.add(new JLabel(" "), BorderLayout.PAGE_END);
 							taskButtons.add(taskStatusMain);
-							JButton b = new JButton("Add Task");
-							taskButtons.add(b);
-							b.addActionListener( new addTask_Action() );
-							//JButton c = new JButton("Cancel");
-							//c.addActionListener( new cancel_Action() );
-							//taskButtons.add(c);
+							JPanel taskPriorityMain = new JPanel( new BorderLayout());
+								taskPriorityMain.add(new JLabel("Priority:  \t"), BorderLayout.LINE_START);
+								taskPriorityMain.add(priority, BorderLayout.CENTER);
+							taskButtons.add(taskPriorityMain);
+							taskButtons.add(new JButton("AddTask"));
 						taskProp.add(taskButtons);
 					taskBody.add(taskProp);
-					//taskBody.add(new JButton("Deadline and Buttons Here")); // EDIT
 				taskPane.add(taskBody);
 			tasksPanelMain.add(taskPane, BorderLayout.CENTER);
 		panel1.add(tasksPanelMain);
-		//panel1.add(todolabel);
-		//panel1.add(todoscroll);
-		//panel1.add(doinglabel);
-		//panel1.add(doingscroll);
         
         JComponent panel2 = makeTextPanel();
 		panel2.setLayout(new GridLayout(1,1));
@@ -161,7 +151,6 @@ public class AddEntry extends JPanel {
 			eventsPanelMain.add(new JLabel("   "), BorderLayout.LINE_END);
 			JPanel eventPane = new JPanel(new BorderLayout());
 				JPanel eventHead = new JPanel(new GridLayout(1,1));
-					//taskHead.add(new JLabel(" "));
 					JPanel eventNameLabel = new JPanel(new BorderLayout());
 						eventNameLabel.add(new JLabel("Event Name:  \t"), BorderLayout.LINE_START);
 						eventNameLabel.add(name1, BorderLayout.CENTER);
@@ -184,35 +173,33 @@ public class AddEntry extends JPanel {
 							eventDeadlineMain.add(eventDate, BorderLayout.CENTER);
 						eventProp.add(eventDeadlineMain);
 							JPanel eventDeadlineInfo = new JPanel(new BorderLayout());	
-								JRadioButtonMenuItem timeSelection = new JRadioButtonMenuItem("Time");
+								timeSelection = new JRadioButtonMenuItem("Time",true);
 								eventDeadlineInfo.add(timeSelection, BorderLayout.LINE_START);
 								JPanel eventTime = new JPanel(new FlowLayout()); //TIME
 									eventTime.add(hour1);
 									eventTime.add(minute1);
 									eventTime.add(ampm1);
 								eventDeadlineInfo.add(eventTime, BorderLayout.CENTER);
+						allDay = new JRadioButtonMenuItem("All Day",false);
+						ButtonGroup bg = new ButtonGroup();
+							bg.add(timeSelection);
+							bg.add(allDay);
+							timeSelection.addItemListener( new time_Select() );
+							allDay.addItemListener( new allDay_Select() );
+							
 						eventProp.add(eventDeadlineInfo);
-						JRadioButtonMenuItem allDay = new JRadioButtonMenuItem("All Day");
 						eventProp.add(allDay);
-						/*JPanel eventButtons = new JPanel(new GridLayout(3,1));
-							JPanel eventStatusMain = new JPanel( new BorderLayout());
-								eventStatusMain.add(new JLabel("Status:   \t"), BorderLayout.LINE_START); //STATUS
-								eventStatusMain.add(status1, BorderLayout.CENTER);
-								//taskStatusMain.add(new JLabel(" "), BorderLayout.PAGE_END);
-							eventButtons.add(eventStatusMain);*/
-						JButton bb = new JButton("Add Event");
-						eventProp.add(bb);
-							bb.addActionListener( new addEvent_Action());//BUTTON1
-						//JButton cc = new JButton("Cancel");	
-						//cc.addActionListener(new cancel_Action());
-						//eventProp.add(cc); //BUTTON2
-						//eventProp.add(eventButtons);
+							JPanel isRepeating = new JPanel(new BorderLayout());	
+								repeatingLabel = new JCheckBox("Repeat Event?");
+								repeatingLabel.addItemListener( new repeating_Select() );
+								isRepeating.add(repeatingLabel, BorderLayout.LINE_START);
+								isRepeating.add(repeating, BorderLayout.CENTER);
+						eventProp.add(isRepeating);
+						eventProp.add(new JButton("Add Event")); //BUTTON1
 					eventBody.add(eventProp);
-					//taskBody.add(new JButton("Deadline and Buttons Here")); // EDIT
 				eventPane.add(eventBody);
 			eventsPanelMain.add(eventPane, BorderLayout.CENTER);
 		panel2.add(eventsPanelMain);
-        //panel2.add(eventscroll);
         
         //Add the tabbed pane to this panel.
         add(tabbedPane);
@@ -245,14 +232,8 @@ public class AddEntry extends JPanel {
      */
     public static void createAndShowGUI() {
         //Create and set up the window.
-		frame = new JFrame("Add Entry");
-        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE); //Close when X is clicked
-        frame.addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(WindowEvent winEvt) {
-                Calendar.addEntryOpen++;
-            }
-        });
+        JFrame frame = new JFrame("AddEntry");
+        
         //Add content to the window.
         frame.add(new AddEntry(), BorderLayout.CENTER);
         
@@ -263,21 +244,21 @@ public class AddEntry extends JPanel {
 		frame.setResizable(false);
     }
     
-  //   public static void main(String[] args) {
-  //       //Schedule a job for the event dispatch thread:
-  //       //creating and showing this application's GUI.
-  //       SwingUtilities.invokeLater(new Runnable() {
-  //           public void run() {
-  //               //Turn off metal's use of bold fonts
-		// UIManager.put("swing.boldMetal", Boolean.FALSE);
-		// createAndShowGUI();
-  //           }
-  //       });
-  //   }
+    public static void main(String[] args) {
+        //Schedule a job for the event dispatch thread:
+        //creating and showing this application's GUI.
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                //Turn off metal's use of bold fonts
+		UIManager.put("swing.boldMetal", Boolean.FALSE);
+		createAndShowGUI();
+            }
+        });
+    }
 	
-	static class addTask_Action implements ActionListener
+	class time_Select implements ItemListener
 	{
-		public void actionPerformed(ActionEvent e)
+		public void itemStateChanged( ItemEvent e)
 		{
 			//INSERT TASK TO DATABASE
 			String n = name.getText();
@@ -302,38 +283,43 @@ public class AddEntry extends JPanel {
 			System.out.println(mins);
 			System.out.println(ap);
 			Calendar.addEntryOpen++;
+
+			if( timeSelection.isSelected() )
+			{
+				
+				hour1.setEnabled(true);
+				minute1.setEnabled(true);
+				ampm1.setEnabled(true);
+			}
 		}
 	}
 	
-	static class addEvent_Action implements ActionListener
+	class allDay_Select implements ItemListener
 	{
-		public void actionPerformed(ActionEvent e)
+		public void itemStateChanged( ItemEvent e)
 		{
-			//INSERT EVENT TO DATABASE
-			String n = name1.getText();
-			String dsc = desc1.getText();
-			String mnth = month1.getSelectedItem()+"";
-			int dy = (int)day1.getSelectedIndex()+1;
-			int yr = Integer.parseInt(year1.getSelectedItem()+"");
-			System.out.println("what");
-			frame.setVisible(false);
-			frame.dispose();
-			System.out.println(n);
-			System.out.println(dsc);
-			System.out.println(mnth);
-			System.out.println(dy);
-			System.out.println(yr);
-			Calendar.addEntryOpen++;
+			if( allDay.isSelected() )
+			{
+				
+				hour1.setEnabled(false);
+				minute1.setEnabled(false);
+				ampm1.setEnabled(false);
+			}
 		}
 	}
 	
-	// static class cancel_Action implements ActionListener
-	// {
-	// 	public void actionPerformed(ActionEvent e)
-	// 	{
-	// 		frame.setVisible(false);
-	// 		frame.dispose();
-	// 		Calendar.addEntryOpen++;
-	// 	}
-	// }
+	class repeating_Select implements ItemListener
+	{
+		public void itemStateChanged(ItemEvent e)
+		{
+			if( repeatingLabel.isSelected() )
+			{
+				repeating.setEnabled(true);
+			}
+			else
+			{
+				repeating.setEnabled(false);
+			}
+		}
+	}
 }
