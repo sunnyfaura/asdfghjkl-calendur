@@ -1,17 +1,14 @@
 import javax.swing.*;
-import javax.swing.event.*;																																																										rt javax.swing.table.*;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
 public class AddEntry extends JPanel {
-	private static JLabel todolabel, doinglabel;
-	private static JList todo, doing, events;
-	private static JScrollPane todoscroll, doingscroll, eventscroll;
 	private static JTextField name, name1;
 	private static JTextArea desc, desc1;
-	private static JComboBox month, day, year, hour, minute, ampm, status;
-	private static JComboBox month1, day1, year1, hour1, minute1, ampm1, status1;
+	private static JComboBox month, day, year, hour, minute, ampm, status, priority;
+	private static JComboBox month1, day1, year1, hour1, minute1, ampm1, repeating;
 	private static JFrame frame;
 	JRadioButtonMenuItem allDay, timeSelection;
 	JCheckBox repeatingLabel;
@@ -242,34 +239,38 @@ public class AddEntry extends JPanel {
             }
         });
     }
+
+    //nawawala yung addEntryListener pls fix
+    /*
+		//INSERT TASK TO DATABASE
+		String n = name.getText();
+		String dsc = desc.getText();
+		int mnth = (int)month.getSelectedIndex(); //January = 0; December = 11;
+		int dy = (int)day.getSelectedIndex()+1;  //returns exact day
+		int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
+		int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
+		int hr = (int)hour.getSelectedIndex()+1; //returns exact hour
+		int mins = (int)minute.getSelectedIndex(); //returns exact minutes
+		int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
+
+		frame.setVisible(false);
+		frame.dispose();
+		System.out.println(n);
+		System.out.println(dsc);
+		System.out.println(mnth);
+		System.out.println(dy);
+		System.out.println(yr);
+		System.out.println(stat);
+		System.out.println(hr);
+		System.out.println(mins);
+		System.out.println(ap);
+		Calendar.addEntryOpen++;
+    */
 	
 	class time_Select implements ItemListener
 	{
 		public void itemStateChanged( ItemEvent e)
 		{
-			//INSERT TASK TO DATABASE
-			String n = name.getText();
-			String dsc = desc.getText();
-			int mnth = (int)month.getSelectedIndex(); //January = 0; December = 11;
-			int dy = (int)day.getSelectedIndex()+1;  //returns exact day
-			int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
-			int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
-			int hr = (int)hour.getSelectedIndex()+1; //returns exact hour
-			int mins = (int)minute.getSelectedIndex(); //returns exact minutes
-			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
-
-			frame.setVisible(false);
-			frame.dispose();
-			System.out.println(n);
-			System.out.println(dsc);
-			System.out.println(mnth);
-			System.out.println(dy);
-			System.out.println(yr);
-			System.out.println(stat);
-			System.out.println(hr);
-			System.out.println(mins);
-			System.out.println(ap);
-			Calendar.addEntryOpen++;
 
 			if( timeSelection.isSelected() )
 			{
@@ -286,8 +287,7 @@ public class AddEntry extends JPanel {
 		public void itemStateChanged( ItemEvent e)
 		{
 			if( allDay.isSelected() )
-			{
-				
+			{	
 				hour1.setEnabled(false);
 				minute1.setEnabled(false);
 				ampm1.setEnabled(false);
