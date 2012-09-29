@@ -1,5 +1,5 @@
 all:
-	javac -cp DerbyPrototype/derby.jar *.java -nowarn
+	javac *.java -nowarn
 	
 clean:
 	rm -r *.class

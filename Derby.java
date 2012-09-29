@@ -55,6 +55,7 @@ public class Derby
         
         try
         {
+            setDBSystemDir();
             String dbName = "derbyDB"; // the name of the database
       
             conn = DriverManager.getConnection(protocol + dbName
@@ -139,6 +140,11 @@ public class Derby
         }
     }
     
+    private void setDBSystemDir() {
+        System.setProperty("derby.system.home", System.getProperty("user.home")
+            + "asdf-calendar/DerbyPrototype");
+    }
+
     private void createTables() { //If the tables already exist, this code block will NOT execute
     	System.out.println("Creating Tables");
     	try {
