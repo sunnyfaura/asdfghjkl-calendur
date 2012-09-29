@@ -3,8 +3,8 @@ import java.awt.event.*;
 import javax.swing.JFrame;
 
 public class SysTray {
-    public static void main(String args[]) {
-        final Calendar calendar = new Calendar();
+    public static void main(String[] asdf) {
+        final Calendar calendar =new Calendar();
         Runnable runner = new Runnable() {
              public void run() {
                 if (SystemTray.isSupported()) {
