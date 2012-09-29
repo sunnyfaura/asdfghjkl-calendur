@@ -3,15 +3,17 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+//import java.
 
 public class AddEntry extends JPanel {
-	private static JTextField name, name1;
-	private static JTextArea desc, desc1;
-	private static JComboBox month, day, year, hour, minute, ampm, status, priority;
-	private static JComboBox month1, day1, year1, hour1, minute1, ampm1, repeating;
-	private static JFrame frame;
-	JRadioButtonMenuItem allDay, timeSelection;
+	JTextField name, name1;
+	JTextArea desc, desc1;
+	JComboBox month, day, year, hour, minute, ampm, status, priority;
+	JComboBox month1, day1, year1, hour1, minute1, ampm1, repeating;
+	public static JFrame frame;
+	public JRadioButtonMenuItem allDay, timeSelection;
 	JCheckBox repeatingLabel;
+	JButton addTaskB, addEventB;
 
     public AddEntry() {
 		super(new GridLayout(1, 1));
@@ -117,7 +119,9 @@ public class AddEntry extends JPanel {
 								taskPriorityMain.add(new JLabel("Priority:  \t"), BorderLayout.LINE_START);
 								taskPriorityMain.add(priority, BorderLayout.CENTER);
 							taskButtons.add(taskPriorityMain);
-							taskButtons.add(new JButton("AddTask"));
+							addTaskB = new JButton("Add Task");
+							addTaskB.addActionListener( new addTask_Action() );
+							taskButtons.add(addTaskB);
 						taskProp.add(taskButtons);
 					taskBody.add(taskProp);
 				taskPane.add(taskBody);
@@ -179,7 +183,9 @@ public class AddEntry extends JPanel {
 								isRepeating.add(repeatingLabel, BorderLayout.LINE_START);
 								isRepeating.add(repeating, BorderLayout.CENTER);
 						eventProp.add(isRepeating);
-						eventProp.add(new JButton("Add Event")); //BUTTON1
+						addEventB = new JButton("Add Event");
+						eventProp.add(addEventB); //BUTTON1
+						addEventB.addActionListener( new addEvent_Action() );
 					eventBody.add(eventProp);
 				eventPane.add(eventBody);
 			eventsPanelMain.add(eventPane, BorderLayout.CENTER);
@@ -216,7 +222,7 @@ public class AddEntry extends JPanel {
      */
     public static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("AddEntry");
+        frame = new JFrame("AddEntry");
         
         //Add content to the window.
         frame.add(new AddEntry(), BorderLayout.CENTER);
@@ -240,32 +246,75 @@ public class AddEntry extends JPanel {
         });
     }
 
-    //nawawala yung addEntryListener pls fix
-    /*
-		//INSERT TASK TO DATABASE
-		String n = name.getText();
-		String dsc = desc.getText();
-		int mnth = (int)month.getSelectedIndex(); //January = 0; December = 11;
-		int dy = (int)day.getSelectedIndex()+1;  //returns exact day
-		int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
-		int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
-		int hr = (int)hour.getSelectedIndex()+1; //returns exact hour
-		int mins = (int)minute.getSelectedIndex(); //returns exact minutes
-		int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
 
-		frame.setVisible(false);
-		frame.dispose();
-		System.out.println(n);
-		System.out.println(dsc);
-		System.out.println(mnth);
-		System.out.println(dy);
-		System.out.println(yr);
-		System.out.println(stat);
-		System.out.println(hr);
-		System.out.println(mins);
-		System.out.println(ap);
-		Calendar.addEntryOpen++;
-    */
+    //nawawala yung addEntryListener pls fix
+    private class addTask_Action implements ActionListener
+	{	//INSERT TASK TO DATABASE
+		public void actionPerformed(ActionEvent e){
+			String n = name.getText();
+			String dsc = desc.getText();
+			int mnth = (int)month.getSelectedIndex(); //January = 0; December = 11;
+			int dy = (int)day.getSelectedIndex()+1;  //returns exact day
+			int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
+			int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
+			int hr = (int)hour.getSelectedIndex()+1; //returns exact hour
+			int mins = (int)minute.getSelectedIndex(); //returns exact minutes
+			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
+			int prt = (int)priority.getSelectedIndex();
+
+			frame.setVisible(false);
+			frame.dispose();
+			System.out.println(n);
+			System.out.println(dsc);
+			System.out.println(mnth);
+			System.out.println(dy);
+			System.out.println(yr);
+			System.out.println(stat);
+			System.out.println(hr);
+			System.out.println(mins);
+			System.out.println(ap);
+			System.out.println(prt);
+			Calendar.addEntryOpen++;
+		}
+    }
+	
+	private class addEvent_Action implements ActionListener
+	{	//INSERT TASK TO DATABASE
+		public void actionPerformed(ActionEvent e){
+			String n = name1.getText();
+			String dsc = desc1.getText();
+			int mnth = (int)month1.getSelectedIndex(); //January = 0; December = 11;
+			int dy = (int)day1.getSelectedIndex()+1;  //returns exact day
+			int yr = Integer.parseInt(year1.getSelectedItem()+""); //returns exact year
+			boolean isAllDay = allDay.isSelected();
+			
+			int hr, mins, ap;
+			if( isAllDay )
+			{
+				hr = ((int)(hour.getSelectedIndex()))+1; //returns exact hour
+				mins = ((int)minute.getSelectedIndex()); //returns exact minutes
+				ap = (int)ampm.getSelectedIndex();		// am = 0; pm = 1;
+			}
+			
+			boolean repeats = repeatingLabel.isSelected();
+			int rpt;
+			if( repeats )
+			{
+				rpt = (int)repeating.getSelectedIndex();
+			}
+			
+			frame.setVisible(false);
+			frame.dispose();
+			System.out.println(n);
+			System.out.println(dsc);
+			System.out.println(mnth);
+			System.out.println(dy);
+			System.out.println(yr);
+			System.out.println(isAllDay);
+			System.out.println(repeats);
+			Calendar.addEntryOpen++;
+		}
+    }
 	
 	class time_Select implements ItemListener
 	{
