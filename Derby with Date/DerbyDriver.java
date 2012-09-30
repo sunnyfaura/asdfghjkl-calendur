@@ -9,6 +9,9 @@ public class DerbyDriver {
 		Derby d = new Derby();
 
 		d.addEvent("Movie","The Avengers","2012","05","25","03","00",false,"2012","05","25","05","00",0);
+
+		System.out.println("Creating Second Event");
+
 		d.addEvent("Dinner","with friends","2012","05","25","06","00",false,"2012","05","25","08","00",0);
 		d.updateDatabase();
 

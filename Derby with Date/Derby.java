@@ -39,6 +39,8 @@ public class Derby
 	PreparedStatement dayTasksQuery = null;
 	PreparedStatement dayEventsQuery = null;
 	PreparedStatement pinboardQuery = null;
+
+    PreparedStatement getId = null;
 	
     
     Statement s = null;
@@ -110,6 +112,9 @@ public class Derby
             
             taskDelete = conn.prepareStatement("DELETE from task WHERE E_id=?");
             statements.add(taskDelete);
+
+            getId = conn.prepareStatement("SELECT MAX(E_id) from entry");
+            statements.add(getId);
             
             //taskQuery = conn.prepareStatement("SELECT entry.E_id entry.name, entry.description, entry.ts, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
 			
@@ -137,8 +142,8 @@ public class Derby
              * to process all returned rows, but we are only expecting two rows
              * this time, and want the verification code to be easy to
              * comprehend, so we use a different pattern.
-             */
-            
+             */     
+       
         }
         catch (SQLException sqle)
         {
@@ -154,7 +159,7 @@ public class Derby
     private void createTables() { //If the tables already exist, this code block will NOT execute
     	System.out.println("Creating Tables");
     	try {
-    		s.execute("CREATE TABLE entry(E_id int NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY, name varchar(255), description varchar(255), ts timestamp)");
+    		s.execute("CREATE TABLE entry(E_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), name varchar(255), description varchar(255), ts timestamp, CONSTRAINT pk PRIMARY KEY (E_id))");
             System.out.println("Created table entry");
     	} catch (SQLException e) {
             printSQLException(e);
@@ -207,7 +212,11 @@ public class Derby
     
     public void addEvent(String name, String desc, String year, String month, String day, String hour, String minute, boolean isAllDay, String endYear, String endMonth, String endDay, String endHour, String endMinute, int repeating) {
     	try {
-    		entryInsert.setString(1, name);
+    		System.out.println("DOING THIS");
+
+            entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, ts) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+
+            entryInsert.setString(1, name);
     		entryInsert.setString(2, desc);
 			
             String s = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00";
@@ -219,14 +228,17 @@ public class Derby
     		entryInsert.executeUpdate();
     		
     		//ResultSet id = entryInsert.getGeneratedKeys();
+            
+            getId = conn.prepareStatement("SELECT MAX(E_id) from entry");
 
-            ResultSet id = s.execute("SELECT MAX(E_id) from entry");
+            ResultSet id = getId.executeQuery();
     		
-    		int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
-    		
-            System.out.println("I AM HERE");
+    		id.next();
+            int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
 
-    		eventInsert.setInt(1, E_id);
+    		eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, ets, repeating) VALUES (?, ?, ?, ?)");
+
+            eventInsert.setInt(1, E_id);
             eventInsert.setBoolean(2, isAllDay);
             
             s = endYear + "-" + endMonth + "-" + endDay + " " + endHour + ":" + endMinute + ":00";
@@ -237,6 +249,8 @@ public class Derby
             eventInsert.setInt(4,repeating);
 
             eventInsert.executeUpdate();
+
+            id.close();
     	} catch (SQLException e) {
     		printSQLException(e);
     	} finally {
