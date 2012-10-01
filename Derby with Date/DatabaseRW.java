@@ -54,7 +54,7 @@ public class DatabaseRW
 	
 	public static ArrayList<Entry> dayQuery(int year, int month, int day) throws Exception
 	{
-		String dateString = intToString(year, month, day, 0, 0, 0);
+		String dateString = intToString(year, month, day, 0, 0);
 		dateString = truncateDateString(dateString);
 		
 		ResultSet taskResults = database.dayTasksQuery(dateString);
