@@ -117,7 +117,9 @@ public class AddEntry extends JPanel {
 								taskPriorityMain.add(new JLabel("Priority:  \t"), BorderLayout.LINE_START);
 								taskPriorityMain.add(priority, BorderLayout.CENTER);
 							taskButtons.add(taskPriorityMain);
-							taskButtons.add(new JButton("AddTask"));
+							JButton addTaskListener = new JButton("Add Task");
+							addTaskListener.addActionListener(new addTask_Action());
+							taskButtons.add(addTaskListener);
 						taskProp.add(taskButtons);
 					taskBody.add(taskProp);
 				taskPane.add(taskBody);
@@ -241,31 +243,42 @@ public class AddEntry extends JPanel {
     }
 
     //nawawala yung addEntryListener pls fix
-    /*
-		//INSERT TASK TO DATABASE
-		String n = name.getText();
-		String dsc = desc.getText();
-		int mnth = (int)month.getSelectedIndex(); //January = 0; December = 11;
-		int dy = (int)day.getSelectedIndex()+1;  //returns exact day
-		int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
-		int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
-		int hr = (int)hour.getSelectedIndex()+1; //returns exact hour
-		int mins = (int)minute.getSelectedIndex(); //returns exact minutes
-		int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
+    class addTask_Action implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			String n = name.getText();
+			String dsc = desc.getText();
+			int mnth = (int)month.getSelectedIndex(); //January = 0; December = 11;
 
-		frame.setVisible(false);
-		frame.dispose();
-		System.out.println(n);
-		System.out.println(dsc);
-		System.out.println(mnth);
-		System.out.println(dy);
-		System.out.println(yr);
-		System.out.println(stat);
-		System.out.println(hr);
-		System.out.println(mins);
-		System.out.println(ap);
-		Calendar.addEntryOpen++;
-    */
+			String dayconv = day.toString();
+			int dy = Integer.parseInt(dayconv)+1;  //returns exact day
+
+			int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
+			int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
+
+			String hrconv = hour.toString();
+			int hr = Integer.parseInt(hrconv)+1; //returns exact hour
+			int mins = (int)minute.getSelectedIndex(); //returns exact minutes
+			//useless ata
+			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
+
+			//PRIORITY still not in action haha
+
+			DatabaseRW.addTask(n, dsc, yr, mnth, dy, hr, mins, stat, 1);
+
+			frame.setVisible(false);
+			frame.dispose();
+			System.out.println(n);
+			System.out.println(dsc);
+			System.out.println(mnth);
+			System.out.println(dy);
+			System.out.println(yr);
+			System.out.println(stat);
+			System.out.println(hr);
+			System.out.println(mins);
+			System.out.println(ap);
+			Calendar.addEntryOpen++;
+		}
+    }
 	
 	class time_Select implements ItemListener
 	{
@@ -274,6 +287,7 @@ public class AddEntry extends JPanel {
 
 			if( timeSelection.isSelected() )
 			{
+				
 				hour1.setEnabled(true);
 				minute1.setEnabled(true);
 				ampm1.setEnabled(true);
