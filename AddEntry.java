@@ -248,13 +248,9 @@ public class AddEntry extends JPanel {
 			String n = name.getText();
 			String dsc = desc.getText();
 			int mnth = (int)month.getSelectedIndex(); //January = 0; December = 11;
-
-			String dayconv = day.toString();
 			int dy = Integer.parseInt(dayconv)+1;  //returns exact day
-
 			int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
 			int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
-
 			String hrconv = hour.toString();
 			int hr = Integer.parseInt(hrconv)+1; //returns exact hour
 			int mins = (int)minute.getSelectedIndex(); //returns exact minutes
