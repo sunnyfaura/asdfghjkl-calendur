@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Tue Oct 02 03:07:46 PHT 2012:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance a816c00e-013a-1dba-17a7-00000189bc38 
+Tue Oct 02 03:15:24 PHT 2012:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance a816c00e-013a-1dc1-154e-00000189f310 
 on database directory /home/fangirl/asdf-calendar/derbyDB  with class loader sun.misc.Launcher$AppClassLoader@6d56e0b4 
 Loaded from file:/opt/Apache/db-derby-10.9.1.0-bin/lib/derby.jar
 java.vendor=Oracle Corporation

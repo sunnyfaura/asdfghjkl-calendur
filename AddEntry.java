@@ -218,7 +218,7 @@ public class AddEntry extends JPanel {
      */
     public static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("AddEntry");
+        frame = new JFrame("Add Entry");
         
         //Add content to the window.
         frame.add(new AddEntry(), BorderLayout.CENTER);
@@ -248,24 +248,18 @@ public class AddEntry extends JPanel {
 			String n = name.getText();
 			String dsc = desc.getText();
 			int mnth = (int)month.getSelectedIndex(); //January = 0; December = 11;
-
-			String dayconv = day.toString();
-			int dy = Integer.parseInt(dayconv)+1;  //returns exact day
-
+			int dy = (int)day.getSelectedIndex()+1;
 			int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
 			int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
-
-			String hrconv = hour.toString();
-			int hr = Integer.parseInt(hrconv)+1; //returns exact hour
+			int hr = (int)hour.getSelectedIndex()+1; //returns exact hour
 			int mins = (int)minute.getSelectedIndex(); //returns exact minutes
-			//useless ata
 			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
 
 			//PRIORITY still not in action haha
 
 			DatabaseRW.addTask(n, dsc, yr, mnth, dy, hr, mins, stat, 1);
 
-			frame.setVisible(false);
+			//frame.setVisible(false);
 			frame.dispose();
 			System.out.println(n);
 			System.out.println(dsc);
@@ -277,6 +271,8 @@ public class AddEntry extends JPanel {
 			System.out.println(mins);
 			System.out.println(ap);
 			Calendar.addEntryOpen++;
+
+			ArrayList<Task> test = DatabaseRW.toTaskArray(resultSet);
 		}
     }
 	
@@ -287,7 +283,6 @@ public class AddEntry extends JPanel {
 
 			if( timeSelection.isSelected() )
 			{
-				
 				hour1.setEnabled(true);
 				minute1.setEnabled(true);
 				ampm1.setEnabled(true);
