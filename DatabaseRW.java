@@ -59,8 +59,8 @@ public class DatabaseRW
 		Timestamp start = intToTimestamp(year, month, day, 0, 0);
 		Timestamp end = intToTimestamp(year, month, day + 1, 0, 0);
 		
-		ResultSet taskResults = database.dayTasksQuery(start, end);
-		ResultSet eventResults = database.dayEventsQuery(start, end);
+		ResultSet taskResults = database.queryTasks(start, end);
+		ResultSet eventResults = database.queryEvents(start, end);
 		
 		ArrayList<Task> taskList = toTaskArray(taskResults);
 		ArrayList<Event> eventList = toEventArray(eventResults);

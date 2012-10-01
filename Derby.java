@@ -38,8 +38,8 @@ public class Derby
     PreparedStatement taskDelete = null;
     PreparedStatement taskQuery = null;
     
-    PreparedStatement dayTasksQuery = null;
-    PreparedStatement dayEventsQuery = null;
+    PreparedStatement queryTasks = null;
+    PreparedStatement queryEvents = null;
     PreparedStatement pinboardQuery = null;
 
     PreparedStatement getId = null;
@@ -124,14 +124,14 @@ public class Derby
             
             System.out.println("Made it this far");
 
-            tasksQuery = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id WHERE entry.startTime BETWEEN ? AND ?");
+            queryTasks = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id WHERE entry.startTime BETWEEN ? AND ?");
 
-            statements.add(tasksQuery);
+            statements.add(queryTasks);
 
             System.out.println("1 COMPlETE");            
             
-            eventsQuery = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.startTime, event.isAllDay, event.endTime, event.repeating FROM entry JOIN event ON entry.E_id=event.E_id WHERE entry.startTime BETWEEN ? AND ?");
-            statements.add(eventsQuery);
+            queryEvents = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.startTime, event.isAllDay, event.endTime, event.repeating FROM entry JOIN event ON entry.E_id=event.E_id WHERE entry.startTime BETWEEN ? AND ?");
+            statements.add(queryEvents);
 
             System.out.println("2 COMPlETE");
             
@@ -328,7 +328,7 @@ public class Derby
             handle();
         }
     }*/
-    public ResultSet eventsQuery(Timestamp start, Timestamp end){
+    public ResultSet queryEvents(Timestamp start, Timestamp end){
         try {
             //new Derby();
             System.out.println("QUERY Obtained");
@@ -338,13 +338,13 @@ public class Derby
             conn = DriverManager.getConnection(protocol + dbName
                     + ";create=true"); 
 
-            eventsQuery.setTimestamp(1, start);
-            eventsQuery.setTimestamp(2, end);
+            queryEvents.setTimestamp(1, start);
+            queryEvents.setTimestamp(2, end);
 
             
             System.out.println("ResultSet OBTAINED");
 
-            ResultSet rs = eventsQuery.executeQuery();
+            ResultSet rs = queryEvents.executeQuery();
 
             return rs;
             
@@ -429,7 +429,7 @@ public class Derby
         }
     }
 	
-	public ResultSet tasksQuery(Timestamp start, Timestamp end){
+	public ResultSet queryTasks(Timestamp start, Timestamp end){
         try {
             //new Derby();
             System.out.println("QUERY Obtained");
@@ -439,13 +439,13 @@ public class Derby
             conn = DriverManager.getConnection(protocol + dbName
                     + ";create=true"); 
 
-            tasksQuery.setTimestamp(1, start);
-            tasksQuery.setTimestamp(2, end);
+            queryTasks.setTimestamp(1, start);
+            queryTasks.setTimestamp(2, end);
 
             
             System.out.println("ResultSet OBTAINED");
 
-            ResultSet rs = tasksQuery.executeQuery();
+            ResultSet rs = queryTasks.executeQuery();
 
             return rs;
             
