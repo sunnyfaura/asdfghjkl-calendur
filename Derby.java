@@ -124,14 +124,14 @@ public class Derby
             
             System.out.println("Made it this far");
 
-            dayTasksQuery = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id WHERE entry.startTime BETWEEN ? AND ?");
+            tasksQuery = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id WHERE entry.startTime BETWEEN ? AND ?");
 
-            statements.add(dayTasksQuery);
+            statements.add(tasksQuery);
 
             System.out.println("1 COMPlETE");            
             
-            dayEventsQuery = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.startTime, event.isAllDay, event.endTime, event.repeating FROM entry JOIN event ON entry.E_id=event.E_id WHERE entry.startTime BETWEEN ('? 00:00:00') AND ('? 23:59:59')");
-            statements.add(dayEventsQuery);
+            eventsQuery = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.startTime, event.isAllDay, event.endTime, event.repeating FROM entry JOIN event ON entry.E_id=event.E_id WHERE entry.startTime BETWEEN ? AND ?");
+            statements.add(eventsQuery);
 
             System.out.println("2 COMPlETE");
             
@@ -328,7 +328,7 @@ public class Derby
             handle();
         }
     }*/
-    public ResultSet dayEventsQuery(String year, String month, String day){
+    public ResultSet eventsQuery(Timestamp start, Timestamp end){
         try {
             //new Derby();
             System.out.println("QUERY Obtained");
@@ -338,18 +338,13 @@ public class Derby
             conn = DriverManager.getConnection(protocol + dbName
                     + ";create=true"); 
 
-            String s = year + "-" + month + "-" + day + " 00:00:00";
-            String s2 = year + "-" + month + "-" + day + " 23:59:59";
-
-            System.out.println(s + "\n" + s2);
-
-            dayEventsQuery.setTimestamp(1, Timestamp.valueOf(s));
-            dayEventsQuery.setTimestamp(2, Timestamp.valueOf(s2));
+            eventsQuery.setTimestamp(1, start);
+            eventsQuery.setTimestamp(2, end);
 
             
             System.out.println("ResultSet OBTAINED");
 
-            ResultSet rs = dayEventsQuery.executeQuery();
+            ResultSet rs = eventsQuery.executeQuery();
 
             return rs;
             
@@ -433,42 +428,30 @@ public class Derby
             handle();
         }
     }
-    
-    public ResultSet dayEventsQuery(String date){
+	
+	public ResultSet tasksQuery(Timestamp start, Timestamp end){
         try {
-            System.out.println("Query Obtained");
+            //new Derby();
+            System.out.println("QUERY Obtained");
 
-            dayEventsQuery.setString(1, date);
-            
-            ResultSet rs = dayEventsQuery.executeQuery();
-            
+            String dbName = "derbyDB"; // the name of the database
+          
+            conn = DriverManager.getConnection(protocol + dbName
+                    + ";create=true"); 
 
+            tasksQuery.setTimestamp(1, start);
+            tasksQuery.setTimestamp(2, end);
+
+            
+            System.out.println("ResultSet OBTAINED");
+
+            ResultSet rs = tasksQuery.executeQuery();
 
             return rs;
             
         } catch(SQLException e) {
             printSQLException(e);
-        } finally {
-            handle();
-        }
-        return null;
-    }
-    
-    public ResultSet dayTasksQuery(String date)
-    {
-        try {
-            dayTasksQuery.setString(1, date);
-            
-            ResultSet rs = dayTasksQuery.executeQuery();
-            
-            return rs;
-            
-        } catch(SQLException e) {
-            printSQLException(e);
-        } finally {
-            handle();
-        }
-        
+        } 
         return null;
     }
     
