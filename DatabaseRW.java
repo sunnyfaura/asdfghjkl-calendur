@@ -56,11 +56,11 @@ public class DatabaseRW
 	
 	public static ArrayList<Entry> dayQuery(int year, int month, int day) throws Exception
 	{
-		String dateString = intToString(year, month, day, 0, 0);
-		dateString = truncateDateString(dateString);
+		Timestamp start = intToTimestamp(year, month, day, 0, 0);
+		Timestamp end = intToTimestamp(year, month, day + 1, 0, 0);
 		
-		ResultSet taskResults = database.dayTasksQuery(dateString);
-		ResultSet eventResults = database.dayEventsQuery(dateString);
+		ResultSet taskResults = database.dayTasksQuery(start, end);
+		ResultSet eventResults = database.dayEventsQuery(start, end);
 		
 		ArrayList<Task> taskList = toTaskArray(taskResults);
 		ArrayList<Event> eventList = toEventArray(eventResults);
@@ -147,17 +147,5 @@ public class DatabaseRW
 		Timestamp ts = new Timestamp(tempCal.getTimeInMillis());
 		
 		return ts;
-	}
-	
-	public static String intToString(int year, int month, int day, int hour, int minute)
-	{
-		Timestamp tempTS = intToTimestamp(year, month, day, hour, minute);
-		
-		return tempTS.toString();
-	}
-	
-	public static String truncateDateString(String dateString)
-	{
-		return dateString.substring(0,10);
 	}
 }
