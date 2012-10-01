@@ -1,28 +1,17 @@
-/*
-header comments
-
-*/
+import java.sql.Timestamp;
 
 public abstract class Entry
 {
 	public int id;
 	public String name;
 	public String desc;
-	public int year;
-	public int month;
-	public int day;
-	public int hour;
-	public int minute;
+	public Timestamp time;
 	
-	protected Entry(int i, String n, String dsc, int y, int mo, int d, int h, int min)
+	protected Entry(int i, String n, String dsc, Timestamp t)
 	{
 		id = i;
 		name = n;
 		desc = dsc;
-		year = y;
-		month = mo;
-		day = d;
-		hour = h;
-		minute = min;
+		time = t;
 	}
 }

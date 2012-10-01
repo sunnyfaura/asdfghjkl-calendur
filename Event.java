@@ -1,23 +1,19 @@
+import java.sql.Timestamp;
+
 public class Event extends Entry
 {
 	public boolean isAllDay;
-	public int endYear;
-	public int endMonth;
-	public int endDay;
-	public int endHour;
-	public int endMinute;
+	public Timestamp endTime; 
 	public int repeating; //0 = never, 1 = yearly, 2 = monthly, 3 = weekly, 4 = daily
 	
-	public Event( int i, String n, String dsc, int y, int m, int d, int h, int min, boolean ad, int ey, int emo, int ed, int eh, int emin, int r )
+	public Event( int i, String n, String dsc, Timestamp ts, boolean ad, Timestamp ets, int r )
 	{
-		super(i, n, dsc, y, m, d, h, min);
+		super(i, n, dsc, ts);
 		
 		isAllDay = ad;
-		endYear = ey;
-		endMonth = emo;
-		endDay = ed;
-		endHour = eh;
-		endMinute = emin;
+		
+		endTime = ets;
+
 		repeating = r;
 	}
 }

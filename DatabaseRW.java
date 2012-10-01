@@ -1,5 +1,7 @@
-import java.util.*;
-import java.sql.*;
+import java.util.Calendar;
+import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
 
 //call this thingy with DatabaseRW.[functionwhatever] from anywhar
 
@@ -14,12 +16,18 @@ public class DatabaseRW
 
 	public static void addEvent(String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
 	{
-		database.addEvent(name, desc, year, month, day, hour, minute, isAllDay, endYear, endMonth, endDay, endHour, endMinute, repeating);
+		Timestamp ts = intToTimestamp(year, month, day, hour, minute);
+		Timestamp ets = intToTimestamp(endYear, endMonth, endDay, endHour, endMinute);
+		
+		database.addEvent(name, desc, ts, isAllDay, ets, repeating);
 	}
 	
 	public static void updateEvent(int id, String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
 	{
-		database.updateEvent(id, name, desc, year, month, day, hour, minute, isAllDay, endYear, endMonth, endDay, endHour, endMinute, repeating);
+		Timestamp ts = intToTimestamp(year, month, day, hour, minute);
+		Timestamp ets = intToTimestamp(endYear, endMonth, endDay, endHour, endMinute);
+		
+		database.updateEvent(id, name, desc, ts, isAllDay, ets, repeating);
 	}
 	
 	public static void deleteEvent(int id)
@@ -29,12 +37,16 @@ public class DatabaseRW
 	
 	public static void addTask(String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority)
 	{
-		database.addTask(name, desc, year, month, day, hour, minute, status, priority);
+		Timestamp ts = intToTimestamp(year, month, day, hour, minute);
+		
+		//database.addTask(name, desc, ts, status, priority);
 	}
 	
-	public static void updateTask(int id, String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority, String toReplace)
+	public static void updateTask(int id, String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority)
 	{
-		database.updateTask(id, name, desc, year, month, day, hour,  minute, status, priority, toReplace);
+		Timestamp ts = intToTimestamp(year, month, day, hour, minute);
+		
+		//database.updateTask(id, name, desc, ts, status, priority);
 	}
 	
 	public static void deleteTask(int id)
@@ -44,8 +56,11 @@ public class DatabaseRW
 	
 	public static ArrayList<Entry> dayQuery(int year, int month, int day) throws Exception
 	{
-		ResultSet taskResults = database.dayTasksQuery(year, month, day);
-		ResultSet eventResults = database.dayEventsQuery(year, month, day);
+		String dateString = intToString(year, month, day, 0, 0);
+		dateString = truncateDateString(dateString);
+		
+		ResultSet taskResults = database.dayTasksQuery(dateString);
+		ResultSet eventResults = database.dayEventsQuery(dateString);
 		
 		ArrayList<Task> taskList = toTaskArray(taskResults);
 		ArrayList<Event> eventList = toEventArray(eventResults);
@@ -65,6 +80,7 @@ public class DatabaseRW
 		return entryList;
 	}
 	
+	//fix this laterz
 	public static ArrayList<Task> toDoQuery(int year, int month, int day) throws Exception
 	{
 		ResultSet results = database.pinboardQuery(year, month, day, 0);
@@ -72,6 +88,7 @@ public class DatabaseRW
 		return toTaskArray(results);
 	}
 	
+	//also this
 	public static ArrayList<Task> doingQuery(int year, int month, int day) throws Exception
 	{
 		ResultSet results = database.pinboardQuery(year, month, day, 1);
@@ -90,20 +107,12 @@ public class DatabaseRW
 			int id = rs.getInt(1);
 			String name = rs.getString(2);
 			String desc = rs.getString(3);
-			int year = rs.getInt(4);
-			int month = rs.getInt(5);
-			int day = rs.getInt(6);
-			int hour = rs.getInt(7);
-			int minute = rs.getInt(8);
-			boolean isAllDay = rs.getBoolean(9);
-			int endYear = rs.getInt(10);
-			int endMonth = rs.getInt(11);
-			int endDay = rs.getInt(12);
-			int endHour = rs.getInt(13);
-			int endMinute = rs.getInt(14);
-			int repeating = rs.getInt(15);
+			Timestamp ts = rs.getTimestamp(4);
+			boolean isAllDay = rs.getBoolean(5);
+			Timestamp ets = rs.getTimestamp(6);
+			int repeating = rs.getInt(7);
 			 
-			list.add(new Event(id, name, desc, year, month, day, hour, minute, isAllDay, endYear, endMonth, endDay, endHour, endMinute, repeating));
+			list.add(new Event(id, name, desc, ts, isAllDay, ets, repeating));
 		}
 		
 		return list;
@@ -119,17 +128,36 @@ public class DatabaseRW
 			int id = rs.getInt(1);
 			String name = rs.getString(2);
 			String desc = rs.getString(3);
-			int year = rs.getInt(4);
-			int month = rs.getInt(5);
-			int day = rs.getInt(6);
-			int hour = rs.getInt(7);
-			int minute = rs.getInt(8);
-			int status = rs.getInt(9);
-			int priority = rs.getInt(10);
+			Timestamp ts = rs.getTimestamp(4);
+			int status = rs.getInt(5);
+			int priority = rs.getInt(6);
 			 
-			list.add(new Task(id, name, desc, year, month, day, hour, minute, status, priority));
+			list.add(new Task(id, name, desc, ts, status, priority));
 		}
-			
-			return list;
+		
+		return list;
+	}
+	
+	public static Timestamp intToTimestamp(int year, int month, int day, int hour, int min)
+	{
+		Calendar tempCal = Calendar.getInstance();
+		
+		tempCal.set(year, month, day, hour, min);
+		
+		Timestamp ts = new Timestamp(tempCal.getTimeInMillis());
+		
+		return ts;
+	}
+	
+	public static String intToString(int year, int month, int day, int hour, int minute)
+	{
+		Timestamp tempTS = intToTimestamp(year, month, day, hour, minute);
+		
+		return tempTS.toString();
+	}
+	
+	public static String truncateDateString(String dateString)
+	{
+		return dateString.substring(0,10);
 	}
 }

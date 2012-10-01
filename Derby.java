@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Time;
 
 import java.util.ArrayList;
+
 
 public class Derby
 {
@@ -16,9 +19,9 @@ public class Derby
     private String protocol = "jdbc:derby:";
     
     Connection conn = null;
-	/* This ArrayList usage may cause a warning when compiling this class
-	 * with a compiler for J2SE 5.0 or newer. We are not using generics
-	 * because we want the source to support J2SE 1.4.2 environments. */
+    /* This ArrayList usage may cause a warning when compiling this class
+     * with a compiler for J2SE 5.0 or newer. We are not using generics
+     * because we want the source to support J2SE 1.4.2 environments. */
     ArrayList statements = new ArrayList(); // list of Statements, PreparedStatements
     PreparedStatement entryInsert = null;
     PreparedStatement entryUpdate = null;
@@ -33,11 +36,13 @@ public class Derby
     PreparedStatement taskUpdate = null;
     PreparedStatement taskDelete = null;
     PreparedStatement taskQuery = null;
-	
-	PreparedStatement dayTasksQuery = null;
-	PreparedStatement dayEventsQuery = null;
-	PreparedStatement pinboardQuery = null;
-	
+    
+    PreparedStatement dayTasksQuery = null;
+    PreparedStatement dayEventsQuery = null;
+    PreparedStatement pinboardQuery = null;
+
+    PreparedStatement getId = null;
+    
     
     Statement s = null;
     ResultSet rs = null;
@@ -55,9 +60,11 @@ public class Derby
         
         try
         {
-            setDBSystemDir();
+            //createConnection();
+            //statements.add(s);
+
             String dbName = "derbyDB"; // the name of the database
-      
+          
             conn = DriverManager.getConnection(protocol + dbName
                     + ";create=true");
 
@@ -70,34 +77,35 @@ public class Derby
             /* Creating a statement object that we can use for running various
              * SQL statements commands against the database.*/
             s = conn.createStatement();
-            statements.add(s);
-            // We create a table...
             
-            DatabaseMetaData dmd = conn.getMetaData();
-            ResultSet tables = dmd.getTables(null, null, null, new String[]{"event","task"});
+            createTables();      
             
-            createTables();       	
-        	
-            entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, year, month, day, hour, minute) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-            statements.add(entryInsert);
+            //entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, ts) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            //statements.add(entryInsert);  
+
+            System.out.println("Database Initialization Complete");
+
+            entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, ts) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            getId = conn.prepareStatement("SELECT MAX(E_id) from entry");
+            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, ets, repeating) VALUES (?, ?, ?, ?)");
             
-            entryUpdate = conn.prepareStatement("UPDATE entry SET name=?, description=?, year=?, month=?, day=?, hour=?, minute=? WHERE E_id=?");
+            entryUpdate = conn.prepareStatement("UPDATE entry SET name=?, description=?, startTime=? WHERE E_id=?");
             statements.add(entryUpdate);
             
             entryDelete = conn.prepareStatement("DELETE FROM entry WHERE E_id=?");
             statements.add(entryDelete);
 
-            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, endYear, endMonth, endDay, endHour, endMinute, repeating) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            statements.add(eventInsert);
+            //eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, ets, repeating) VALUES (?, ?, ?, ?)");
+            //statements.add(eventInsert);
             
-            eventUpdate = conn.prepareStatement("UPDATE event SET isAllDay=?, endYear=?, endMonth=?, endDay=?, endHour=?, endMinute=?, repeating=? WHERE E_id=?");
+            eventUpdate = conn.prepareStatement("UPDATE event SET isAllDay=?, endTime=?, repeating=? WHERE E_id=?");
             statements.add(eventUpdate);       
             
             eventDelete = conn.prepareStatement("DELETE FROM event WHERE E_id=?");
             statements.add(eventDelete);
             
-            eventQuery = conn.prepareStatement("SELECT entry.E_id entry.name, entry.description, entry.year, entry.month, entry.day, entry.hour, entry.minute, event.isAllDay, event.endYear, event.endMonth, event.endDay, event.endHour, event.endMinute, event.repeating FROM entry JOIN event ON entry.E_id=event.E_id");
-            statements.add(eventQuery);
+            //eventQuery = conn.prepareStatement("SELECT entry.E_id entry.name, entry.description, entry.startTime event.isAllDay, event.endTime, event.repeating FROM entry JOIN event ON entry.E_id=event.E_id");
+            //statements.add(eventQuery);
             
             taskInsert = conn.prepareStatement("INSERT INTO task (E_id, status, priority) VALUES (?, ?, ?)");
             statements.add(taskInsert);
@@ -107,17 +115,29 @@ public class Derby
             
             taskDelete = conn.prepareStatement("DELETE from task WHERE E_id=?");
             statements.add(taskDelete);
+
+            //getId = conn.prepareStatement("SELECT MAX(E_id) from entry");
+            //statements.add(getId);
             
-            taskQuery = conn.prepareStatement("SELECT entry.E_id entry.name, entry.description, entry.year, entry.month, entry.day, entry.hour, entry.minute, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
-			
-			dayTasksQuery = conn.prepareStatement("SELECT entry.E_id  entry.name, entry.description, entry.year, entry.month, entry.day, entry.hour, entry.minute, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id WHERE *entry.year=? AND entry.month=? AND entry.day=?)");
-			statements.add(dayTasksQuery);
-			
-			dayEventsQuery = conn.prepareStatement("SELECT entry.E_id entry.name, entry.description, entry.year, entry.month, entry.day, entry.hour, entry.minute, event.isAllDay, event.endYear, event.endMonth, event.endDay, event.endHour, event.endMinute, event.repeating FROM entry JOIN event ON entry.E_id=event.E_id WHERE (entry.year=? AND entry.month=? AND entry.day=?)");
-			statements.add(dayEventsQuery);
-			
-			pinboardQuery = conn.prepareStatement("SELECT entry.E_id entry.name, entry.description, entry.year, entry.month, entry.day, entry.hour, entry.minute, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id WHERE (entry.year>?) OR (entry.year=? AND entry.month>?) OR (entry.year=? AND entry.month=? AND entry.day=>?) AND task.status=?");
-			statements.add(pinboardQuery);
+            //taskQuery = conn.prepareStatement("SELECT entry.E_id entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
+            
+            System.out.println("Made it this far");
+
+            dayTasksQuery = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.ts, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id WHERE entry.ts BETWEEN ? AND ?");
+
+            statements.add(dayTasksQuery);
+
+            System.out.println("1 COMPlETE");            
+            
+            dayEventsQuery = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.startTime, event.isAllDay, event.endTime, event.repeating FROM entry JOIN event ON entry.E_id=event.E_id WHERE entry.startTime BETWEEN ('? 00:00:00') AND ('? 23:59:59')");
+            statements.add(dayEventsQuery);
+
+            System.out.println("2 COMPlETE");
+            
+            //pinboardQuery = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.year, entry.month, entry.day, entry.hour, entry.minute, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id WHERE (entry.year>?) OR (entry.year=? AND entry.month>?) OR (entry.year=? AND entry.month=? AND entry.day=>?) AND task.status=?");
+            //statements.add(pinboardQuery);
+
+            System.out.println("Made it even farther");
             /* 
              * Normally, it is best to use a pattern of
              *  while(rs.next()) {
@@ -126,43 +146,59 @@ public class Derby
              * to process all returned rows, but we are only expecting two rows
              * this time, and want the verification code to be easy to
              * comprehend, so we use a different pattern.
-             */
-            
+             */     
+       
         }
         catch (SQLException sqle)
         {
             printSQLException(sqle);
-        } finally {
-            // release all open resources to avoid unnecessary memory usage
+        } 
+    }
 
-            handle();
-            
+    private void createConnection() {
+        try {
+            String dbName = "derbyDB"; // the name of the database
+          
+            conn = DriverManager.getConnection(protocol + dbName
+                    + ";create=true");
+
+            System.out.println("Connected to and created database " + dbName);
+
+            // We want to control transactions manually. Autocommit is on by
+            // default in JDBC.
+            conn.setAutoCommit(false);
+
+            /* Creating a statement object that we can use for running various
+             * SQL statements commands against the database.*/
+            s = conn.createStatement();
+
+
+            System.out.println("CONNECTION CREATED");
+        } catch (SQLException e) {
+            printSQLException(e);
         }
     }
     
-    private void setDBSystemDir() {
-        System.setProperty("derby.system.home", System.getProperty("user.home")
-            + "asdf-calendar/DerbyPrototype");
-    }
-
     private void createTables() { //If the tables already exist, this code block will NOT execute
-    	System.out.println("Creating Tables");
-    	try {
-    		s.execute("CREATE TABLE entry(E_id int NOT NULL AUTO_INCREMENT PRIMARY KEY, name varchar(255), description varchar(255), year int, month int, day int, hour int, minute int");
+        System.out.println("Creating Tables");
+        try {
+            s.execute("CREATE TABLE entry(E_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), name varchar(255), description varchar(255), startTime timestamp, CONSTRAINT pk PRIMARY KEY (E_id))");
             System.out.println("Created table entry");
-    	} catch (SQLException e) {}
-    	try {
-    		s.execute("CREATE TABLE event(E_id int NOT NULL PRIMARY KEY, isAllDay boolean, endYear int, endMonth int, endDay int, endHour int, endMinute int, repeating smallint)");
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        try {
+            s.execute("CREATE TABLE event(E_id int NOT NULL PRIMARY KEY, isAllDay boolean, endTime timestamp, repeating smallint)");
             System.out.println("Created table event");
-    	} catch(SQLException e) {}
-    	try {
-    		s.execute("CREATE TABLE task(E_id int NOT NULL PRIMARY KEY, status smallint, priority smallint)");
+        } catch(SQLException e) {}
+        try {
+            s.execute("CREATE TABLE task(E_id int NOT NULL PRIMARY KEY, status smallint, priority smallint)");
             System.out.println("Created table task");
-    	} catch (SQLException e) {}
+        } catch (SQLException e) {}
     }
     
     private void handle() {
-    	try {
+        try {
             if (rs != null) {
                 rs.close();
                 rs = null;
@@ -197,254 +233,284 @@ public class Derby
         }
     }
     
-    public void addEvent(String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating) {
-    	try {
-    		entryInsert.setString(1, name);
-    		entryInsert.setString(2, desc);
-    		entryInsert.setInt(3, year);
-			entryInsert.setInt(4, month);
-			entryInsert.setInt(5, day);
-			entryInsert.setInt(6, hour);
-			entryInsert.setInt(7, minute);
-    		entryInsert.executeUpdate();
-    		
-    		ResultSet id = entryInsert.getGeneratedKeys();
-    		
-    		int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
-    		
-    		eventInsert.setInt(1, E_id);
+    public void addEvent(String name, String desc, Timestamp ts, boolean isAllDay, Timestamp ets, int repeating) {
+        try {
+            //System.out.println("DOING THIS");
+
+            //new Derby();
+            //entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, startTime) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+
+            entryInsert.setString(1, name);
+            entryInsert.setString(2, desc);
+            entryInsert.setTimestamp(3, ts);
+
+            entryInsert.executeUpdate();
+
+            System.out.println("MADE IT HERE");
+            
+            //ResultSet id = entryInsert.getGeneratedKeys();
+            
+
+            ResultSet id = getId.executeQuery();
+            
+            id.next();
+            int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
+            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, endTime, repeating) VALUES (?, ?, ?, ?)");
+
+            eventInsert.setInt(1, E_id);
             eventInsert.setBoolean(2, isAllDay);
-            entryInsert.setInt(3, endYear);
-			entryInsert.setInt(4, endMonth);
-			entryInsert.setInt(5, endDay);
-			entryInsert.setInt(6, endHour);
-			entryInsert.setInt(7, endMinute);
-            eventInsert.setInt(8, repeating);
+            eventInsert.setTimestamp(3, ets);
+            eventInsert.setInt(4,repeating);
+
             eventInsert.executeUpdate();
-    	} catch (SQLException e) {
-    		printSQLException(e);
-    	} finally {
-    		handle();
-    	}
+
+            //conn.commit();
+            
+            //entryInsert.close();
+            //getId.close();
+            //eventInsert.close();
+            //id.close();
+
+            //conn.close();
+            
+
+            System.out.println("DID THIS");
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
     }
     
-    public void updateEvent(int id, String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endDay, int endYear, int endHour, int endMonth, int endMinute, int repeating) {
-    	try {
-    		entryUpdate.setString(1, name);
+    public void updateEvent(int id, String name, String desc, Timestamp ts, boolean isAllDay, Timestamp ets, int repeating) {
+        try {
+            entryUpdate.setString(1, name);
             entryUpdate.setString(2, desc);
-            entryUpdate.setInt(3, year);
-			entryUpdate.setInt(4, month);
-			entryUpdate.setInt(5, day);
-			entryUpdate.setInt(6, hour);
-			entryUpdate.setInt(7, minute);
-			entryUpdate.setInt(9, id);
+            entryInsert.setTimestamp(3, ts);
+            entryUpdate.setInt(4, id);
             entryUpdate.executeUpdate();
-			
-			eventUpdate.setBoolean(1, isAllDay);
-			eventUpdate.setInt(2, endYear);
-			eventUpdate.setInt(3, endMonth);
-			eventUpdate.setInt(4, endDay);
-			eventUpdate.setInt(5, endHour);
-			eventUpdate.setInt(6, endMinute);
-			eventUpdate.setInt(7, repeating);
-			eventUpdate.setInt(8, id);
-			eventUpdate.executeUpdate();
-			
-			} catch(SQLException e) {
-    		printSQLException(e);
-    	} finally {
-    		handle();
-    	}
+            
+            eventUpdate.setBoolean(1, isAllDay);
+            //eventUpdate.setTimestamp(2, ets);
+            eventUpdate.setInt(3, repeating);
+            eventUpdate.setInt(4, id);
+            eventUpdate.executeUpdate();
+            
+            } catch(SQLException e) {
+            printSQLException(e);
+        }
     }
     
     public void deleteEvent(int E_id) {
-    	try {
-    		entryDelete.setInt(1, E_id);
-    		entryDelete.executeUpdate();
-    		
-    		eventDelete.setInt(1,E_id);
-    		eventDelete.executeUpdate();
-    		
-    	} catch(SQLException e) {
-    		printSQLException(e);
-    	} finally {
-    		handle();
-    	}
+        try {
+            entryDelete.setInt(1, E_id);
+            entryDelete.executeUpdate();
+            
+            eventDelete.setInt(1,E_id);
+            eventDelete.executeUpdate();
+            
+        } catch(SQLException e) {
+            printSQLException(e);
+        } 
     }
     
-	/*
+    /*
     public ResultSet queryEvent(String dateIn) {
-    	try {
-    		eventQuery.setString(1, dateIn);
-    		
-    		ResultSet rs = eventQuery.executeQuery();
-    		
-			return rs;
-			
-    	} catch(SQLException e) {
-    		printSQLException(e);
-    	} finally {
-    		handle();
-    	}
+        try {
+            eventQuery.setString(1, dateIn);
+            
+            ResultSet rs = eventQuery.executeQuery();
+            
+            return rs;
+            
+        } catch(SQLException e) {
+            printSQLException(e);
+        } finally {
+            handle();
+        }
     }*/
-	public ResultSet dayEventsQuery(int year, int month, int day){
-		try {
-    		dayEventsQuery.setInt(1, year);
-			dayEventsQuery.setInt(2, month);
-			dayEventsQuery.setInt(3, day);
-    		
-    		ResultSet rs = dayEventsQuery.executeQuery();
-    		
-			return rs;
-    		
-    	} catch(SQLException e) {
-    		printSQLException(e);
-    	} finally {
-    		handle();
-    	}
-		return null;
-	}
+    public ResultSet dayEventsQuery(String year, String month, String day){
+        try {
+            //new Derby();
+            System.out.println("QUERY Obtained");
+
+            String dbName = "derbyDB"; // the name of the database
+          
+            conn = DriverManager.getConnection(protocol + dbName
+                    + ";create=true"); 
+
+            String s = year + "-" + month + "-" + day + " 00:00:00";
+            String s2 = year + "-" + month + "-" + day + " 23:59:59";
+
+            System.out.println(s + "\n" + s2);
+
+            dayEventsQuery.setTimestamp(1, Timestamp.valueOf(s));
+            dayEventsQuery.setTimestamp(2, Timestamp.valueOf(s2));
+
+            
+            System.out.println("ResultSet OBTAINED");
+
+            ResultSet rs = dayEventsQuery.executeQuery();
+
+            return rs;
+            
+        } catch(SQLException e) {
+            printSQLException(e);
+        } 
+        return null;
+    }
     
     public void addTask(String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority) {
-    	try {
-    		entryInsert.setString(1, name);
-    		entryInsert.setString(2, desc);
-    		entryInsert.setInt(3, year);
-			entryInsert.setInt(4, month);
-			entryInsert.setInt(5, day);
-			entryInsert.setInt(6, hour);
-			entryInsert.setInt(7, minute);
-    		entryInsert.executeUpdate();
-    		
-    		ResultSet id = entryInsert.getGeneratedKeys();
-    		
-    		int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
-    		
-    		taskInsert.setInt(1, E_id);
+        try {
+            entryInsert.setString(1, name);
+            entryInsert.setString(2, desc);
+            
+            String s = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00";
+
+            System.out.println(s);
+
+            entryInsert.setTimestamp(3,Timestamp.valueOf(s));
+
+            entryInsert.executeUpdate();
+
+            entryInsert.executeUpdate();
+            
+            ResultSet id = getId.executeQuery();
+            
+            id.next();
+            int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
+
+            taskInsert.setInt(1, E_id);
             taskInsert.setInt(2, status);
             taskInsert.setInt(3, priority);
+
             taskInsert.executeUpdate();
-    	} catch(SQLException e) {
-    		printSQLException(e);
-    	} finally {
-    		handle();
-    	}
+
+            conn.commit();
+            
+            entryInsert.close();
+            getId.close();
+            eventInsert.close();
+            id.close();
+
+            conn.close();
+        } catch(SQLException e) {
+            printSQLException(e);
+        } finally {
+            handle();
+        }
     }
     
-    public void updateTask(int id, String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority, String toReplace) {
-    	try {
-    		entryUpdate.setString(1, name);
+    public void updateTask(int id, String name, String desc, Timestamp ts, int status, int priority) {
+        try {
+            entryUpdate.setString(1, name);
             entryUpdate.setString(2, desc);
-            entryUpdate.setInt(3, year);
-			entryUpdate.setInt(4, month);
-			entryUpdate.setInt(5, day);
-			entryUpdate.setInt(6, hour);
-			entryUpdate.setInt(7, minute);
-			entryUpdate.setInt(9, id);
+            entryUpdate.setTimestamp(3, ts);
+            entryUpdate.setInt(4, id);
             entryUpdate.executeUpdate();
-			
-			taskUpdate.setInt(1, status);
-			taskUpdate.setInt(2, priority);
-			taskUpdate.setInt(3, id);
-			taskUpdate.executeUpdate();
-    	} catch(SQLException e) {
-    		printSQLException(e);
-    	} finally {
-    		handle();
-    	}
+            
+            taskUpdate.setInt(1, status);
+            taskUpdate.setInt(2, priority);
+            taskUpdate.setInt(3, id);
+            taskUpdate.executeUpdate();
+        } catch(SQLException e) {
+            printSQLException(e);
+        } finally {
+            handle();
+        }
     }
 
     public void deleteTask(int E_id) {
-    	try {
-    		entryDelete.setInt(1, E_id);
-    		entryDelete.executeUpdate();
-    		
-    		taskDelete.setInt(1,E_id);
-    		taskDelete.executeUpdate();
-    		
-    	} catch(SQLException e) {
-    		printSQLException(e);
-    	} finally {
-    		handle();
-    	}
+        try {
+            entryDelete.setInt(1, E_id);
+            entryDelete.executeUpdate();
+            
+            taskDelete.setInt(1,E_id);
+            taskDelete.executeUpdate();
+            
+        } catch(SQLException e) {
+            printSQLException(e);
+        } finally {
+            handle();
+        }
     }
     
-	/*
-    public ResultSet queryTask(String dateIn) {
-    	try {
-    		taskQuery.setString(1, dateIn);
-    		
-    		ResultSet rs = taskQuery.executeQuery();
-    		
-			return rs;
-    		
-    	} catch(SQLException e) {
-    		printSQLException(e);
-    	} finally {
-    		handle();
-    	}
-    }*/
-	
-	public ResultSet dayTasksQuery(int year, int month, int day)
-	{
-		try {
-    		dayTasksQuery.setInt(1, year);
-			dayTasksQuery.setInt(2, month);
-			dayTasksQuery.setInt(3, day);
-    		
-    		ResultSet rs = dayTasksQuery.executeQuery();
-    		
-			return rs;
-    		
-    	} catch(SQLException e) {
-    		printSQLException(e);
-    	} finally {
-    		handle();
-    	}
-		
-		return null;
-	}
-	
-	public ResultSet pinboardQuery(int year, int month, int day, int status)
-	{
-		try
-		{
-			pinboardQuery.setInt(1, year);
-			pinboardQuery.setInt(2, year);
-			pinboardQuery.setInt(4, year);
-			
-			pinboardQuery.setInt(3, month);
-			pinboardQuery.setInt(5, month);
-			
-			pinboardQuery.setInt(6, day);
-			
-			pinboardQuery.setInt(7, status);
-			
-			ResultSet rs = pinboardQuery.executeQuery();
-    		
-			return rs;
-			
-		} catch(SQLException e) {
-    		printSQLException(e);
-    	} finally {
-    		handle();
-    	}
-		
-		return null;
-	}
+    public ResultSet dayEventsQuery(String date){
+        try {
+            System.out.println("Query Obtained");
+
+            dayEventsQuery.setString(1, date);
+            
+            ResultSet rs = dayEventsQuery.executeQuery();
+            
+
+
+            return rs;
+            
+        } catch(SQLException e) {
+            printSQLException(e);
+        } finally {
+            handle();
+        }
+        return null;
+    }
+    
+    public ResultSet dayTasksQuery(String date)
+    {
+        try {
+            dayTasksQuery.setString(1, date);
+            
+            ResultSet rs = dayTasksQuery.executeQuery();
+            
+            return rs;
+            
+        } catch(SQLException e) {
+            printSQLException(e);
+        } finally {
+            handle();
+        }
+        
+        return null;
+    }
+    
+    public ResultSet pinboardQuery(int year, int month, int day, int status)
+    {
+        try
+        {
+            pinboardQuery.setInt(1, year);
+            pinboardQuery.setInt(2, year);
+            pinboardQuery.setInt(4, year);
+            
+            pinboardQuery.setInt(3, month);
+            pinboardQuery.setInt(5, month);
+            
+            pinboardQuery.setInt(6, day);
+            
+            pinboardQuery.setInt(7, status);
+            
+            ResultSet rs = pinboardQuery.executeQuery();
+            
+            return rs;
+            
+        } catch(SQLException e) {
+            printSQLException(e);
+        } finally {
+            handle();
+        }
+        
+        return null;
+    }
     
     public void updateDatabase() {
-    	try {
-    		conn.commit();
-    	} catch (SQLException e) {
-    		printSQLException(e);
-    	} finally {
-    		handle();
-    	}
+        try {
+            conn.commit();
+        } catch (SQLException e) {
+            printSQLException(e);
+        } finally {
+            handle();
+        }
     }
     
     public void closeDatabase() {
-		/*
+        /*
          * In embedded mode, an application should shut down the database.
          * If the application fails to shut down the database,
          * Derby will not perform a checkpoint when the JVM shuts down.
@@ -462,7 +528,7 @@ public class Derby
          * Not shutting down when in a client environment, see method
          * Javadoc.
          */
-    	
+        
         if (framework.equals("embedded"))
         {
             try

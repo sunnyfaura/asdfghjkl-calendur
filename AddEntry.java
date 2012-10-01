@@ -274,7 +274,6 @@ public class AddEntry extends JPanel {
 
 			if( timeSelection.isSelected() )
 			{
-				
 				hour1.setEnabled(true);
 				minute1.setEnabled(true);
 				ampm1.setEnabled(true);
