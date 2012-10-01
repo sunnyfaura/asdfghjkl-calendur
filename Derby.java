@@ -10,6 +10,7 @@ import java.sql.Time;
 
 import java.util.ArrayList;
 
+//changed ts and ets into startTime and endTime because they're annoyingly non-indicative
 
 public class Derby
 {
@@ -80,14 +81,14 @@ public class Derby
             
             createTables();      
             
-            //entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, ts) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            //entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, startTime) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             //statements.add(entryInsert);  
 
             System.out.println("Database Initialization Complete");
 
-            entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, ts) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, startTime) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             getId = conn.prepareStatement("SELECT MAX(E_id) from entry");
-            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, ets, repeating) VALUES (?, ?, ?, ?)");
+            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, endTime, repeating) VALUES (?, ?, ?, ?)");
             
             entryUpdate = conn.prepareStatement("UPDATE entry SET name=?, description=?, startTime=? WHERE E_id=?");
             statements.add(entryUpdate);
@@ -95,7 +96,7 @@ public class Derby
             entryDelete = conn.prepareStatement("DELETE FROM entry WHERE E_id=?");
             statements.add(entryDelete);
 
-            //eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, ets, repeating) VALUES (?, ?, ?, ?)");
+            //eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, endTime, repeating) VALUES (?, ?, ?, ?)");
             //statements.add(eventInsert);
             
             eventUpdate = conn.prepareStatement("UPDATE event SET isAllDay=?, endTime=?, repeating=? WHERE E_id=?");
@@ -123,7 +124,7 @@ public class Derby
             
             System.out.println("Made it this far");
 
-            dayTasksQuery = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.ts, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id WHERE entry.ts BETWEEN ? AND ?");
+            dayTasksQuery = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id WHERE entry.startTime BETWEEN ? AND ?");
 
             statements.add(dayTasksQuery);
 
@@ -233,7 +234,7 @@ public class Derby
         }
     }
     
-    public void addEvent(String name, String desc, Timestamp ts, boolean isAllDay, Timestamp ets, int repeating) {
+    public void addEvent(String name, String desc, Timestamp startTime, boolean isAllDay, Timestamp endTime, int repeating) {
         try {
             //System.out.println("DOING THIS");
 
@@ -242,7 +243,7 @@ public class Derby
 
             entryInsert.setString(1, name);
             entryInsert.setString(2, desc);
-            entryInsert.setTimestamp(3, ts);
+            entryInsert.setTimestamp(3, startTime);
 
             entryInsert.executeUpdate();
 
@@ -259,7 +260,7 @@ public class Derby
 
             eventInsert.setInt(1, E_id);
             eventInsert.setBoolean(2, isAllDay);
-            eventInsert.setTimestamp(3, ets);
+            eventInsert.setTimestamp(3, endTime);
             eventInsert.setInt(4,repeating);
 
             eventInsert.executeUpdate();
@@ -280,16 +281,16 @@ public class Derby
         }
     }
     
-    public void updateEvent(int id, String name, String desc, Timestamp ts, boolean isAllDay, Timestamp ets, int repeating) {
+    public void updateEvent(int id, String name, String desc, Timestamp startTime, boolean isAllDay, Timestamp endTime, int repeating) {
         try {
             entryUpdate.setString(1, name);
             entryUpdate.setString(2, desc);
-            entryInsert.setTimestamp(3, ts);
+            entryInsert.setTimestamp(3, startTime);
             entryUpdate.setInt(4, id);
             entryUpdate.executeUpdate();
             
             eventUpdate.setBoolean(1, isAllDay);
-            //eventUpdate.setTimestamp(2, ets);
+            //eventUpdate.setTimestamp(2, endTime);
             eventUpdate.setInt(3, repeating);
             eventUpdate.setInt(4, id);
             eventUpdate.executeUpdate();
@@ -399,11 +400,11 @@ public class Derby
         }
     }
     
-    public void updateTask(int id, String name, String desc, Timestamp ts, int status, int priority) {
+    public void updateTask(int id, String name, String desc, Timestamp startTime, int status, int priority) {
         try {
             entryUpdate.setString(1, name);
             entryUpdate.setString(2, desc);
-            entryUpdate.setTimestamp(3, ts);
+            entryUpdate.setTimestamp(3, startTime);
             entryUpdate.setInt(4, id);
             entryUpdate.executeUpdate();
             
