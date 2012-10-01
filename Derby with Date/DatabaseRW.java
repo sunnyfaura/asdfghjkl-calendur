@@ -78,6 +78,7 @@ public class DatabaseRW
 		return entryList;
 	}
 	
+	//fix this laterz
 	public static ArrayList<Task> toDoQuery(int year, int month, int day) throws Exception
 	{
 		ResultSet results = database.pinboardQuery(year, month, day, 0);
@@ -85,6 +86,7 @@ public class DatabaseRW
 		return toTaskArray(results);
 	}
 	
+	//also this
 	public static ArrayList<Task> doingQuery(int year, int month, int day) throws Exception
 	{
 		ResultSet results = database.pinboardQuery(year, month, day, 1);
@@ -145,9 +147,9 @@ public class DatabaseRW
 		return ts;
 	}
 	
-	public static String intToString(int year, int month, int day, int hour, int minute, int second)
+	public static String intToString(int year, int month, int day, int hour, int minute)
 	{
-		Timestamp tempTS = intToTimestamp(year, month, day, hour, minute, second);
+		Timestamp tempTS = intToTimestamp(year, month, day, hour, minute);
 		
 		return tempString = tempTS.toString();
 	}
