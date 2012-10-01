@@ -59,8 +59,11 @@ public class Derby
         
         try
         {
+            //createConnection();
+            //statements.add(s);
+
             String dbName = "derbyDB"; // the name of the database
-      
+          
             conn = DriverManager.getConnection(protocol + dbName
                     + ";create=true");
 
@@ -73,18 +76,22 @@ public class Derby
             /* Creating a statement object that we can use for running various
              * SQL statements commands against the database.*/
             s = conn.createStatement();
-            statements.add(s);
-            // We create a table...
-            
-            DatabaseMetaData dmd = conn.getMetaData();
-            ResultSet tables = dmd.getTables(null, null, null, new String[]{"event","task"});
             
             createTables();    	 
         	
+<<<<<<< HEAD
+            //entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, ts) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            //statements.add(entryInsert);  
+=======
             entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, startTime) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             statements.add(entryInsert);  
+>>>>>>> 687a76fec192c9b0fa3b98c4609ec16c56630e58
 
             System.out.println("Database Initialization Complete");
+
+            entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, ts) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            getId = conn.prepareStatement("SELECT MAX(E_id) from entry");
+            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, ets, repeating) VALUES (?, ?, ?, ?)");
             
             entryUpdate = conn.prepareStatement("UPDATE entry SET name=?, description=?, startTime=? WHERE E_id=?");
             statements.add(entryUpdate);
@@ -92,8 +99,13 @@ public class Derby
             entryDelete = conn.prepareStatement("DELETE FROM entry WHERE E_id=?");
             statements.add(entryDelete);
 
+<<<<<<< HEAD
+            //eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, ets, repeating) VALUES (?, ?, ?, ?)");
+            //statements.add(eventInsert);
+=======
             eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, endTime, repeating) VALUES (?, ?, ?, ?)");
             statements.add(eventInsert);
+>>>>>>> 687a76fec192c9b0fa3b98c4609ec16c56630e58
             
             eventUpdate = conn.prepareStatement("UPDATE event SET isAllDay=?, endTime=?, repeating=? WHERE E_id=?");
             statements.add(eventUpdate);       
@@ -113,14 +125,18 @@ public class Derby
             taskDelete = conn.prepareStatement("DELETE from task WHERE E_id=?");
             statements.add(taskDelete);
 
-            getId = conn.prepareStatement("SELECT MAX(E_id) from entry");
-            statements.add(getId);
+            //getId = conn.prepareStatement("SELECT MAX(E_id) from entry");
+            //statements.add(getId);
             
             //taskQuery = conn.prepareStatement("SELECT entry.E_id entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
 			
             System.out.println("Made it this far");
 
+<<<<<<< HEAD
+			dayTasksQuery = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.ts, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id WHERE entry.ts BETWEEN ? AND ?");
+=======
 			dayTasksQuery = conn.prepareStatement("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id WHERE entry.startTime BETWEEN ('? 00:00:00') AND ('? 23:59:59')");
+>>>>>>> 687a76fec192c9b0fa3b98c4609ec16c56630e58
 			statements.add(dayTasksQuery);
 
             System.out.println("1 COMPlETE");            
@@ -148,11 +164,30 @@ public class Derby
         catch (SQLException sqle)
         {
             printSQLException(sqle);
-        } finally {
-            // release all open resources to avoid unnecessary memory usage
+        } 
+    }
 
-            //handle();
-            
+    private void createConnection() {
+        try {
+            String dbName = "derbyDB"; // the name of the database
+          
+            conn = DriverManager.getConnection(protocol + dbName
+                    + ";create=true");
+
+            System.out.println("Connected to and created database " + dbName);
+
+            // We want to control transactions manually. Autocommit is on by
+            // default in JDBC.
+            conn.setAutoCommit(false);
+
+            /* Creating a statement object that we can use for running various
+             * SQL statements commands against the database.*/
+            s = conn.createStatement();
+
+
+            System.out.println("CONNECTION CREATED");
+        } catch (SQLException e) {
+            printSQLException(e);
         }
     }
     
@@ -214,25 +249,33 @@ public class Derby
     	try {
     		//System.out.println("DOING THIS");
 
+<<<<<<< HEAD
+            //new Derby();
+=======
             entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, startTime) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+>>>>>>> 687a76fec192c9b0fa3b98c4609ec16c56630e58
 
             entryInsert.setString(1, name);
     		entryInsert.setString(2, desc);
             entryInsert.setTimestamp(3, ts);
 
     		entryInsert.executeUpdate();
+
+            System.out.println("MADE IT HERE");
     		
     		//ResultSet id = entryInsert.getGeneratedKeys();
             
-            getId = conn.prepareStatement("SELECT MAX(E_id) from entry");
 
             ResultSet id = getId.executeQuery();
     		
     		id.next();
             int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
 
+<<<<<<< HEAD
+=======
     		eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, endTime, repeating) VALUES (?, ?, ?, ?)");
 
+>>>>>>> 687a76fec192c9b0fa3b98c4609ec16c56630e58
             eventInsert.setInt(1, E_id);
             eventInsert.setBoolean(2, isAllDay);
             eventInsert.setTimestamp(3, ets);
@@ -240,11 +283,19 @@ public class Derby
 
             eventInsert.executeUpdate();
 
-            id.close();
+            //conn.commit();
+            
+            //entryInsert.close();
+            //getId.close();
+            //eventInsert.close();
+            //id.close();
+
+            //conn.close();
+            
+
+            System.out.println("DID THIS");
     	} catch (SQLException e) {
     		printSQLException(e);
-    	} finally {
-    		handle();
     	}
     }
     
@@ -264,8 +315,6 @@ public class Derby
 			
 			} catch(SQLException e) {
     		printSQLException(e);
-    	} finally {
-    		handle();
     	}
     }
     
@@ -279,11 +328,61 @@ public class Derby
     		
     	} catch(SQLException e) {
     		printSQLException(e);
+    	} 
+    }
+    
+<<<<<<< HEAD
+	/*
+    public ResultSet queryEvent(String dateIn) {
+    	try {
+    		eventQuery.setString(1, dateIn);
+    		
+    		ResultSet rs = eventQuery.executeQuery();
+    		
+			return rs;
+			
+    	} catch(SQLException e) {
+    		printSQLException(e);
     	} finally {
     		handle();
     	}
-    }
+    }*/
+	public ResultSet dayEventsQuery(String year, String month, String day){
+		try {
+            //new Derby();
+            System.out.println("QUERY Obtained");
+
+            String dbName = "derbyDB"; // the name of the database
+          
+            conn = DriverManager.getConnection(protocol + dbName
+                    + ";create=true"); 
+
+            String s = year + "-" + month + "-" + day + " 00:00:00";
+            String s2 = year + "-" + month + "-" + day + " 23:59:59";
+
+            System.out.println(s + "\n" + s2);
+
+    		dayEventsQuery.setTimestamp(1, Timestamp.valueOf(s));
+            dayEventsQuery.setTimestamp(2, Timestamp.valueOf(s2));
+
+    		
+            System.out.println("ResultSet OBTAINED");
+
+    		ResultSet rs = dayEventsQuery.executeQuery();
+
+			return rs;
+    		
+    	} catch(SQLException e) {
+    		printSQLException(e);
+    	} 
+        return null;
+	}
     
+    public void addTask(String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority) {
+    	try {
+    		entryInsert.setString(1, name);
+    		entryInsert.setString(2, desc);
+=======
     public void addTask(String name, String desc, Timestamp ts, int status, int priority) {
     	try {
     		entryInsert.setString(1, name);
@@ -292,13 +391,37 @@ public class Derby
     		entryInsert.executeUpdate();
     		
     		ResultSet id = entryInsert.getGeneratedKeys();
+>>>>>>> 687a76fec192c9b0fa3b98c4609ec16c56630e58
     		
-    		int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
+            String s = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00";
+
+            System.out.println(s);
+
+            entryInsert.setTimestamp(3,Timestamp.valueOf(s));
+
+            entryInsert.executeUpdate();
+
+    		entryInsert.executeUpdate();
     		
-    		taskInsert.setInt(1, E_id);
+    		ResultSet id = getId.executeQuery();
+            
+            id.next();
+            int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
+
+            taskInsert.setInt(1, E_id);
             taskInsert.setInt(2, status);
             taskInsert.setInt(3, priority);
+
             taskInsert.executeUpdate();
+
+            conn.commit();
+            
+            entryInsert.close();
+            getId.close();
+            eventInsert.close();
+            id.close();
+
+            conn.close();
     	} catch(SQLException e) {
     		printSQLException(e);
     	} finally {
