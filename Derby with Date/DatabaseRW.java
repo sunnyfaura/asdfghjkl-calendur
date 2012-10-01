@@ -54,7 +54,8 @@ public class DatabaseRW
 	
 	public static ArrayList<Entry> dayQuery(int year, int month, int day) throws Exception
 	{
-		String dateString = intToString(year, month, day);
+		String dateString = intToString(year, month, day, 0, 0, 0);
+		dateString = truncateDateString(dateString);
 		
 		ResultSet taskResults = database.dayTasksQuery(dateString);
 		ResultSet eventResults = database.dayEventsQuery(dateString);
@@ -144,12 +145,15 @@ public class DatabaseRW
 		return ts;
 	}
 	
-	public static String intToString(int year, int month, int day)
+	public static String intToString(int year, int month, int day, int hour, int minute, int second)
 	{
-		Timestamp tempTS = intToTimestamp(year, month, day);
+		Timestamp tempTS = intToTimestamp(year, month, day, hour, minute, second);
 		
-		String tempString = tempTS.toString();
-		
-		return tempString.substring(0,10);
+		return tempString = tempTS.toString();
+	}
+	
+	public static String truncateDateString(String dateString)
+	{
+		return dateString.substring(0,10);
 	}
 }
