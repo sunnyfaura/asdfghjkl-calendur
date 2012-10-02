@@ -222,6 +222,11 @@ public class AddEntry extends JPanel {
         
         //Add content to the window.
         frame.add(new AddEntry(), BorderLayout.CENTER);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+    		public void windowClosing(WindowEvent winEvt) {
+    			Calendar.addEntryOpen++;
+       		}
+		});
         
         //Display the window.
         frame.pack();
@@ -271,8 +276,39 @@ public class AddEntry extends JPanel {
 			System.out.println(mins);
 			System.out.println(ap);
 			Calendar.addEntryOpen++;
+		}
+    }
 
-			ArrayList<Task> test = DatabaseRW.toTaskArray(resultSet);
+    class addEvent_Action implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			String n = name.getText();
+			String dsc = desc.getText();
+			int mnth = (int)month.getSelectedIndex(); //January = 0; December = 11;
+			int dy = (int)day.getSelectedIndex()+1;
+			int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
+			int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
+			int hr = (int)hour.getSelectedIndex()+1; //returns exact hour
+			int mins = (int)minute.getSelectedIndex(); //returns exact minutes
+			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
+			//boolea allday = ()
+
+
+			//PRIORITY still not in action haha
+
+			//DatabaseRW.addEvent(n, dsc, yr, mnth, dy, hr, mins, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
+
+			//frame.setVisible(false);
+			frame.dispose();
+			System.out.println(n);
+			System.out.println(dsc);
+			System.out.println(mnth);
+			System.out.println(dy);
+			System.out.println(yr);
+			System.out.println(stat);
+			System.out.println(hr);
+			System.out.println(mins);
+			System.out.println(ap);
+			Calendar.addEntryOpen++;
 		}
     }
 	
