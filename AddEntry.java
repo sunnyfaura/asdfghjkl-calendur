@@ -19,8 +19,10 @@ public class AddEntry extends JPanel {
 		super(new GridLayout(1, 1));
 		name = new JTextField();
 		desc = new JTextArea();
+		desc.setLineWrap(true);
 		name1 = new JTextField();
 		desc1 = new JTextArea();
+		desc1.setLineWrap(true);
 		
 		String[] months = { "January", "February", "March","April","May","June","July","August","September","October","November","December"};
 		month = new JComboBox(months);
@@ -222,11 +224,7 @@ public class AddEntry extends JPanel {
      */
     public static void createAndShowGUI() {
         //Create and set up the window.
-<<<<<<< HEAD
         frame = new JFrame("AddEntry");
-=======
-        frame = new JFrame("Add Entry");
->>>>>>> b8228e7897bad0d88061c1e03f8f995f543b9018
         
         //Add content to the window.
         frame.add(new AddEntry(), BorderLayout.CENTER);
@@ -257,38 +255,18 @@ public class AddEntry extends JPanel {
 
 
     //nawawala yung addEntryListener pls fix
-<<<<<<< HEAD
-    private class addTask_Action implements ActionListener
-	{	//INSERT TASK TO DATABASE
-		public void actionPerformed(ActionEvent e){
-			String n = name.getText();
-			String dsc = desc.getText();
-			int mnth = (int)month.getSelectedIndex(); //January = 0; December = 11;
-			int dy = (int)day.getSelectedIndex()+1;  //returns exact day
-=======
     class addTask_Action implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			String n = name.getText();
 			String dsc = desc.getText();
 			int mnth = ((int)month.getSelectedIndex())+1; //January = 0; December = 11;
 			int dy = (int)day.getSelectedIndex()+1;
->>>>>>> b8228e7897bad0d88061c1e03f8f995f543b9018
 			int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
 			int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
 			int hr = (int)hour.getSelectedIndex()+1; //returns exact hour
 			int mins = (int)minute.getSelectedIndex(); //returns exact minutes
 			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
-<<<<<<< HEAD
 			int prt = (int)priority.getSelectedIndex();
-
-			frame.setVisible(false);
-			frame.dispose();
-			System.out.println(n);
-			System.out.println(dsc);
-			System.out.println(mnth);
-			System.out.println(dy);
-			System.out.println(yr);
-=======
 
 			//frame.setVisible(false);
 			frame.dispose();
@@ -297,18 +275,20 @@ public class AddEntry extends JPanel {
 			System.out.println(yr);
 			System.out.println(mnth);
 			System.out.println(dy);
->>>>>>> b8228e7897bad0d88061c1e03f8f995f543b9018
 			System.out.println(stat);
 			System.out.println(hr);
 			System.out.println(mins);
 			System.out.println(ap);
-<<<<<<< HEAD
 			System.out.println(prt);
 			Calendar.addEntryOpen++;
+			
+			DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,1);
+			DatabaseRW.queryTask();
+
 		}
     }
 	
-	private class addEvent_Action implements ActionListener
+	/*private class addEvent_Action implements ActionListener
 	{	//INSERT TASK TO DATABASE
 		public void actionPerformed(ActionEvent e){
 			String n = name1.getText();
@@ -334,13 +314,8 @@ public class AddEntry extends JPanel {
 			}
 			
 			frame.setVisible(false);
-=======
-			Calendar.addEntryOpen++;
-
-			DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,1);
-			DatabaseRW.queryTask();
 		}
-    }
+    }*/
 
     class addEvent_Action implements ActionListener{
 		public void actionPerformed(ActionEvent e){
@@ -361,22 +336,18 @@ public class AddEntry extends JPanel {
 			//DatabaseRW.addEvent(n, dsc, yr, mnth, dy, hr, mins, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
 
 			//frame.setVisible(false);
->>>>>>> b8228e7897bad0d88061c1e03f8f995f543b9018
 			frame.dispose();
 			System.out.println(n);
 			System.out.println(dsc);
 			System.out.println(mnth);
 			System.out.println(dy);
 			System.out.println(yr);
-<<<<<<< HEAD
 			System.out.println(isAllDay);
 			System.out.println(repeats);
-=======
 			System.out.println(stat);
 			System.out.println(hr);
 			System.out.println(mins);
 			System.out.println(ap);
->>>>>>> b8228e7897bad0d88061c1e03f8f995f543b9018
 			Calendar.addEntryOpen++;
 		}
     }
