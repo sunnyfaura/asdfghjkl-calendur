@@ -180,7 +180,7 @@ public class Derby
     public void doStatement(int m){
         try{
 			//System.out.println("passing values: " + name + " " + desc);
-			ResultSet id = getId.executeQuery();
+			ResultSet id = null;
 			int key = 0;
 			switch(m)
 			{
@@ -189,7 +189,7 @@ public class Derby
 					entryInsert.setString(2, desc);
 					entryInsert.setTimestamp(3, startTime);
 					entryInsert.executeUpdate();
-					id.next();
+					id = getId.executeQuery();
 					key = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
 					taskInsert.setInt(1, key);
 					taskInsert.setInt(2, status);
@@ -202,7 +202,7 @@ public class Derby
 					entryInsert.setString(2, desc);
 					entryInsert.setTimestamp(3, startTime);
 					entryInsert.executeUpdate();
-					id.next();
+					id = getId.executeQuery();
 					key = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
 					eventInsert.setInt(1, key);
 					eventInsert.setBoolean(2, isAllDay);
