@@ -49,7 +49,24 @@ public class DatabaseRW
 
 	public static void addEvent(String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
 	{
+		String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
+        System.out.println(str);
+		name = name;
+		desc = desc;
+		
+		String str2 = endYear + "-" + endMonth + "-" + endDay + " " + endHour + ":" + endMinute + ":00.000"; 
 
+		startTime = Timestamp.valueOf(str);
+		endTime = Timestamp.valueOf(str2);
+
+		isAllDay = isAllDay;
+
+		repeating = repeating;
+
+		answer = 12;
+
+		System.out.println("Event table has been updated.");
+		database.go();
 	}
 	
 	public static void updateEvent(int id, String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)

@@ -194,18 +194,18 @@ public class Derby
             taskInsert.executeUpdate();
             System.out.println("Insert Task Succesful!");
          } else if(m == 12){
-            // entryInsert.setString(1, name);
-            // entryInsert.setString(2, desc);
-            // entryInsert.setTimestamp(3, startTime);
-            // entryInsert.executeUpdate();
-            // ResultSet id = getId.executeQuery();
-            // id.next();
-            // int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
-            // eventInsert.setInt(1, E_id);
-            // eventInsert.setBoolean(2, isAllDay);
-            // eventInsert.setTimestamp(3, endTime);
-            // eventInsert.setInt(4,repeating);
-            // eventInsert.executeUpdate();
+            entryInsert.setString(1, name);
+            entryInsert.setString(2, desc);
+            entryInsert.setTimestamp(3, startTime);
+            entryInsert.executeUpdate();
+            ResultSet id = getId.executeQuery();
+            id.next();
+            int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
+            eventInsert.setInt(1, E_id);
+            eventInsert.setBoolean(2, isAllDay);
+            eventInsert.setTimestamp(3, endTime);
+            eventInsert.setInt(4,repeating);
+            eventInsert.executeUpdate();
          } else if(m == 21){
             // entryUpdate.setString(1, name);
             // entryUpdate.setString(2, desc);
