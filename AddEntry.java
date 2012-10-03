@@ -253,6 +253,7 @@ public class AddEntry extends JPanel {
         });
     }
 
+    //THERE IS A NEED TO CHECK IF DESC IS MORE THAN 255 CHARACTERS
 
     //nawawala yung addEntryListener pls fix
     class addTask_Action implements ActionListener{

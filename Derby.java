@@ -213,7 +213,7 @@ public class Derby
             // entryUpdate.executeUpdate();
             // taskUpdate.setInt(1, status);
             // taskUpdate.setInt(2, priority);
-            // taskUpdate.setInt(3, id);
+            // taskUpda te.setInt(3, id);
             // taskUpdate.executeUpdate();
          } else if(m == 22){
             // entryUpdate.setString(1, name);
