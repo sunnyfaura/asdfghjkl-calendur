@@ -25,10 +25,10 @@ public class DatabaseRW
 	{
 		//String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
         //System.out.println(str);
-		name = name;
-		desc = desc;
-		status = status;
-		priority = priority;
+		this.name = name;
+		this.desc = desc;
+		this.status = status;
+		this.priority = priority;
 		timestamp = intToTimestamp(year, month, day, hour, minute);
 
 		answer = 11;
@@ -51,17 +51,17 @@ public class DatabaseRW
 	{
 		//String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
         //System.out.println(str);
-		name = name;
-		desc = desc;
+		this.name = name;
+		this.desc = desc;
 		
 		//String str2 = endYear + "-" + endMonth + "-" + endDay + " " + endHour + ":" + endMinute + ":00.000"; 
 
 		startTime = intToTimestamp(year, month, day, hour, minute);
 		endTime = intToTimestamp(endYear, endMonth, endDay, endHour, endMinute);
 
-		isAllDay = isAllDay;
+		this.isAllDay = isAllDay;
 
-		repeating = repeating;
+		this.repeating = repeating;
 
 		answer = 12;
 
