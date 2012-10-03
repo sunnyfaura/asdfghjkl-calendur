@@ -29,7 +29,7 @@ public class DatabaseRW
 		desc = de;
 		status = s;
 		priority = p;
-		timestamp = intToTimestamp(y, mo, da, h, mi);
+		startTime = intToTimestamp(y, mo, da, h, mi);
 
 		answer = 11;
 
@@ -128,9 +128,9 @@ public class DatabaseRW
 		return timestamp;
 	}
 	
-	  /*========================*/
-	 /*Conveniece methods! Yay!*/
-	/*========================*/
+	/*===========================*/
+	/* Conveniece methods! Yay! */
+	/*=========================*/
 	
 	public static Timestamp intToTimestamp(int year, int month, int day, int hour, int minute)
 	{
