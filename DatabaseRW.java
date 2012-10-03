@@ -21,15 +21,15 @@ public class DatabaseRW
 		database = db;
 	}
 
-	public static void addTask(String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority)
+	public static void addTask(String n, String de, int y, int mo, int da, int h, int mi, int s, int p)
 	{
 		//String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
         //System.out.println(str);
-		this.name = name;
-		this.desc = desc;
-		this.status = status;
-		this.priority = priority;
-		timestamp = intToTimestamp(year, month, day, hour, minute);
+		name = n;
+		desc = de;
+		status = s;
+		priority = p;
+		timestamp = intToTimestamp(y, mo, da, h, mi);
 
 		answer = 11;
 
@@ -47,21 +47,21 @@ public class DatabaseRW
 
 	}
 
-	public static void addEvent(String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
+	public static void addEvent(String n, String de, int y, int mo, int da, int h, int mi, boolean iad, int endY, int endMo, int endDa, int endH, int endMi, int r)
 	{
 		//String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
         //System.out.println(str);
-		this.name = name;
-		this.desc = desc;
+		name = n;
+		desc = de;
 		
 		//String str2 = endYear + "-" + endMonth + "-" + endDay + " " + endHour + ":" + endMinute + ":00.000"; 
 
-		startTime = intToTimestamp(year, month, day, hour, minute);
-		endTime = intToTimestamp(endYear, endMonth, endDay, endHour, endMinute);
+		startTime = intToTimestamp(y, mo, da, h, mi);
+		endTime = intToTimestamp(endY, endMo, endDa, endH, endMi);
 
-		this.isAllDay = isAllDay;
+		isAllDay = iad;
 
-		this.repeating = repeating;
+		repeating = r;
 
 		answer = 12;
 

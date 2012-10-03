@@ -179,6 +179,7 @@ public class Derby
     /*===================================*/
     public void doStatement(int m){
         try{
+        //System.out.println("passing values: " + name + " " + desc);
          ResultSet id = getId.executeQuery();
          if(m == 11){
             entryInsert.setString(1, name);
@@ -191,13 +192,12 @@ public class Derby
             taskInsert.setInt(2, status);
             taskInsert.setInt(3, priority);
             taskInsert.executeUpdate();
-            System.out.println("Insert Task Succesful!");
+            System.out.println("Insert Task Succesful! Inserted at ID: " + E_id);
          } else if(m == 12){
             entryInsert.setString(1, name);
             entryInsert.setString(2, desc);
             entryInsert.setTimestamp(3, startTime);
             entryInsert.executeUpdate();
-            ResultSet id = getId.executeQuery();
             id.next();
             int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
             eventInsert.setInt(1, E_id);
@@ -243,7 +243,7 @@ public class Derby
             System.out.println("=========================================");
             while(rs.next()){
                 System.out.println(rs.getString(1)+"::::"+rs.getString(2));
-                System.out.println(rs.getTimestamp(3));
+                System.out.println(rs.getString(3));
             }
             System.out.println("=========================================");
             rs.close();
