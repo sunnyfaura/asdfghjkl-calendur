@@ -181,6 +181,7 @@ public class Derby
         try{
 			//System.out.println("passing values: " + name + " " + desc);
 			ResultSet id = getId.executeQuery();
+			int key = 0;
 			switch(m)
 			{
 				case 11:
@@ -189,12 +190,12 @@ public class Derby
 					entryInsert.setTimestamp(3, startTime);
 					entryInsert.executeUpdate();
 					id.next();
-					int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
-					taskInsert.setInt(1, E_id);
+					key = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
+					taskInsert.setInt(1, key);
 					taskInsert.setInt(2, status);
 					taskInsert.setInt(3, priority);
 					taskInsert.executeUpdate();
-					System.out.println("Insert Task Succesful! Inserted at ID: " + E_id);
+					System.out.println("Insert Task Succesful! Inserted at ID: " + key);
 					break;
 				case 12:
 					entryInsert.setString(1, name);
@@ -202,8 +203,8 @@ public class Derby
 					entryInsert.setTimestamp(3, startTime);
 					entryInsert.executeUpdate();
 					id.next();
-					int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
-					eventInsert.setInt(1, E_id);
+					key = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
+					eventInsert.setInt(1, key);
 					eventInsert.setBoolean(2, isAllDay);
 					eventInsert.setTimestamp(3, endTime);
 					eventInsert.setInt(4,repeating);
@@ -233,17 +234,17 @@ public class Derby
 					// eventUpdate.executeUpdate();
 					break;
 				case 31:
-					// int E_id = id.getInt(1);
-					// entryDelete.setInt(1, E_id);
+					// key = id.getInt(1);
+					// entryDelete.setInt(1, key);
 					// entryDelete.executeUpdate();
-					// taskDelete.setInt(1,E_id);
+					// taskDelete.setInt(1,key);
 					// taskDelete.executeUpdate();
 					break;
 				case 32:
-					// int E_id = id.getInt(1);
-					// entryDelete.setInt(1, E_id);
+					// key = id.getInt(1);
+					// entryDelete.setInt(1, key);
 					// entryDelete.executeUpdate();
-					// eventDelete.setInt(1,E_id);
+					// eventDelete.setInt(1,key);
 					// eventDelete.executeUpdate();
 					break;
 				case 41:
