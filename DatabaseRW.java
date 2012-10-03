@@ -23,13 +23,13 @@ public class DatabaseRW
 
 	public static void addTask(String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority)
 	{
-		String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
-        System.out.println(str);
+		//String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
+        //System.out.println(str);
 		name = name;
 		desc = desc;
 		status = status;
 		priority = priority;
-		timestamp = Timestamp.valueOf(str);
+		timestamp = intToTimestamp(year, month, day, hour, minute);
 
 		answer = 11;
 
@@ -49,15 +49,15 @@ public class DatabaseRW
 
 	public static void addEvent(String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
 	{
-		String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
+		//String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
         System.out.println(str);
 		name = name;
 		desc = desc;
 		
-		String str2 = endYear + "-" + endMonth + "-" + endDay + " " + endHour + ":" + endMinute + ":00.000"; 
+		//String str2 = endYear + "-" + endMonth + "-" + endDay + " " + endHour + ":" + endMinute + ":00.000"; 
 
-		startTime = Timestamp.valueOf(str);
-		endTime = Timestamp.valueOf(str2);
+		startTime = intToTimestamp(year, month, day, hour, minute);
+		endTime = intToTimestamp(endYear, endMonth, endDay, endHour, endMinute);
 
 		isAllDay = isAllDay;
 
@@ -126,5 +126,17 @@ public class DatabaseRW
 
 	public static Timestamp getTimestamp(){
 		return timestamp;
+	}
+	
+	  /*========================*/
+	 /*Conveniece methods! Yay!*/
+	/*========================*/
+	
+	public static Timestamp intToTimestamp(int year, int month, int day, int hour, int minute)
+	{
+		Calendar tempCal = Calendar.getInstance();
+		tempCal.set(year, month, day, hour, minute);
+		
+		return new Timestamp(tempCal.getTimeInMillis());
 	}
 }
