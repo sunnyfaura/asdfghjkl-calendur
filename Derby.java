@@ -44,12 +44,13 @@ public class Derby
     //entry columns
     String name, desc;
     //task columns
-    int year, month, day, hour, minute, status, priority;
+    int status, priority;
+    Timestamp timestamp;
     //event columns
     boolean isAllDay; int endYear, endMonth, endDay, endHour, endMinute, repeating;
     Timestamp startTime, endTime;
 
-    public Derby() {
+    public void go() {
         System.out.println("Derby starting in " + framework + " mode");
         loadDriver();
 
@@ -71,17 +72,14 @@ public class Derby
             /** All inserts, updates, deletes, queries are done here **/
             /*========================================================*/
 
-            do {
-                if (answer != 0)
-                    doStatement(answer);
-            } while (answer != 0);
-            
+                answer = DatabaseRW.getAnswer();
+                name = DatabaseRW.getName();
+                desc = DatabaseRW.getDesc();
+                timestamp = DatabaseRW.getTimestamp();
+                status = DatabaseRW.getStatus();
+                priority = DatabaseRW.getPriority();
 
-            //Dropping tables
-            s.execute("drop table entry");
-            s.execute("drop table event");
-            s.execute("drop table task");
-            System.out.println("Dropped tables");           
+                doStatement(answer);
 
             //Making data persistent in the database
             conn.commit();
@@ -139,7 +137,7 @@ public class Derby
             s.execute("CREATE TABLE task(E_id int NOT NULL PRIMARY KEY, status smallint, priority smallint)");
             System.out.println("Created table task");
         } catch(SQLException sqle){
-            printSQLException(sqle);
+            //Do nothing
         }
     }
 
@@ -185,9 +183,7 @@ public class Derby
          if(m == 11){
             entryInsert.setString(1, name);
             entryInsert.setString(2, desc);
-            String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00";
-            System.out.println(str);
-            entryInsert.setTimestamp(3,Timestamp.valueOf(str));
+            entryInsert.setTimestamp(3, timestamp);
             entryInsert.executeUpdate();
             id.next();
             int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
@@ -243,21 +239,22 @@ public class Derby
             // eventDelete.setInt(1,E_id);
             // eventDelete.executeUpdate();
          } else if(m == 41){
-            rs = s.executeQuery("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id WHERE entry.startTime BETWEEN ? AND ?");
+            rs = s.executeQuery("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
             System.out.println("=========================================");
             while(rs.next()){
-                //System.out.println(rs.getWhatever(1)+"::::"+rs.getWhatever());
+                System.out.println(rs.getString(1)+"::::"+rs.getString(2));
+                System.out.println(rs.getTimestamp(3));
             }
             System.out.println("=========================================");
             rs.close();
          } else if(m == 42){
-            rs = s.executeQuery("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
-            System.out.println("=========================================");
-            while(rs.next()){
-                //System.out.println(rs.getWhatever(1)+"::::"+rs.getWhatever());
-            }
-            System.out.println("=========================================");
-            rs.close();
+            // rs = s.executeQuery("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
+            // System.out.println("=========================================");
+            // while(rs.next()){
+            //     //System.out.println(rs.getWhatever(1)+"::::"+rs.getWhatever());
+            // }
+            // System.out.println("=========================================");
+            // rs.close();
          }
         } catch(SQLException sqle){
             printSQLException(sqle);
