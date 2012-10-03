@@ -21,15 +21,15 @@ public class DatabaseRW
 		database = db;
 	}
 
-	public static void addTask(String n, String d, int y, int m, int da, int h, int min, int s, int p)
+	public static void addTask(String n, String de, int y, int mo, int da, int h, int mi, int s, int p)
 	{
-		String str = y + "-" + m + "-" + da + " " + h + ":" + min + ":00.000"; 
-        System.out.println(str);
+		//String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
+        //System.out.println(str);
 		name = n;
-		desc = d;
+		desc = de;
 		status = s;
 		priority = p;
-		timestamp = Timestamp.valueOf(str);
+		timestamp = intToTimestamp(y, mo, da, h, mi);
 
 		answer = 11;
 
@@ -47,21 +47,21 @@ public class DatabaseRW
 
 	}
 
-	public static void addEvent(String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
+	public static void addEvent(String n, String de, int y, int mo, int da, int h, int mi, boolean iad, int endY, int endMo, int endDa, int endH, int endMi, int r)
 	{
-		String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
-        System.out.println(str);
-		name = name;
-		desc = desc;
+		//String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
+        //System.out.println(str);
+		name = n;
+		desc = de;
 		
-		String str2 = endYear + "-" + endMonth + "-" + endDay + " " + endHour + ":" + endMinute + ":00.000"; 
+		//String str2 = endYear + "-" + endMonth + "-" + endDay + " " + endHour + ":" + endMinute + ":00.000"; 
 
-		startTime = Timestamp.valueOf(str);
-		endTime = Timestamp.valueOf(str2);
+		startTime = intToTimestamp(y, mo, da, h, mi);
+		endTime = intToTimestamp(endY, endMo, endDa, endH, endMi);
 
-		isAllDay = isAllDay;
+		isAllDay = iad;
 
-		repeating = repeating;
+		repeating = r;
 
 		answer = 12;
 
@@ -126,5 +126,17 @@ public class DatabaseRW
 
 	public static Timestamp getTimestamp(){
 		return timestamp;
+	}
+	
+	  /*========================*/
+	 /*Conveniece methods! Yay!*/
+	/*========================*/
+	
+	public static Timestamp intToTimestamp(int year, int month, int day, int hour, int minute)
+	{
+		Calendar tempCal = Calendar.getInstance();
+		tempCal.set(year, month, day, hour, minute);
+		
+		return new Timestamp(tempCal.getTimeInMillis());
 	}
 }

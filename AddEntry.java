@@ -281,29 +281,29 @@ public class AddEntry extends JPanel {
     class addEvent_Action implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			String n = name.getText();
-			String dsc = desc.getText();
-			int mnth = (int)month.getSelectedIndex(); //January = 0; December = 11;
-			int dy = (int)day.getSelectedIndex()+1;
-			int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
-			int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
-			int hr = (int)hour.getSelectedIndex()+1; //returns exact hour
-			int mins = (int)minute.getSelectedIndex(); //returns exact minutes
+			String de = desc.getText();
+			int mo = (int)month.getSelectedIndex(); //January = 0; December = 11;
+			int da = (int)day.getSelectedIndex()+1;
+			int y = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
+			int s = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
+			int h = (int)hour.getSelectedIndex()+1; //returns exact hour
+			int mi = (int)minute.getSelectedIndex(); //returns exact minutes
 			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
 
 			//PRIORITY still not in action haha
 
-			//DatabaseRW.addEvent(n, dsc, yr, mnth, dy, hr, mins, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
+			//DatabaseRW.addEvent(n,de,y,mo,da,h,mi,iad,endY,endMo,endDa,endH,endMi,r);
 
 			//frame.setVisible(false);
 			frame.dispose();
 			System.out.println(n);
-			System.out.println(dsc);
-			System.out.println(mnth);
-			System.out.println(dy);
-			System.out.println(yr);
-			System.out.println(stat);
-			System.out.println(hr);
-			System.out.println(mins);
+			System.out.println(de);
+			System.out.println(mo);
+			System.out.println(da);
+			System.out.println(y);
+			System.out.println(s);
+			System.out.println(h);
+			System.out.println(mi);
 			System.out.println(ap);
 			Calendar.addEntryOpen++;
 		}
