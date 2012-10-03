@@ -167,16 +167,16 @@ public class Derby
         }
     }
 
-    /*=====================================/
-                11 = insert task
-                12 = insert event
-                21 = update task
-                22 = update event
-                31 = delete task
-                32 = delete event
-                41 = query task
-                42 = query event
-    /*===================================*/
+    /*=======================/
+        11 = insert task
+        12 = insert event
+        21 = update task
+        22 = update event
+        31 = delete task
+        32 = delete event
+        41 = query task
+        42 = query event
+    /*=====================*/
     public void doStatement(int m){
         try{
 			//System.out.println("passing values: " + name + " " + desc);
@@ -209,6 +209,7 @@ public class Derby
 					eventInsert.setTimestamp(3, endTime);
 					eventInsert.setInt(4,repeating);
 					eventInsert.executeUpdate();
+                    System.out.println("Insert Event Succesful! Inserted at ID: " + key);
 					break;
 				case 21:
 					// entryUpdate.setString(1, name);

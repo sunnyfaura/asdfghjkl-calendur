@@ -272,7 +272,6 @@ public class AddEntry extends JPanel {
 			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
 			int prt = (int)priority.getSelectedIndex();
 
-			//frame.setVisible(false)
 			System.out.println(n);
 			System.out.println(dsc);
 			System.out.println(yr);
@@ -287,8 +286,7 @@ public class AddEntry extends JPanel {
 			
 			if( dsc.length() <= 255 )
 			{
-				DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,1);
-				DatabaseRW.queryTask();
+				DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,prt);
 				frame.dispose();
 			}
 			else
@@ -298,35 +296,6 @@ public class AddEntry extends JPanel {
 
 		}
     }
-	
-	/*private class addEvent_Action implements ActionListener
-	{	//INSERT TASK TO DATABASE
-		public void actionPerformed(ActionEvent e){
-			String n = name1.getText();
-			String dsc = desc1.getText();
-			int mnth = (int)month1.getSelectedIndex(); //January = 0; December = 11;
-			int dy = (int)day1.getSelectedIndex()+1;  //returns exact day
-			int yr = Integer.parseInt(year1.getSelectedItem()+""); //returns exact year
-			boolean isAllDay = allDay.isSelected();
-			
-			int hr, mins, ap;
-			if( isAllDay )
-			{
-				hr = ((int)(hour.getSelectedIndex()))+1; //returns exact hour
-				mins = ((int)minute.getSelectedIndex()); //returns exact minutes
-				ap = (int)ampm.getSelectedIndex();		// am = 0; pm = 1;
-			}
-			
-			boolean repeats = repeatingLabel.isSelected();
-			int rpt;
-			if( repeats )
-			{
-				rpt = (int)repeating.getSelectedIndex();
-			}
-			
-			frame.setVisible(false);
-		}
-    }*/
 
     class addEvent_Action implements ActionListener{
 		public void actionPerformed(ActionEvent e){
@@ -340,13 +309,7 @@ public class AddEntry extends JPanel {
 			int mi = (int)minute.getSelectedIndex(); //returns exact minutes
 			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
 
-			//PRIORITY still not in action haha
-
-			//DatabaseRW.addEvent(n,de,y,mo,da,h,mi,iad,endY,endMo,endDa,endH,endMi,r);
-
-			//frame.setVisible(false);
 			System.out.println(n);
-			
 			System.out.println(de);
 			System.out.println(mo);
 			System.out.println(da);
@@ -360,7 +323,7 @@ public class AddEntry extends JPanel {
 			
 			if( de.length() <= 255 )
 			{
-				//add event adding to database
+				//DatabaseRW.addEvent(n,de,y,mo,da,h,mi,iad,endY,endMo,endDa,endH,endMi,r);
 				frame.dispose();
 			}
 			else
