@@ -14,15 +14,18 @@ public class AddEntry extends JPanel {
 	public JRadioButtonMenuItem allDay, timeSelection;
 	JCheckBox repeatingLabel;
 	JButton addTaskB, addEventB;
+	JScrollPane dscScroll, dsc1Scroll;
 
     public AddEntry() {
 		super(new GridLayout(1, 1));
 		name = new JTextField();
 		desc = new JTextArea();
 		desc.setLineWrap(true);
+		dscScroll = new JScrollPane(desc);
 		name1 = new JTextField();
 		desc1 = new JTextArea();
 		desc1.setLineWrap(true);
+		dsc1Scroll = new JScrollPane(desc1);
 		
 		String[] months = { "January", "February", "March","April","May","June","July","August","September","October","November","December"};
 		month = new JComboBox(months);
@@ -94,7 +97,7 @@ public class AddEntry extends JPanel {
 						taskDescMain.add(new JLabel(" "), BorderLayout.PAGE_START);
 						JPanel taskDescLabel = new JPanel(new FlowLayout());
 						taskDescMain.add(new JLabel("Description:   \t"), BorderLayout.LINE_START);
-						taskDescMain.add(desc, BorderLayout.CENTER);
+						taskDescMain.add(dscScroll, BorderLayout.CENTER);
 					taskBody.add(taskDescMain);
 					JPanel taskProp = new JPanel(new GridLayout(2,1));
 						JPanel taskDeadlineMain = new JPanel(new BorderLayout());
@@ -151,7 +154,7 @@ public class AddEntry extends JPanel {
 						eventDescMain.add(new JLabel(" "), BorderLayout.PAGE_START);
 						JPanel eventDescLabel = new JPanel(new FlowLayout());
 						eventDescMain.add(new JLabel("Description:   \t"), BorderLayout.LINE_START);
-						eventDescMain.add(desc1, BorderLayout.CENTER);
+						eventDescMain.add(dsc1Scroll, BorderLayout.CENTER);
 					eventBody.add(eventDescMain);
 					JPanel eventProp = new JPanel(new GridLayout(5,1));
 						JPanel eventDeadlineMain = new JPanel(new BorderLayout());
@@ -269,8 +272,7 @@ public class AddEntry extends JPanel {
 			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
 			int prt = (int)priority.getSelectedIndex();
 
-			//frame.setVisible(false);
-			frame.dispose();
+			//frame.setVisible(false)
 			System.out.println(n);
 			System.out.println(dsc);
 			System.out.println(yr);
@@ -283,8 +285,16 @@ public class AddEntry extends JPanel {
 			System.out.println(prt);
 			Calendar.addEntryOpen++;
 			
-			DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,1);
-			DatabaseRW.queryTask();
+			if( dsc.length() <= 255 )
+			{
+				DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,1);
+				DatabaseRW.queryTask();
+				frame.dispose();
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(frame,"Description cannot be longer than 255 characters.","Message",JOptionPane.ERROR_MESSAGE);
+			}
 
 		}
     }
@@ -321,7 +331,7 @@ public class AddEntry extends JPanel {
     class addEvent_Action implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			String n = name.getText();
-			String de = desc.getText();
+			String de = desc1.getText();
 			int mo = (int)month.getSelectedIndex(); //January = 0; December = 11;
 			int da = (int)day.getSelectedIndex()+1;
 			int y = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
@@ -335,7 +345,6 @@ public class AddEntry extends JPanel {
 			//DatabaseRW.addEvent(n,de,y,mo,da,h,mi,iad,endY,endMo,endDa,endH,endMi,r);
 
 			//frame.setVisible(false);
-			frame.dispose();
 			System.out.println(n);
 			
 			System.out.println(de);
@@ -346,8 +355,18 @@ public class AddEntry extends JPanel {
 			System.out.println(h);
 			System.out.println(mi);
 			System.out.println(ap);
-
+			System.out.println(de.length());
 			Calendar.addEntryOpen++;
+			
+			if( de.length() <= 255 )
+			{
+				//add event adding to database
+				frame.dispose();
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(frame,"Description cannot be longer than 255 characters.","Message",JOptionPane.ERROR_MESSAGE);
+			}
 		}
     }
 	

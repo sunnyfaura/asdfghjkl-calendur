@@ -75,7 +75,7 @@ public class Derby
                 answer = DatabaseRW.getAnswer();
                 name = DatabaseRW.getName();
                 desc = DatabaseRW.getDesc();
-                timestamp = DatabaseRW.getTimestamp();
+                startTime = DatabaseRW.getStartTime();
                 status = DatabaseRW.getStatus();
                 priority = DatabaseRW.getPriority();
 
@@ -179,83 +179,94 @@ public class Derby
     /*===================================*/
     public void doStatement(int m){
         try{
-        //System.out.println("passing values: " + name + " " + desc);
-         ResultSet id = getId.executeQuery();
-         if(m == 11){
-            entryInsert.setString(1, name);
-            entryInsert.setString(2, desc);
-            entryInsert.setTimestamp(3, timestamp);
-            entryInsert.executeUpdate();
-            id.next();
-            int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
-            taskInsert.setInt(1, E_id);
-            taskInsert.setInt(2, status);
-            taskInsert.setInt(3, priority);
-            taskInsert.executeUpdate();
-            System.out.println("Insert Task Succesful! Inserted at ID: " + E_id);
-         } else if(m == 12){
-            entryInsert.setString(1, name);
-            entryInsert.setString(2, desc);
-            entryInsert.setTimestamp(3, startTime);
-            entryInsert.executeUpdate();
-            id.next();
-            int E_id = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
-            eventInsert.setInt(1, E_id);
-            eventInsert.setBoolean(2, isAllDay);
-            eventInsert.setTimestamp(3, endTime);
-            eventInsert.setInt(4,repeating);
-            eventInsert.executeUpdate();
-         } else if(m == 21){
-            // entryUpdate.setString(1, name);
-            // entryUpdate.setString(2, desc);
-            // entryUpdate.setTimestamp(3, startTime);
-            // entryUpdate.setInt(4, id);
-            // entryUpdate.executeUpdate();
-            // taskUpdate.setInt(1, status);
-            // taskUpdate.setInt(2, priority);
-            // taskUpda te.setInt(3, id);
-            // taskUpdate.executeUpdate();
-         } else if(m == 22){
-            // entryUpdate.setString(1, name);
-            // entryUpdate.setString(2, desc);
-            //entryInsert.setTimestamp(3, startTime);
-            // entryUpdate.setInt(4, id);
-            // entryUpdate.executeUpdate();
-            // eventUpdate.setBoolean(1, isAllDay);
-            //eventUpdate.setTimestamp(2, endTime);
-            // eventUpdate.setInt(3, repeating);
-            // eventUpdate.setInt(4, id);
-            // eventUpdate.executeUpdate();
-         } else if(m == 31){
-            // int E_id = id.getInt(1);
-            // entryDelete.setInt(1, E_id);
-            // entryDelete.executeUpdate();
-            // taskDelete.setInt(1,E_id);
-            // taskDelete.executeUpdate();
-         } else if(m == 32){
-            // int E_id = id.getInt(1);
-            // entryDelete.setInt(1, E_id);
-            // entryDelete.executeUpdate();
-            // eventDelete.setInt(1,E_id);
-            // eventDelete.executeUpdate();
-         } else if(m == 41){
-            rs = s.executeQuery("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
-            System.out.println("=========================================");
-            while(rs.next()){
-                System.out.println(rs.getString(1)+"::::"+rs.getString(2));
-                System.out.println(rs.getString(3));
-            }
-            System.out.println("=========================================");
-            rs.close();
-         } else if(m == 42){
-            // rs = s.executeQuery("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
-            // System.out.println("=========================================");
-            // while(rs.next()){
-            //     //System.out.println(rs.getWhatever(1)+"::::"+rs.getWhatever());
-            // }
-            // System.out.println("=========================================");
-            // rs.close();
-         }
+			//System.out.println("passing values: " + name + " " + desc);
+			ResultSet id = getId.executeQuery();
+			int key = 0;
+			switch(m)
+			{
+				case 11:
+					entryInsert.setString(1, name);
+					entryInsert.setString(2, desc);
+					entryInsert.setTimestamp(3, startTime);
+					entryInsert.executeUpdate();
+					id.next();
+					key = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
+					taskInsert.setInt(1, key);
+					taskInsert.setInt(2, status);
+					taskInsert.setInt(3, priority);
+					taskInsert.executeUpdate();
+					System.out.println("Insert Task Succesful! Inserted at ID: " + key);
+					break;
+				case 12:
+					entryInsert.setString(1, name);
+					entryInsert.setString(2, desc);
+					entryInsert.setTimestamp(3, startTime);
+					entryInsert.executeUpdate();
+					id.next();
+					key = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
+					eventInsert.setInt(1, key);
+					eventInsert.setBoolean(2, isAllDay);
+					eventInsert.setTimestamp(3, endTime);
+					eventInsert.setInt(4,repeating);
+					eventInsert.executeUpdate();
+					break;
+				case 21:
+					// entryUpdate.setString(1, name);
+					// entryUpdate.setString(2, desc);
+					// entryUpdate.setTimestamp(3, startTime);
+					// entryUpdate.setInt(4, id);
+					// entryUpdate.executeUpdate();
+					// taskUpdate.setInt(1, status);
+					// taskUpdate.setInt(2, priority);
+					// taskUpdate.setInt(3, id);
+					// taskUpdate.executeUpdate();
+					break;
+				case 22:
+					// entryUpdate.setString(1, name);
+					// entryUpdate.setString(2, desc);
+					//entryInsert.setTimestamp(3, startTime);
+					// entryUpdate.setInt(4, id);
+					// entryUpdate.executeUpdate();
+					// eventUpdate.setBoolean(1, isAllDay);
+					//eventUpdate.setTimestamp(2, endTime);
+					// eventUpdate.setInt(3, repeating);
+					// eventUpdate.setInt(4, id);
+					// eventUpdate.executeUpdate();
+					break;
+				case 31:
+					// key = id.getInt(1);
+					// entryDelete.setInt(1, key);
+					// entryDelete.executeUpdate();
+					// taskDelete.setInt(1,key);
+					// taskDelete.executeUpdate();
+					break;
+				case 32:
+					// key = id.getInt(1);
+					// entryDelete.setInt(1, key);
+					// entryDelete.executeUpdate();
+					// eventDelete.setInt(1,key);
+					// eventDelete.executeUpdate();
+					break;
+				case 41:
+					rs = s.executeQuery("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
+					System.out.println("=========================================");
+					while(rs.next()){
+						System.out.println(rs.getString(1)+"::::"+rs.getString(2));
+						System.out.println(rs.getString(3));
+					}
+					System.out.println("=========================================");
+					rs.close();
+					break;
+				case 42:
+					// rs = s.executeQuery("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
+					// System.out.println("=========================================");
+					// while(rs.next()){
+					//     //System.out.println(rs.getWhatever(1)+"::::"+rs.getWhatever());
+					// }
+					// System.out.println("=========================================");
+					// rs.close();
+					break;
+			}
         } catch(SQLException sqle){
             printSQLException(sqle);
         }
