@@ -3,18 +3,22 @@ import java.awt.event.*;
 import javax.swing.JFrame;
 
 public class SysTray {
+    final static Calendar calendar =new Calendar();
+    final static Image image = Toolkit.getDefaultToolkit().getImage("tray.jpg");
+    final static PopupMenu popup = new PopupMenu();
+    final static TrayIcon trayIcon = new TrayIcon(image, "The Life Planner", popup);
+    
     public static void main(String[] asdf) {
-        final Calendar calendar =new Calendar();
         Derby database = new Derby();
         DatabaseRW.setDatabase(database);
+
+        trayIcon.setImageAutoSize(true);
+
         Runnable runner = new Runnable() {
              public void run() {
                 if (SystemTray.isSupported()) {
                     final SystemTray tray = SystemTray.getSystemTray();
-                    Image image = Toolkit.getDefaultToolkit().getImage("tray.jpg");
-                    PopupMenu popup = new PopupMenu();
-                    final TrayIcon trayIcon = new TrayIcon(image, "The Life Planner", popup);
-                    trayIcon.setImageAutoSize(true);
+                    
                     MenuItem item = new MenuItem();
                         PopupMenu comments = new PopupMenu("Choose a mood for commenter..  ");
                         MenuItem moods = new MenuItem("Happy");
@@ -39,6 +43,7 @@ public class SysTray {
                         comments.add(moods);
                     popup.add(comments);
                     popup.addSeparator();
+
                     item = new MenuItem("Open Calendar..      ");
                     item.addActionListener(new ActionListener() {
                         public void actionPerformed (ActionEvent e){

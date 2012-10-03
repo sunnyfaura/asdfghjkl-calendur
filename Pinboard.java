@@ -107,6 +107,9 @@ public class Pinboard extends JPanel {
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(WindowEvent winEvt) {
                 Calendar.pinboardOpen++;
+                if(Calendar.calendarOpen%2==0 && Calendar.pinboardOpen%2==0){
+                   SysTray.trayIcon.displayMessage("I'M NOT DEAD YET","Right-click for more", TrayIcon.MessageType.INFO);
+                }
             }
         });
         
