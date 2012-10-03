@@ -262,7 +262,7 @@ public class AddEntry extends JPanel {
 
 			//PRIORITY still not in action haha
 
-			DatabaseRW.addTask(n, dsc, yr, mnth, dy, hr, mins, stat, 1);
+			DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,1);
 
 			//frame.setVisible(false);
 			frame.dispose();
