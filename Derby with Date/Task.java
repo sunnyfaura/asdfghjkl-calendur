@@ -1,5 +1,3 @@
-import java.sql.Timestamp;
-
 public class Task extends Entry
 {
 	public int status;

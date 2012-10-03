@@ -1,10 +1,19 @@
-import java.util.*;
-import java.sql.*;
+import java.util.Calendar;
+import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
 
 //call this thingy with DatabaseRW.[functionwhatever] from anywhar
 
 public class DatabaseRW
 {
+	public static int answer;
+	public static String name, desc;
+	public static int status, priority;
+	public static boolean isAllDay;
+	public static int endYear, endMonth, endDay, endHour, endMinute, repeating;
+	public static Timestamp startTime, endTime, timestamp;
+
 	static Derby database = null;
 
 	public static void setDatabase(Derby db)
@@ -12,124 +21,122 @@ public class DatabaseRW
 		database = db;
 	}
 
-	public static void addEvent(String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
-	{
-		database.addEvent(name, desc, year, month, day, hour, minute, isAllDay, endYear, endMonth, endDay, endHour, endMinute, repeating);
-	}
-	
-	public static void updateEvent(int id, String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
-	{
-		database.updateEvent(id, name, desc, year, month, day, hour, minute, isAllDay, endYear, endMonth, endDay, endHour, endMinute, repeating);
-	}
-	
-	public static void deleteEvent(int id)
-	{
-		database.deleteEvent(id);
-	}
-	
 	public static void addTask(String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority)
 	{
-		database.addTask(name, desc, year, month, day, hour, minute, status, priority);
+		//String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
+        //System.out.println(str);
+		this.name = name;
+		this.desc = desc;
+		this.status = status;
+		this.priority = priority;
+		timestamp = intToTimestamp(year, month, day, hour, minute);
+
+		answer = 11;
+
+		System.out.println("Task table has been updated.");
+		database.go();
 	}
 	
-	public static void updateTask(int id, String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority, String toReplace)
+	public static void updateTask(int id, String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority)
 	{
-		database.updateTask(id, name, desc, year, month, day, hour,  minute, status, priority, toReplace);
+		
 	}
 	
 	public static void deleteTask(int id)
 	{
-		database.deleteTask(id);
+
+	}
+
+	public static void addEvent(String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
+	{
+		//String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
+        //System.out.println(str);
+		this.name = name;
+		this.desc = desc;
+		
+		//String str2 = endYear + "-" + endMonth + "-" + endDay + " " + endHour + ":" + endMinute + ":00.000"; 
+
+		startTime = intToTimestamp(year, month, day, hour, minute);
+		endTime = intToTimestamp(endYear, endMonth, endDay, endHour, endMinute);
+
+		this.isAllDay = isAllDay;
+
+		this.repeating = repeating;
+
+		answer = 12;
+
+		System.out.println("Event table has been updated.");
+		database.go();
 	}
 	
-	public static ArrayList<Entry> dayQuery(int year, int month, int day) throws Exception
+	public static void updateEvent(int id, String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
 	{
-		ResultSet taskResults = database.dayTasksQuery(year, month, day);
-		ResultSet eventResults = database.dayEventsQuery(year, month, day);
-		
-		ArrayList<Task> taskList = toTaskArray(taskResults);
-		ArrayList<Event> eventList = toEventArray(eventResults);
-		
-		ArrayList<Entry> entryList = new ArrayList<Entry>();
-		
-		for(Task asdf : taskList)
-		{
-			entryList.add((Entry) asdf);
-		}
-		
-		for(Event asdf : eventList)
-		{
-			entryList.add((Entry) asdf);
-		}
-		
-		return entryList;
+
 	}
 	
-	public static ArrayList<Task> toDoQuery(int year, int month, int day) throws Exception
+	public static void deleteEvent(int id)
 	{
-		ResultSet results = database.pinboardQuery(year, month, day, 0);
 		
-		return toTaskArray(results);
+	}
+
+	public static void queryTask(){
+		answer = 41;
+		database.go();
+	}
+
+	/*==================================*/
+	/* Beginning of getValue() methods */
+	/*================================*/
+
+	public static int getAnswer(){
+		return answer;
+	}
+
+	public static String getName(){
+		return name;
+	}
+
+	public static String getDesc(){
+		return desc;
+	}
+
+	public static int getStatus(){
+		return status;
+	}
+
+	public static int getPriority(){
+		return priority;
+	}
+
+	public static boolean getIsAllDay(){
+		return isAllDay;
+	}
+
+	public static int getRepeating(){
+		return repeating;
+	}
+
+	public static Timestamp getStartTime(){
+		return startTime;
+	}
+
+	public static Timestamp getEndTime(){
+		return endTime;
+	}
+
+	public static Timestamp getTimestamp(){
+		return timestamp;
 	}
 	
-	public static ArrayList<Task> doingQuery(int year, int month, int day) throws Exception
-	{
-		ResultSet results = database.pinboardQuery(year, month, day, 1);
-		
-		return toTaskArray(results);
-	}
+	  /*========================*/
+	 /*Conveniece methods! Yay!*/
+	/*========================*/
 	
-	public static ArrayList<Event> toEventArray(ResultSet rs) throws Exception
+	public static Timestamp intToTimestamp(int year, int month, int day, int hour, int minute)
 	{
-		ArrayList<Event> list = new ArrayList<Event>();
+		Calendar tempCal = Calendar.getInstance();
+		tempCal.set(year, month, day, hour, minute);
 		
-		while(rs.next()) { //This will iterate through the query list
-			
-			//The following are values obtained from each iteration from the query list. 
-			//UNOPTIMIZED. Please shove these values into the parameter code instead 
-			int id = rs.getInt(1);
-			String name = rs.getString(2);
-			String desc = rs.getString(3);
-			int year = rs.getInt(4);
-			int month = rs.getInt(5);
-			int day = rs.getInt(6);
-			int hour = rs.getInt(7);
-			int minute = rs.getInt(8);
-			boolean isAllDay = rs.getBoolean(9);
-			int endYear = rs.getInt(10);
-			int endMonth = rs.getInt(11);
-			int endDay = rs.getInt(12);
-			int endHour = rs.getInt(13);
-			int endMinute = rs.getInt(14);
-			int repeating = rs.getInt(15);
-			 
-			list.add(new Event(id, name, desc, year, month, day, hour, minute, isAllDay, endYear, endMonth, endDay, endHour, endMinute, repeating));
-		}
-		
-		return list;
-	}
-	
-	public static ArrayList<Task> toTaskArray(ResultSet rs) throws Exception
-	{
-		ArrayList<Task> list = new ArrayList<Task>();
-		
-		while(rs.next()) { //This will iterate through the query list
-			//The following are values obtained from each iteration from the query list. 
-			//UNOPTIMIZED. Please shove these values into the parameter code instead 
-			int id = rs.getInt(1);
-			String name = rs.getString(2);
-			String desc = rs.getString(3);
-			int year = rs.getInt(4);
-			int month = rs.getInt(5);
-			int day = rs.getInt(6);
-			int hour = rs.getInt(7);
-			int minute = rs.getInt(8);
-			int status = rs.getInt(9);
-			int priority = rs.getInt(10);
-			 
-			list.add(new Task(id, name, desc, year, month, day, hour, minute, status, priority));
-		}
-			
-			return list;
+		return new Timestamp(tempCal.getTimeInMillis());
 	}
 }

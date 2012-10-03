@@ -119,9 +119,9 @@ public class AddEntry extends JPanel {
 								taskPriorityMain.add(new JLabel("Priority:  \t"), BorderLayout.LINE_START);
 								taskPriorityMain.add(priority, BorderLayout.CENTER);
 							taskButtons.add(taskPriorityMain);
-							addTaskB = new JButton("Add Task");
-							addTaskB.addActionListener( new addTask_Action() );
-							taskButtons.add(addTaskB);
+							JButton addTaskListener = new JButton("Add Task");
+							addTaskListener.addActionListener(new addTask_Action());
+							taskButtons.add(addTaskListener);
 						taskProp.add(taskButtons);
 					taskBody.add(taskProp);
 				taskPane.add(taskBody);
@@ -222,10 +222,19 @@ public class AddEntry extends JPanel {
      */
     public static void createAndShowGUI() {
         //Create and set up the window.
+<<<<<<< HEAD
         frame = new JFrame("AddEntry");
+=======
+        frame = new JFrame("Add Entry");
+>>>>>>> b8228e7897bad0d88061c1e03f8f995f543b9018
         
         //Add content to the window.
         frame.add(new AddEntry(), BorderLayout.CENTER);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+    		public void windowClosing(WindowEvent winEvt) {
+    			Calendar.addEntryOpen++;
+       		}
+		});
         
         //Display the window.
         frame.pack();
@@ -248,6 +257,7 @@ public class AddEntry extends JPanel {
 
 
     //nawawala yung addEntryListener pls fix
+<<<<<<< HEAD
     private class addTask_Action implements ActionListener
 	{	//INSERT TASK TO DATABASE
 		public void actionPerformed(ActionEvent e){
@@ -255,11 +265,20 @@ public class AddEntry extends JPanel {
 			String dsc = desc.getText();
 			int mnth = (int)month.getSelectedIndex(); //January = 0; December = 11;
 			int dy = (int)day.getSelectedIndex()+1;  //returns exact day
+=======
+    class addTask_Action implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			String n = name.getText();
+			String dsc = desc.getText();
+			int mnth = ((int)month.getSelectedIndex())+1; //January = 0; December = 11;
+			int dy = (int)day.getSelectedIndex()+1;
+>>>>>>> b8228e7897bad0d88061c1e03f8f995f543b9018
 			int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
 			int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
 			int hr = (int)hour.getSelectedIndex()+1; //returns exact hour
 			int mins = (int)minute.getSelectedIndex(); //returns exact minutes
 			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
+<<<<<<< HEAD
 			int prt = (int)priority.getSelectedIndex();
 
 			frame.setVisible(false);
@@ -269,10 +288,21 @@ public class AddEntry extends JPanel {
 			System.out.println(mnth);
 			System.out.println(dy);
 			System.out.println(yr);
+=======
+
+			//frame.setVisible(false);
+			frame.dispose();
+			System.out.println(n);
+			System.out.println(dsc);
+			System.out.println(yr);
+			System.out.println(mnth);
+			System.out.println(dy);
+>>>>>>> b8228e7897bad0d88061c1e03f8f995f543b9018
 			System.out.println(stat);
 			System.out.println(hr);
 			System.out.println(mins);
 			System.out.println(ap);
+<<<<<<< HEAD
 			System.out.println(prt);
 			Calendar.addEntryOpen++;
 		}
@@ -304,14 +334,49 @@ public class AddEntry extends JPanel {
 			}
 			
 			frame.setVisible(false);
+=======
+			Calendar.addEntryOpen++;
+
+			DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,1);
+			DatabaseRW.queryTask();
+		}
+    }
+
+    class addEvent_Action implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			String n = name.getText();
+			String dsc = desc.getText();
+			int mnth = (int)month.getSelectedIndex(); //January = 0; December = 11;
+			int dy = (int)day.getSelectedIndex()+1;
+			int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
+			int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
+			int hr = (int)hour.getSelectedIndex()+1; //returns exact hour
+			int mins = (int)minute.getSelectedIndex(); //returns exact minutes
+			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
+			//boolea allday = ()
+
+
+			//PRIORITY still not in action haha
+
+			//DatabaseRW.addEvent(n, dsc, yr, mnth, dy, hr, mins, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
+
+			//frame.setVisible(false);
+>>>>>>> b8228e7897bad0d88061c1e03f8f995f543b9018
 			frame.dispose();
 			System.out.println(n);
 			System.out.println(dsc);
 			System.out.println(mnth);
 			System.out.println(dy);
 			System.out.println(yr);
+<<<<<<< HEAD
 			System.out.println(isAllDay);
 			System.out.println(repeats);
+=======
+			System.out.println(stat);
+			System.out.println(hr);
+			System.out.println(mins);
+			System.out.println(ap);
+>>>>>>> b8228e7897bad0d88061c1e03f8f995f543b9018
 			Calendar.addEntryOpen++;
 		}
     }
@@ -323,7 +388,6 @@ public class AddEntry extends JPanel {
 
 			if( timeSelection.isSelected() )
 			{
-				
 				hour1.setEnabled(true);
 				minute1.setEnabled(true);
 				ampm1.setEnabled(true);
