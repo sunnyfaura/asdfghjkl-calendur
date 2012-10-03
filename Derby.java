@@ -179,6 +179,7 @@ public class Derby
     /*===================================*/
     public void doStatement(int m){
         try{
+        System.out.println("passing values: " + name + " " + desc);
          ResultSet id = getId.executeQuery();
          if(m == 11){
             entryInsert.setString(1, name);

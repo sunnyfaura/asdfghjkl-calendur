@@ -289,8 +289,6 @@ public class AddEntry extends JPanel {
 			int hr = (int)hour.getSelectedIndex()+1; //returns exact hour
 			int mins = (int)minute.getSelectedIndex(); //returns exact minutes
 			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
-			//boolea allday = ()
-
 
 			//PRIORITY still not in action haha
 

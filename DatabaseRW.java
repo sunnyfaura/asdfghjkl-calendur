@@ -21,14 +21,14 @@ public class DatabaseRW
 		database = db;
 	}
 
-	public static void addTask(String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority)
+	public static void addTask(String n, String d, int y, int m, int da, int h, int min, int s, int p)
 	{
-		String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
+		String str = y + "-" + m + "-" + da + " " + h + ":" + min + ":00.000"; 
         System.out.println(str);
-		name = name;
-		desc = desc;
-		status = status;
-		priority = priority;
+		name = n;
+		desc = d;
+		status = s;
+		priority = p;
 		timestamp = Timestamp.valueOf(str);
 
 		answer = 11;
