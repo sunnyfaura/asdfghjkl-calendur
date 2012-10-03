@@ -50,7 +50,7 @@ public class DatabaseRW
 	public static void addEvent(String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
 	{
 		//String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
-        System.out.println(str);
+        //System.out.println(str);
 		name = name;
 		desc = desc;
 		
