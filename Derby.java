@@ -274,6 +274,16 @@ public class Derby
             printSQLException(sqle);
         }
     }
+
+    public void destroyEverything(){
+        try{
+            s.execute("drop table entry");
+            s.execute("drop table event");
+            s.execute("drop table task");
+        } catch(SQLException sqle){
+            printSQLException(sqle);
+        }
+    }
     
     /*=================================================*/
     /** The following are copypasta from Derby sauce **/
