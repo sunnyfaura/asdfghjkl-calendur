@@ -74,7 +74,7 @@ public class Derby
         try
         {
             prepareThyStatements();
-            
+
             /*========================================================*/
             /** All inserts, updates, deletes, queries are done here **/
             /*========================================================*/
@@ -156,7 +156,7 @@ public class Derby
             //Insert statements
             entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, startTime) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             taskInsert = conn.prepareStatement("INSERT INTO task (E_id, status, priority) VALUES (?, ?, ?)");
-            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, repeating) VALUES (?, ?, ?, ?)");
+            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, repeating) VALUES (?, ?, ?)");
 
             //Update statements
             entryUpdate = conn.prepareStatement("UPDATE entry SET name=?, description=?, startTime=? WHERE E_id=?");

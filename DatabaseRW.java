@@ -45,7 +45,7 @@ public class DatabaseRW
 
 	}
 
-	public static void addEvent(String n, String de, int y, int mo, int da, int h, int mi, boolean iad,s int r)
+	public static void addEvent(String n, String de, int y, int mo, int da, int h, int mi, boolean iad, int r)
 	{
 		name = n;
 		desc = de;
@@ -115,7 +115,7 @@ public class DatabaseRW
 	}
 
 	public static Timestamp getTimestamp(){
-		return timestamp;
+		return startTime;
 	}
 	
 	/*===========================*/
