@@ -12,7 +12,7 @@ public class AddEntry extends JPanel {
 	JComboBox month1, day1, year1, hour1, minute1, ampm1, repeating;
 	public static JFrame frame;
 	public JRadioButtonMenuItem allDay, timeSelection;
-	JCheckBox repeatingLabel;
+	JLabel repeatingLabel;
 	JButton addTaskB, addEventB;
 	JScrollPane dscScroll, dsc1Scroll;
 
@@ -69,9 +69,9 @@ public class AddEntry extends JPanel {
 		String[] priority0 = { "Very High", "High", "Normal", "Low", "Very Low" };
 		priority = new JComboBox(priority0);
 		
-		String[] repeating0 = { "Daily", "Weekly", "Monthly", "Yearly" };
+		String[] repeating0 = { "None","Daily", "Weekly", "Monthly", "Yearly" };
 		repeating = new JComboBox(repeating0);
-		repeating.setEnabled(false);
+		repeating.setEnabled(true);
         
         JTabbedPane tabbedPane = new JTabbedPane();
         ImageIcon icon = createImageIcon("tray.jpg");
@@ -183,8 +183,7 @@ public class AddEntry extends JPanel {
 						eventProp.add(eventDeadlineInfo);
 						eventProp.add(allDay);
 							JPanel isRepeating = new JPanel(new BorderLayout());	
-								repeatingLabel = new JCheckBox("Repeat Event?");
-								repeatingLabel.addItemListener( new repeating_Select() );
+								repeatingLabel = new JLabel("Repeat Event?");
 								isRepeating.add(repeatingLabel, BorderLayout.LINE_START);
 								isRepeating.add(repeating, BorderLayout.CENTER);
 						eventProp.add(isRepeating);
@@ -272,6 +271,11 @@ public class AddEntry extends JPanel {
 			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
 			int prt = (int)priority.getSelectedIndex();
 
+			if( ap == 1 )
+			{
+				hr = hr + 12;
+			}
+
 			System.out.println(n);
 			System.out.println(dsc);
 			System.out.println(yr);
@@ -284,12 +288,13 @@ public class AddEntry extends JPanel {
 			System.out.println(prt);
 			Calendar.addEntryOpen++;
 			
-			if( n.length() > 0 && n.length() <= 255 && dsc.length() > 0 && dsc.length() <= 255) 
+
+			if( n.length()>0 && n.length()<=255 && dsc.length()>0 && dsc.length() <= 255 )
 			{
 				DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,prt);
 				frame.dispose();
 			}
-			else if (n.length() > 255)
+			else if(n.length() > 255)
 			{
 				JOptionPane.showMessageDialog(frame,"Name cannot be longer than 255 characters.","Message",JOptionPane.ERROR_MESSAGE);
 			}
@@ -297,7 +302,7 @@ public class AddEntry extends JPanel {
 			{
 				JOptionPane.showMessageDialog(frame,"Description cannot be longer than 255 characters.","Message",JOptionPane.ERROR_MESSAGE);
 			}
-			else if(n.length() == 0 )
+			else if(n.length() == 0)
 			{
 				JOptionPane.showMessageDialog(frame,"Please enter a name.","Message",JOptionPane.ERROR_MESSAGE);
 			}
@@ -321,6 +326,13 @@ public class AddEntry extends JPanel {
 			int ap = (int)ampm1.getSelectedIndex(); // am = 0; pm = 1;
 			boolean iad = repeatingLabel.isSelected();
 
+			if(ap == 1)
+			{
+				h = h + 12;
+			}
+			boolean iad = allDay.isSelected();
+			int r = (int)repeating.getSelectedIndex();
+			
 			System.out.println(n);
 			System.out.println(de);
 			System.out.println(mo);
@@ -331,13 +343,12 @@ public class AddEntry extends JPanel {
 			System.out.println(mi);
 			Calendar.addEntryOpen++;
 			
-			if( n.length() > 0 && n.length() <= 255 && de.length() > 0 && de.length() <= 255) 
+			if( n.length()>0 && n.length()<=255 && de.length()>0 && de.length() <= 255 )
 			{
-				//add to db
-				//DatabaseRW.addEvent(n,de,y,mo,da,h,mi,iad,endY,endMo,endDa,endH,endMi,r);
+				DatabaseRW.addEvent(n, de, y, mo, da, h, mi, iad, r);
 				frame.dispose();
 			}
-			else if (n.length() > 255)
+			else if(n.length() > 255)
 			{
 				JOptionPane.showMessageDialog(frame,"Name cannot be longer than 255 characters.","Message",JOptionPane.ERROR_MESSAGE);
 			}
@@ -345,7 +356,7 @@ public class AddEntry extends JPanel {
 			{
 				JOptionPane.showMessageDialog(frame,"Description cannot be longer than 255 characters.","Message",JOptionPane.ERROR_MESSAGE);
 			}
-			else if(n.length() == 0 )
+			else if(n.length() == 0)
 			{
 				JOptionPane.showMessageDialog(frame,"Please enter a name.","Message",JOptionPane.ERROR_MESSAGE);
 			}
@@ -379,21 +390,6 @@ public class AddEntry extends JPanel {
 				hour1.setEnabled(false);
 				minute1.setEnabled(false);
 				ampm1.setEnabled(false);
-			}
-		}
-	}
-	
-	class repeating_Select implements ItemListener
-	{
-		public void itemStateChanged(ItemEvent e)
-		{
-			if( repeatingLabel.isSelected() )
-			{
-				repeating.setEnabled(true);
-			}
-			else
-			{
-				repeating.setEnabled(false);
 			}
 		}
 	}
