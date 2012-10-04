@@ -47,8 +47,9 @@ public class Derby
     int status, priority;
     Timestamp timestamp;
     //event columns
-    boolean isAllDay; int endYear, endMonth, endDay, endHour, endMinute, repeating;
-    Timestamp startTime, endTime;
+    boolean isAllDay;
+	int endYear, endMonth, endDay, endHour, endMinute, repeating;
+    Timestamp startTime;
 
     public void go() {
         System.out.println("Derby starting in " + framework + " mode");
@@ -149,12 +150,12 @@ public class Derby
             //Insert statements
             entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, startTime) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             taskInsert = conn.prepareStatement("INSERT INTO task (E_id, status, priority) VALUES (?, ?, ?)");
-            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, endTime, repeating) VALUES (?, ?, ?, ?)");
+            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, repeating) VALUES (?, ?, ?, ?)");
 
             //Update statements
             entryUpdate = conn.prepareStatement("UPDATE entry SET name=?, description=?, startTime=? WHERE E_id=?");
             taskUpdate = conn.prepareStatement("UPDATE task SET status=?, priority=? where E_id=?");
-            eventUpdate = conn.prepareStatement("UPDATE event SET isAllDay=?, endTime=?, repeating=? WHERE E_id=?");
+            eventUpdate = conn.prepareStatement("UPDATE event SET isAllDay=?, repeating=? WHERE E_id=?");
 
             //Delete statements
             entryDelete = conn.prepareStatement("DELETE FROM entry WHERE E_id=?");
@@ -208,8 +209,7 @@ public class Derby
 					key = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
 					eventInsert.setInt(1, key);
 					eventInsert.setBoolean(2, isAllDay);
-					eventInsert.setTimestamp(3, endTime);
-					eventInsert.setInt(4,repeating);
+					eventInsert.setInt(3,repeating);
 					eventInsert.executeUpdate();
                     System.out.println("Insert Event Succesful! Inserted at ID: " + key);
 					break;
@@ -231,9 +231,8 @@ public class Derby
 					// entryUpdate.setInt(4, id);
 					// entryUpdate.executeUpdate();
 					// eventUpdate.setBoolean(1, isAllDay);
-					//eventUpdate.setTimestamp(2, endTime);
-					// eventUpdate.setInt(3, repeating);
-					// eventUpdate.setInt(4, id);
+					// eventUpdate.setInt(2, repeating);
+					// eventUpdate.setInt(3, id);
 					// eventUpdate.executeUpdate();
 					break;
 				case 31:
