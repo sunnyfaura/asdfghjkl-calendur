@@ -65,7 +65,6 @@ public class Derby
             s = conn.createStatement(); 
             createTables();      
             System.out.println("Database Initialization Complete");
-            prepareThyStatements();
         } catch (SQLException sqle){
             printSQLException(sqle);
         }
@@ -74,6 +73,8 @@ public class Derby
     public void go() {
         try
         {
+            prepareThyStatements();
+            
             /*========================================================*/
             /** All inserts, updates, deletes, queries are done here **/
             /*========================================================*/
