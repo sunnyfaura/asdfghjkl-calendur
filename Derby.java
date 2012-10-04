@@ -190,6 +190,7 @@ public class Derby
 					entryInsert.setTimestamp(3, startTime);
 					entryInsert.executeUpdate();
 					id = getId.executeQuery();
+					id.next();
 					key = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
 					taskInsert.setInt(1, key);
 					taskInsert.setInt(2, status);
@@ -203,6 +204,7 @@ public class Derby
 					entryInsert.setTimestamp(3, startTime);
 					entryInsert.executeUpdate();
 					id = getId.executeQuery();
+					id.next();
 					key = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
 					eventInsert.setInt(1, key);
 					eventInsert.setBoolean(2, isAllDay);
