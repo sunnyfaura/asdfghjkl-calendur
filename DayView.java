@@ -25,7 +25,13 @@ public class DayView
 		catch (UnsupportedLookAndFeelException e) {}
 		
 		//instantiate component
+		/*ArrayList<Task> leTasks = DatabaseRW.queryDayTasks(iyear, imonth, idate);
+		String[] leTaskNames = new String[leTasks.size()];
 
+		for(int i = 0; i < leTasks.size(); i++)
+		{
+			leTaskNames[i] = leTasks.get(i).getName();
+		}*/
 		tasklabel = new JLabel( "Tasks" );
 		eventlabel = new JLabel( "Events" );
 		
@@ -33,6 +39,7 @@ public class DayView
 		day = new JLabel( days[iday]+"" );
 		String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 		date = new JLabel( months[imonth]+" "+idate+", "+iyear ); // <---connect to calendar or something
+		//tasks = new JList(leTaskNames);
 		tasks = new JList();
 		events = new JList();
 		panel = new JPanel(new GridLayout(2, 1));

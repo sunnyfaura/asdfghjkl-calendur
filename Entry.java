@@ -14,4 +14,9 @@ public abstract class Entry
 		desc = dsc;
 		time = t;
 	}
+
+	public String getName()
+	{
+		return name;
+	}
 }

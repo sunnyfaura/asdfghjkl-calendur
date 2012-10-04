@@ -276,7 +276,7 @@ public class AddEntry extends JPanel {
 				hr = hr + 12;
 			}
 
-			System.out.println(n);
+			/*System.out.println(n);
 			System.out.println(dsc);
 			System.out.println(yr);
 			System.out.println(mnth);
@@ -285,12 +285,13 @@ public class AddEntry extends JPanel {
 			System.out.println(hr);
 			System.out.println(mins);
 			System.out.println(ap);
-			System.out.println(prt);
+			System.out.println(prt);*/
 			Calendar.addEntryOpen++;
 			
 			if( n.length()>0 && n.length()<=255 && dsc.length()>0 && dsc.length() <= 255 )
 			{
 				DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,prt);
+				DatabaseRW.queryTask();
 				frame.dispose();
 			}
 			else if(n.length() > 255)
