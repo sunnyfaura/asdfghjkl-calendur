@@ -109,11 +109,7 @@ public class DatabaseRW
 	public static Timestamp getStartTime(){
 		return startTime;
 	}
-
-	public static Timestamp getEndTime(){
-		return endTime;
-	}
-
+	
 	public static Timestamp getTimestamp(){
 		return startTime;
 	}
