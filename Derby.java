@@ -37,9 +37,6 @@ public class Derby
     PreparedStatement taskDelete;
     PreparedStatement eventDelete;
 
-    PreparedStatement queryDayTasks;
-    PreparedStatement queryDayEvents;
-
     PreparedStatement getId;
 
     //see doStatement()
@@ -50,16 +47,15 @@ public class Derby
     int status, priority;
     Timestamp timestamp;
     //event columns
-    boolean isAllDay;
-	int endYear, endMonth, endDay, endHour, endMinute, repeating;
-    Timestamp startTime;
-    Timestamp queryStart, queryEnd;
-    int id;
+    boolean isAllDay; int endYear, endMonth, endDay, endHour, endMinute, repeating;
+    Timestamp startTime, endTime;
 
-    public void init(){
-        try {
-            System.out.println("Derby starting in " + framework + " mode");
-            loadDriver();
+    public void go() {
+        System.out.println("Derby starting in " + framework + " mode");
+        loadDriver();
+
+        try
+        {
             String dbName = "derbyDB"; // the name of the database
             conn = DriverManager.getConnection(protocol + dbName + ";create=true");
             System.out.println("Connected to and created database " + dbName);
@@ -70,15 +66,6 @@ public class Derby
             s = conn.createStatement(); 
             createTables();      
             System.out.println("Database Initialization Complete");
-
-        } catch (SQLException sqle){
-            printSQLException(sqle);
-        }
-    }
-
-    public void go() {
-        try
-        {
             prepareThyStatements();
 
             /*========================================================*/
@@ -91,9 +78,6 @@ public class Derby
                 startTime = DatabaseRW.getStartTime();
                 status = DatabaseRW.getStatus();
                 priority = DatabaseRW.getPriority();
-                repeating = DatabaseRW.getRepeating();
-                queryStart = DatabaseRW.getQueryStart();
-                queryEnd = DatabaseRW.getQueryEnd();
 
                 doStatement(answer);
 
@@ -148,7 +132,7 @@ public class Derby
             System.out.println("Creating Tables");
             s.execute("CREATE TABLE entry(E_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), name varchar(255), description varchar(255), startTime timestamp, CONSTRAINT pk PRIMARY KEY (E_id))");
             System.out.println("Created table entry");
-            s.execute("CREATE TABLE event(E_id int NOT NULL PRIMARY KEY, isAllDay boolean, repeating smallint)");
+            s.execute("CREATE TABLE event(E_id int NOT NULL PRIMARY KEY, isAllDay boolean, endTime timestamp, repeating smallint)");
             System.out.println("Created table event");
             s.execute("CREATE TABLE task(E_id int NOT NULL PRIMARY KEY, status smallint, priority smallint)");
             System.out.println("Created table task");
@@ -165,21 +149,17 @@ public class Derby
             //Insert statements
             entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, startTime) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             taskInsert = conn.prepareStatement("INSERT INTO task (E_id, status, priority) VALUES (?, ?, ?)");
-            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, repeating) VALUES (?, ?, ?)");
+            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, endTime, repeating) VALUES (?, ?, ?, ?)");
 
             //Update statements
             entryUpdate = conn.prepareStatement("UPDATE entry SET name=?, description=?, startTime=? WHERE E_id=?");
             taskUpdate = conn.prepareStatement("UPDATE task SET status=?, priority=? where E_id=?");
-            eventUpdate = conn.prepareStatement("UPDATE event SET isAllDay=?, repeating=? WHERE E_id=?");
+            eventUpdate = conn.prepareStatement("UPDATE event SET isAllDay=?, endTime=?, repeating=? WHERE E_id=?");
 
             //Delete statements
             entryDelete = conn.prepareStatement("DELETE FROM entry WHERE E_id=?");
             taskDelete = conn.prepareStatement("DELETE from task WHERE E_id=?");
             eventDelete = conn.prepareStatement("DELETE FROM event WHERE E_id=?");
-
-            //query by day
-            queryDayTasks = conn.prepareStatement("SELECT entry.E_id, name, description, startTime, status, priority FROM entry JOIN task ON entry.E_id = task.E_id WHERE startTime BETWEEN ? AND ?");
-            queryDayEvents = conn.prepareStatement("SELECT entry.E_id, name, description, startTime, isAllDay, repeating FROM entry JOIN event ON entry.E_id = event.E_id WHERE startTime BETWEEN ? AND ?");
 
             getId = conn.prepareStatement("SELECT MAX(E_id) from entry");
         } catch(SQLException sqle){
@@ -187,22 +167,20 @@ public class Derby
         }
     }
 
-    /*=======================/
-        11 = insert task
-        12 = insert event
-        21 = update task
-        22 = update event
-        31 = delete task
-        32 = delete event
-        41 = query task
-        42 = query event
-        51 = query tasks by day
-        52 = query events by day
-    /*=====================*/
+    /*=====================================/
+                11 = insert task
+                12 = insert event
+                21 = update task
+                22 = update event
+                31 = delete task
+                32 = delete event
+                41 = query task
+                42 = query event
+    /*===================================*/
     public void doStatement(int m){
         try{
 			//System.out.println("passing values: " + name + " " + desc);
-			ResultSet pKey = null;
+			ResultSet id = getId.executeQuery();
 			int key = 0;
 			switch(m)
 			{
@@ -211,9 +189,8 @@ public class Derby
 					entryInsert.setString(2, desc);
 					entryInsert.setTimestamp(3, startTime);
 					entryInsert.executeUpdate();
-					pKey = getId.executeQuery();
-					pKey.next();
-					key = pKey.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
+					id.next();
+					key = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
 					taskInsert.setInt(1, key);
 					taskInsert.setInt(2, status);
 					taskInsert.setInt(3, priority);
@@ -225,50 +202,50 @@ public class Derby
 					entryInsert.setString(2, desc);
 					entryInsert.setTimestamp(3, startTime);
 					entryInsert.executeUpdate();
-					pKey = getId.executeQuery();
-					pKey.next();
-					key = pKey.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
+					id.next();
+					key = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
 					eventInsert.setInt(1, key);
 					eventInsert.setBoolean(2, isAllDay);
-					eventInsert.setInt(3,repeating);
+					eventInsert.setTimestamp(3, endTime);
+					eventInsert.setInt(4,repeating);
 					eventInsert.executeUpdate();
-                    System.out.println("Insert Event Succesful! Inserted at ID: " + key);
 					break;
 				case 21:
-					entryUpdate.setString(1, name);
-					entryUpdate.setString(2, desc);
-					entryUpdate.setTimestamp(3, startTime);
-					entryUpdate.setInt(4, id);
-					entryUpdate.executeUpdate();
-					taskUpdate.setInt(1, status);
-					taskUpdate.setInt(2, priority);
-					taskUpdate.setInt(3, id);
-					taskUpdate.executeUpdate();
+					// entryUpdate.setString(1, name);
+					// entryUpdate.setString(2, desc);
+					// entryUpdate.setTimestamp(3, startTime);
+					// entryUpdate.setInt(4, id);
+					// entryUpdate.executeUpdate();
+					// taskUpdate.setInt(1, status);
+					// taskUpdate.setInt(2, priority);
+					// taskUpdate.setInt(3, id);
+					// taskUpdate.executeUpdate();
 					break;
 				case 22:
-					entryUpdate.setString(1, name);
-					entryUpdate.setString(2, desc);
-					entryUpdate.setTimestamp(3, startTime);
-					entryUpdate.setInt(4, id);
-					entryUpdate.executeUpdate();
-					eventUpdate.setBoolean(1, isAllDay);
-					eventUpdate.setInt(2, repeating);
-					eventUpdate.setInt(3, id);
-					eventUpdate.executeUpdate();
+					// entryUpdate.setString(1, name);
+					// entryUpdate.setString(2, desc);
+					//entryInsert.setTimestamp(3, startTime);
+					// entryUpdate.setInt(4, id);
+					// entryUpdate.executeUpdate();
+					// eventUpdate.setBoolean(1, isAllDay);
+					//eventUpdate.setTimestamp(2, endTime);
+					// eventUpdate.setInt(3, repeating);
+					// eventUpdate.setInt(4, id);
+					// eventUpdate.executeUpdate();
 					break;
 				case 31:
-					key = pKey.getInt(1);
-					entryDelete.setInt(1, key);
-					entryDelete.executeUpdate();
-					taskDelete.setInt(1,key);
-					taskDelete.executeUpdate();
+					// key = id.getInt(1);
+					// entryDelete.setInt(1, key);
+					// entryDelete.executeUpdate();
+					// taskDelete.setInt(1,key);
+					// taskDelete.executeUpdate();
 					break;
 				case 32:
-					key = pKey.getInt(1);
-					entryDelete.setInt(1, key);
-					entryDelete.executeUpdate();
-					eventDelete.setInt(1,key);
-					eventDelete.executeUpdate();
+					// key = id.getInt(1);
+					// entryDelete.setInt(1, key);
+					// entryDelete.executeUpdate();
+					// eventDelete.setInt(1,key);
+					// eventDelete.executeUpdate();
 					break;
 				case 41:
 					rs = s.executeQuery("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
@@ -281,36 +258,15 @@ public class Derby
 					rs.close();
 					break;
 				case 42:
-					rs = s.executeQuery("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
-					System.out.println("=========================================");
-					while(rs.next()){
-					    //System.out.println(rs.getWhatever(1)+"::::"+rs.getWhatever());
-					}
-					System.out.println("=========================================");
-					rs.close();
+					// rs = s.executeQuery("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
+					// System.out.println("=========================================");
+					// while(rs.next()){
+					//     //System.out.println(rs.getWhatever(1)+"::::"+rs.getWhatever());
+					// }
+					// System.out.println("=========================================");
+					// rs.close();
 					break;
-                case 51:
-                    System.out.println("balls");
-                    queryDayTasks.setTimestamp(1, queryStart);
-                    queryDayTasks.setTimestamp(2, queryEnd);
-                    DatabaseRW.setResults(queryDayTasks.executeQuery());
-                    break;
-                case 52:
-                    queryDayEvents.setTimestamp(1, queryStart);
-                    queryDayEvents.setTimestamp(1, queryEnd);
-                    DatabaseRW.setResults(queryDayEvents.executeQuery());
-                    break;
 			}
-        } catch(SQLException sqle){
-            printSQLException(sqle);
-        }
-    }
-
-    public void destroyEverything(){
-        try{
-            s.execute("drop table entry");
-            s.execute("drop table event");
-            s.execute("drop table task");
         } catch(SQLException sqle){
             printSQLException(sqle);
         }
