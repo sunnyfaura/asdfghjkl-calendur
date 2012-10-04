@@ -51,12 +51,10 @@ public class Derby
 	int endYear, endMonth, endDay, endHour, endMinute, repeating;
     Timestamp startTime;
 
-    public void go() {
-        System.out.println("Derby starting in " + framework + " mode");
-        loadDriver();
-
-        try
-        {
+    public void init(){
+        try {
+            System.out.println("Derby starting in " + framework + " mode");
+            loadDriver();
             String dbName = "derbyDB"; // the name of the database
             conn = DriverManager.getConnection(protocol + dbName + ";create=true");
             System.out.println("Connected to and created database " + dbName);
@@ -68,7 +66,14 @@ public class Derby
             createTables();      
             System.out.println("Database Initialization Complete");
             prepareThyStatements();
+        } catch (SQLException sqle){
+            printSQLException(sqle);
+        }
+    }
 
+    public void go() {
+        try
+        {
             /*========================================================*/
             /** All inserts, updates, deletes, queries are done here **/
             /*========================================================*/
