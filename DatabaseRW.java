@@ -23,8 +23,6 @@ public class DatabaseRW
 
 	public static void addTask(String n, String de, int y, int mo, int da, int h, int mi, int s, int p)
 	{
-		//String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
-        //System.out.println(str);
 		name = n;
 		desc = de;
 		status = s;
@@ -49,20 +47,13 @@ public class DatabaseRW
 
 	public static void addEvent(String n, String de, int y, int mo, int da, int h, int mi, boolean iad, int endY, int endMo, int endDa, int endH, int endMi, int r)
 	{
-		//String str = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":00.000"; 
-        //System.out.println(str);
 		name = n;
 		desc = de;
-		
-		//String str2 = endYear + "-" + endMonth + "-" + endDay + " " + endHour + ":" + endMinute + ":00.000"; 
-
 		startTime = intToTimestamp(y, mo, da, h, mi);
 		endTime = intToTimestamp(endY, endMo, endDa, endH, endMi);
-
 		isAllDay = iad;
-
 		repeating = r;
-
+		
 		answer = 12;
 
 		System.out.println("Event table has been updated.");

@@ -48,9 +48,7 @@ public class DayView
 		frmMain.setResizable(false);
 		frmMain.setVisible(true);
 		frmMain.setAlwaysOnTop(true);
-		//frmMain.setLayout(new GridLayout(2, 1));
 		
-		//panel.setLayout(new GridLayout(2,1));
 		//add contents to pane
 		pane.add(panel, BorderLayout.CENTER);
 		JPanel taskPanel = new JPanel(new BorderLayout());
@@ -79,6 +77,7 @@ public class DayView
 		pane.add(new JLabel(" "), BorderLayout.PAGE_END);
 		pane.add(new JLabel("   "), BorderLayout.LINE_END);
 		pane.add(new JLabel("   "), BorderLayout.LINE_START);
+		
 		//set bounds
 		panel.setBounds(0, 0, 500, 500);
 		day.setBounds(10, 10, 80,20);
@@ -88,9 +87,4 @@ public class DayView
 		//eventlabel.setBounds(10, 220, 80, 20);
 		//eventscroll.setBounds(10, 240, 300, 150);
 	}
-	
-	/*public static void main( String[] args )
-	{
-		new DayView(5,8,28,2012);
-	}*/
 }

@@ -256,6 +256,7 @@ public class AddEntry extends JPanel {
         });
     }
 
+    //THERE IS A NEED TO CHECK IF DESC IS MORE THAN 255 CHARACTERS
 
     //nawawala yung addEntryListener pls fix
     class addTask_Action implements ActionListener{
@@ -271,7 +272,6 @@ public class AddEntry extends JPanel {
 			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
 			int prt = (int)priority.getSelectedIndex();
 
-			//frame.setVisible(false)
 			System.out.println(n);
 			System.out.println(dsc);
 			System.out.println(yr);
@@ -286,8 +286,7 @@ public class AddEntry extends JPanel {
 			
 			if( n.length() > 0 && n.length() <= 255 && dsc.length() > 0 && dsc.length() <= 255) 
 			{
-				DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,1);
-				DatabaseRW.queryTask();
+				DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,prt);
 				frame.dispose();
 			}
 			else if (n.length() > 255)
@@ -309,35 +308,6 @@ public class AddEntry extends JPanel {
 
 		}
     }
-	
-	/*private class addEvent_Action implements ActionListener
-	{	//INSERT TASK TO DATABASE
-		public void actionPerformed(ActionEvent e){
-			String n = name1.getText();
-			String dsc = desc1.getText();
-			int mnth = (int)month1.getSelectedIndex(); //January = 0; December = 11;
-			int dy = (int)day1.getSelectedIndex()+1;  //returns exact day
-			int yr = Integer.parseInt(year1.getSelectedItem()+""); //returns exact year
-			boolean isAllDay = allDay.isSelected();
-			
-			int hr, mins, ap;
-			if( isAllDay )
-			{
-				hr = ((int)(hour.getSelectedIndex()))+1; //returns exact hour
-				mins = ((int)minute.getSelectedIndex()); //returns exact minutes
-				ap = (int)ampm.getSelectedIndex();		// am = 0; pm = 1;
-			}
-			
-			boolean repeats = repeatingLabel.isSelected();
-			int rpt;
-			if( repeats )
-			{
-				rpt = (int)repeating.getSelectedIndex();
-			}
-			
-			frame.setVisible(false);
-		}
-    }*/
 
     class addEvent_Action implements ActionListener{
 		public void actionPerformed(ActionEvent e){
@@ -351,13 +321,7 @@ public class AddEntry extends JPanel {
 			int ap = (int)ampm1.getSelectedIndex(); // am = 0; pm = 1;
 			boolean iad = repeatingLabel.isSelected();
 
-			//PRIORITY still not in action haha
-
-			//DatabaseRW.addEvent(n,de,y,mo,da,h,mi,iad,endY,endMo,endDa,endH,endMi,r);
-
-			//frame.setVisible(false);
 			System.out.println(n);
-			
 			System.out.println(de);
 			System.out.println(mo);
 			System.out.println(da);
@@ -365,12 +329,12 @@ public class AddEntry extends JPanel {
 			System.out.println(iad);
 			System.out.println(h);
 			System.out.println(mi);
-			
 			Calendar.addEntryOpen++;
 			
 			if( n.length() > 0 && n.length() <= 255 && de.length() > 0 && de.length() <= 255) 
 			{
 				//add to db
+				//DatabaseRW.addEvent(n,de,y,mo,da,h,mi,iad,endY,endMo,endDa,endH,endMi,r);
 				frame.dispose();
 			}
 			else if (n.length() > 255)

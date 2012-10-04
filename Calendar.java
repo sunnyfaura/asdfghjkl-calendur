@@ -91,6 +91,9 @@ public class Calendar extends JFrame
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
     		public void windowClosing(WindowEvent winEvt) {
     			calendarOpen++;
+    			if(calendarOpen%2==0 && pinboardOpen%2==0){
+                   SysTray.trayIcon.displayMessage("I'M NOT DEAD YET","Right-click for more", TrayIcon.MessageType.INFO);
+                }
        		}
 		});
 		this.setVisible(true);
@@ -127,8 +130,7 @@ public class Calendar extends JFrame
 		pnlCalendar.add(btnPrev);
 		pnlCalendar.add(btnNext);
 		pnlCalendar.add(pinBoard);
-		pnlCalendar.add(addEntry);
-		
+		pnlCalendar.add(addEntry);	
 		
 		//set bounds
 		pnlCalendar.setBounds(0,0,500,500);
