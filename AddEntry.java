@@ -287,6 +287,7 @@ public class AddEntry extends JPanel {
 			if( n.length() > 0 && n.length() <= 255 && dsc.length() > 0 && dsc.length() <= 255) 
 			{
 				DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,prt);
+				DatabaseRW.queryTask();
 				frame.dispose();
 			}
 			else if (n.length() > 255)

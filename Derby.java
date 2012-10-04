@@ -50,24 +50,30 @@ public class Derby
     boolean isAllDay; int endYear, endMonth, endDay, endHour, endMinute, repeating;
     Timestamp startTime, endTime;
 
-    public void go() {
-        System.out.println("Derby starting in " + framework + " mode");
-        loadDriver();
+    // public Derby(){
+    //     try{
+           
 
+    //     } catch(SQLException sqle) {
+    //         printSQLException(sqle);
+    //     }
+    // }
+
+    public void go() {
         try
         {
+            System.out.println("Derby starting in " + framework + " mode");
+            loadDriver();
             String dbName = "derbyDB"; // the name of the database
             conn = DriverManager.getConnection(protocol + dbName + ";create=true");
             System.out.println("Connected to and created database " + dbName);
             conn.setAutoCommit(false);
-
-            /* Creating a statement object that we can use for running various
+             /* Creating a statement object that we can use for running various
              * SQL statements commands against the database.*/
             s = conn.createStatement(); 
             createTables();      
             System.out.println("Database Initialization Complete");
             prepareThyStatements();
-
             /*========================================================*/
             /** All inserts, updates, deletes, queries are done here **/
             /*========================================================*/
