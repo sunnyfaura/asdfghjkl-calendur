@@ -133,7 +133,7 @@ public class Derby
             System.out.println("Creating Tables");
             s.execute("CREATE TABLE entry(E_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), name varchar(255), description varchar(255), startTime timestamp, CONSTRAINT pk PRIMARY KEY (E_id))");
             System.out.println("Created table entry");
-            s.execute("CREATE TABLE event(E_id int NOT NULL PRIMARY KEY, isAllDay boolean, endTime timestamp, repeating smallint)");
+            s.execute("CREATE TABLE event(E_id int NOT NULL PRIMARY KEY, isAllDay boolean, repeating smallint)");
             System.out.println("Created table event");
             s.execute("CREATE TABLE task(E_id int NOT NULL PRIMARY KEY, status smallint, priority smallint)");
             System.out.println("Created table task");
