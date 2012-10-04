@@ -12,7 +12,7 @@ public class DatabaseRW
 	public static int status, priority;
 	public static boolean isAllDay;
 	public static int endYear, endMonth, endDay, endHour, endMinute, repeating;
-	public static Timestamp startTime, endTime, timestamp;
+	public static Timestamp startTime, endTime, queryStart, queryEnd;
 
 	static Derby database = null;
 
@@ -45,12 +45,11 @@ public class DatabaseRW
 
 	}
 
-	public static void addEvent(String n, String de, int y, int mo, int da, int h, int mi, boolean iad, int endY, int endMo, int endDa, int endH, int endMi, int r)
+	public static void addEvent(String n, String de, int y, int mo, int da, int h, int mi, boolean iad,s int r)
 	{
 		name = n;
 		desc = de;
 		startTime = intToTimestamp(y, mo, da, h, mi);
-		endTime = intToTimestamp(endY, endMo, endDa, endH, endMi);
 		isAllDay = iad;
 		repeating = r;
 		
