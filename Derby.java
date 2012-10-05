@@ -93,102 +93,160 @@ public class Derby
 	
 	public int insertEntry(String n, String d, Timestamp st)
 	{
-		ps = conn.prepareStatement("INSERT INTO entry (name, description, startTime) VALUES ( ?, ?, ? )", Statement.RETURN_GENERATED_KEYS);
+		try{
+			ps = conn.prepareStatement("INSERT INTO entry (name, description, startTime) VALUES ( ?, ?, ? )", Statement.RETURN_GENERATED_KEYS);
+			
+			ps.setString(1, n);
+			ps.setString(2, d);
+			ps.setTimestamp(3, st);
+			ps.execute();
+			
+			rs = ps.getGeneratedKeys();
+			
+			int key = 0;
+			
+			while(rs.next())
+			{
+				key = rs.geInt(1);
+			}
+			
+			ps.close();
+			
+			return key;
+		} catch (SQLException balls) {}
 		
-		ps.setString(1, n);
-		ps.setString(2, d);
-		ps.setTimestamp(3, st);
-		ps.execute();
-		
-		rs = ps.getGeneratedKeys();
-		
-		int key = 0;
-		
-		while(rs.next())
-		{
-			key = rs.geInt(1);
-		}
-		
-		ps.close();
-		
-		return key;
+		return 0;
 	}
 	
 	public int insertEvent(String n, String d, Timestamp st, int r, int rk)
 	{
-		int key = insertEntry(n, d, st);
+		try{
+			int key = insertEntry(n, d, st);
+			
+			ps = conn.prepareStatement("INSERT INTO event (id, repeating, repeatKey) VALUES (?, ?, ?)");
+			ps.setInt(1, key);
+			ps.setInt(2, r);
+			ps.setInt(3, rk);
+			ps.execute();
+			
+			ps.close();
+			
+			return key;
+		} catch (SQLException balls) {}
 		
-		ps = conn.prepareStatement("INSERT INTO event (id, repeating, repeatKey) VALUES (?, ?, ?)");
-		ps.setInt(1, key);
-		ps.setInt(2, r);
-		ps.setInt(3, rk);
-		ps.execute();
-		
-		ps.close();
-		
-		return key;
+		return 0;
 	}
 	
 	public int insertTask(String n, String d, Timestamp st, int s, int p)
 	{
-		int key = insertEntry(n, d, st);
+		try{
+			int key = insertEntry(n, d, st);
+			
+			ps = conn.prepareStatement("INSERT INTO event (id, status, priority) VALUES (?, ?, ?)");
+			ps.setInt(1, key);
+			ps.setInt(2, s);
+			ps.setInt(3, p);
+			ps.execute();
+			
+			ps.close();
+			
+			return key;
+		} catch (SQLException balls) {}
 		
-		ps = conn.prepareStatement("INSERT INTO event (id, status, priority) VALUES (?, ?, ?)");
-		ps.setInt(1, key);
-		ps.setInt(2, s);
-		ps.setInt(3, p);
-		ps.execute();
-		
-		ps.close();
-		
-		return key;
+		return 0;
 	}
 	
 	public int updateEntry(int i, int n, int d, Timestamp ts)
 	{
-		ps = conn.prepareStatement("UPDATE entry SET name = ?, description = ?, startTime = ts WHERE id = ?");
-		ps.setString(1, n);
-		ps.setString(2, d);
-		ps.setTimestamp(3, ts);
-		ps.setInt(4, i);
+		try {
+			ps = conn.prepareStatement("UPDATE entry SET name = ?, description = ?, startTime = ts WHERE id = ?");
+			ps.setString(1, n);
+			ps.setString(2, d);
+			ps.setTimestamp(3, ts);
+			ps.setInt(4, i);
+			
+			int returny = ps.executeUpdate();
+			
+			ps.close();
+			
+			return returny;
+		} catch (SQLException balls) {}
 		
-		int returny = ps.executeUpdate();
-		
-		ps.close();
-		
-		return returny;
+		return 0;
 	}
 	
 	public int updateEvent(int i, int n, int d, Timestamp ts, int r, int rk)
 	{
-		updateEntry(i, n, d, ts);
+		try{
+			updateEntry(i, n, d, ts);
+			
+			ps = conn.prepareStatement("UPDATE event SET repeating = ?, repeatKey = ? WHERE id = ?");
+			ps.setInt(1, r);
+			ps.setInt(2, rk);
+			ps.setInt(3, i);
+			
+			int returny = ps.executeUpdate();
+			
+			ps.close();
+			
+			return returny;
+		} catch (SQLException balls) {}
 		
-		ps = conn.prepareStatement("UPDATE event SET repeating = ?, repeatKey = ? WHERE id = ?");
-		ps.setInt(1, r);
-		ps.setInt(2, rk);
-		ps.setInt(3, i);
-		
-		int returny = ps.executeUpdate();
-		
-		ps.close();
-		
-		return returny;
+		return 0;
 	}
 	
 	public int updateTask(int i, int n, int d, Timestamp ts, int s, int p)
 	{
-		updateEntry(i, n, d, ts);
+		try {
+			updateEntry(i, n, d, ts);
+			
+			ps = conn.prepareStatement("UPDATE event SET status = ?, priority = ? WHERE id = ?");
+			ps.setInt(1, s);
+			ps.setInt(2, p);
+			ps.setInt(3, i);
+			
+			int returny = ps.executeUpdate();
+			
+			ps.close();
+			
+			return returny;
+		} catch (SQLException balls) {}
 		
-		ps = conn.prepareStatement("UPDATE event SET status = ?, priority = ? WHERE id = ?");
-		ps.setInt(1, s);
-		ps.setInt(2, p);
-		ps.setInt(3, i);
+		return 0;
+	}
+	
+	public ResultSet queryEvents(Timestamp start, Timestamp end)
+	{
+		try{
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, repeating, repeatKey FROM entry JOIN event ON entry.id = event.id WHERE timeStart BETWEEN ? and ?");
+			ps.setTimestamp(1, start);
+			ps.setTimestamp(2, end);
+			
+			rs = ps.executeQuery();
+			
+			ps.close()
+			
+			return rs;
+		} catch (SQLException balls) {}
 		
-		int returny = ps.executeUpdate();
+		return null;
+	}
+	
+	public ResultSet queryTasks(Timestamp start, Timestamp end)
+	{
+		try{
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM entry JOIN event ON entry.id = event.id WHERE timeStart BETWEEN ? and ?");
+			ps.setTimestamp(1, start);
+			ps.setTimestamp(2, end);
+			
+			rs = ps.executeQuery();
+			
+			ps.close()
+			
+			return rs;
+		} catch (SQLException balls) {}
 		
-		ps.close();
-		
-		return returny;
+		return null;
 	}
 
     /*=====================================*/
