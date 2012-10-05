@@ -50,15 +50,18 @@ public class Derby
     boolean isAllDay; int endYear, endMonth, endDay, endHour, endMinute, repeating;
     Timestamp startTime, endTime;
 
-    public void go() {
+    public void init() throws Exception{
+        String dbName = "derbyDB"; // the name of the database
+        conn = DriverManager.getConnection(protocol + dbName + ";create=true");
+        System.out.println("Connected to and created database " + dbName);
         System.out.println("Derby starting in " + framework + " mode");
         loadDriver();
+    }
 
+    public void go() {
         try
         {
-            String dbName = "derbyDB"; // the name of the database
-            conn = DriverManager.getConnection(protocol + dbName + ";create=true");
-            System.out.println("Connected to and created database " + dbName);
+            
             conn.setAutoCommit(false);
 
             /* Creating a statement object that we can use for running various
@@ -270,6 +273,45 @@ public class Derby
         } catch(SQLException sqle){
             printSQLException(sqle);
         }
+    }
+
+    public static void releaseConnection() throws Ex{
+
+    }
+
+    /*==================*/
+    /* Drop the tables */
+    /*================*/
+
+    public static void dropTables() throws Exception {
+        try {
+            executeUpdate("drop table entry");
+        } catch ( SQLException sqle ) {
+            if (! tableDoesntExist(sqle.getSQLState())) {
+                throw sqle;
+            }
+        }
+        
+        try {
+            executeUpdate("drop table task");
+        } catch ( SQLException sqle ) {
+            if (! tableDoesntExist(sqle.getSQLState())) {
+                throw sqle;
+            }
+        }
+
+        try {
+            executeUpdate("drop table event");
+        } catch ( SQLException sqle ) {
+            if (! tableDoesntExist(sqle.getSQLState())) {
+                throw sqle;
+            }
+        } 
+    }
+
+    private static boolean tableDoesntExist(String sqlState){
+        return sqlState.equals("42X05") ||
+               sqlState.equals("42Y55");
     }
     
     /*=================================================*/

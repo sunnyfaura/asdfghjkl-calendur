@@ -325,13 +325,13 @@ public class AddEntry extends JPanel {
 			int h = (int)hour1.getSelectedIndex()+1; //returns exact hour
 			int mi = (int)minute1.getSelectedIndex(); //returns exact minutes
 			int ap = (int)ampm1.getSelectedIndex(); // am = 0; pm = 1;
-			boolean iad = repeatingLabel.isSelected();
+			boolean iad = allDay.isSelected();
 
 			if(ap == 1)
 			{
 				h = h + 12;
 			}
-			boolean iad = allDay.isSelected();
+			//boolean iad = allDay.isSelected();
 			int r = (int)repeating.getSelectedIndex();
 			
 			System.out.println(n);
