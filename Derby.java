@@ -18,40 +18,17 @@ public class Derby
     private String protocol = "jdbc:derby:";
     
     Connection conn = null;
+	
     /* This ArrayList usage may cause a warning when compiling this class
      * with a compiler for J2SE 5.0 or newer. We are not using generics
      * because we want the source to support J2SE 1.4.2 environments. */
-    ArrayList statements = new ArrayList(); // list of Statements, PreparedStatements    
+	// NEVERMIND I KILELD IT MUAHAHAHAHAHAHA
+	
     Statement s = null;
+	PreparedStatement ps = null;
     ResultSet rs = null;
-
-    PreparedStatement entryInsert;
-    PreparedStatement taskInsert;
-    PreparedStatement eventInsert;
-
-    PreparedStatement entryUpdate;
-    PreparedStatement taskUpdate;    
-    PreparedStatement eventUpdate;
-
-    PreparedStatement entryDelete;
-    PreparedStatement taskDelete;
-    PreparedStatement eventDelete;
-
-    PreparedStatement getId;
-
-    //see doStatement()
-    int answer;
-    //entry columns
-    String name, desc;
-    //task columns
-    int status, priority;
-    Timestamp timestamp;
-    //event columns
-    boolean isAllDay;
-	int endYear, endMonth, endDay, endHour, endMinute, repeating;
-    Timestamp startTime;
-
-    public void init(){
+	
+    public Derby(){
         try {
             System.out.println("Derby starting in " + framework + " mode");
             loadDriver();
@@ -62,117 +39,162 @@ public class Derby
 
             /* Creating a statement object that we can use for running various
              * SQL statements commands against the database.*/
-            s = conn.createStatement(); 
+			
             createTables();      
             System.out.println("Database Initialization Complete");
         } catch (SQLException sqle){
             printSQLException(sqle);
         }
     }
-
-    public void go() {
-        try
-        {
-            prepareThyStatements();
-
-            /*========================================================*/
-            /** All inserts, updates, deletes, queries are done here **/
-            /*========================================================*/
-
-                answer = DatabaseRW.getAnswer();
-                name = DatabaseRW.getName();
-                desc = DatabaseRW.getDesc();
-                startTime = DatabaseRW.getStartTime();
-                status = DatabaseRW.getStatus();
-                priority = DatabaseRW.getPriority();
-
-                doStatement(answer);
-
-            //Making data persistent in the database
-            conn.commit();
-            System.out.println("Committed the transaction");
-        }
-        catch (SQLException sqle){
-            printSQLException(sqle);
-        } finally {
-            // release all open resources to avoid unnecessary memory usage
-
-            // ResultSet
-            try {
-                if (rs != null) {
-                    rs.close();
-                    rs = null;
-                }
-            } catch (SQLException sqle) {
-                printSQLException(sqle);
-            }
-
-            // Statements and PreparedStatements
-            int i = 0;
-            while (!statements.isEmpty()) {
-                // PreparedStatement extend Statement
-                Statement st = (Statement)statements.remove(i);
-                try {
-                    if (st != null) {
-                        st.close();
-                        st = null;
-                    }
-                } catch (SQLException sqle) {
-                    printSQLException(sqle);
-                }
-            }
-
-            //Connection
-            try {
-                if (conn != null) {
-                    conn.close();
-                    conn = null;
-                }
-            } catch (SQLException sqle) {
-                printSQLException(sqle);
-            }
-        }
-    }
     
-    private void createTables() { //If the tables already exist, this code block will NOT execute
+    public void createTables() { //If the tables already exist, this code block will NOT execute
         try{
             System.out.println("Creating Tables");
-            s.execute("CREATE TABLE entry(E_id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), name varchar(255), description varchar(255), startTime timestamp, CONSTRAINT pk PRIMARY KEY (E_id))");
+			
+			s = conn.createStatement();
+            s.execute("CREATE TABLE entry(id int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), name varchar(255), description varchar(255), startTime timestamp, CONSTRAINT pk PRIMARY KEY (id))");
             System.out.println("Created table entry");
-            s.execute("CREATE TABLE event(E_id int NOT NULL PRIMARY KEY, isAllDay boolean, repeating smallint)");
+            s.execute("CREATE TABLE event(id int NOT NULL PRIMARY KEY, repeating int, repeatKey int)");
             System.out.println("Created table event");
-            s.execute("CREATE TABLE task(E_id int NOT NULL PRIMARY KEY, status smallint, priority smallint)");
+            s.execute("CREATE TABLE task(id int NOT NULL PRIMARY KEY, status int, priority int)");
+			s.close();
+			
             System.out.println("Created table task");
         } catch(SQLException sqle){
             //Do nothing
         }
     }
-
-    /*=====================================*/
-    /** All statements are prepared here **/
-    /*===================================*/
-    public void prepareThyStatements() {
+	
+	public void destroyEverything(){
         try{
-            //Insert statements
-            entryInsert = conn.prepareStatement("INSERT INTO entry (name, description, startTime) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-            taskInsert = conn.prepareStatement("INSERT INTO task (E_id, status, priority) VALUES (?, ?, ?)");
-            eventInsert = conn.prepareStatement("INSERT INTO event (E_id, isAllDay, repeating) VALUES (?, ?, ?)");
-
-            //Update statements
-            entryUpdate = conn.prepareStatement("UPDATE entry SET name=?, description=?, startTime=? WHERE E_id=?");
-            taskUpdate = conn.prepareStatement("UPDATE task SET status=?, priority=? where E_id=?");
-            eventUpdate = conn.prepareStatement("UPDATE event SET isAllDay=?, repeating=? WHERE E_id=?");
-
-            //Delete statements
-            entryDelete = conn.prepareStatement("DELETE FROM entry WHERE E_id=?");
-            taskDelete = conn.prepareStatement("DELETE from task WHERE E_id=?");
-            eventDelete = conn.prepareStatement("DELETE FROM event WHERE E_id=?");
-
-            getId = conn.prepareStatement("SELECT MAX(E_id) from entry");
+			s = conn.createStatement();
+            s.execute("drop table entry");
+			System.out.println("Destroyed table entry");
+            s.execute("drop table event");
+			System.out.println("Destroyed table event");
+            s.execute("drop table task");
+			System.out.println("Destroyed table task");
+			s.close();
         } catch(SQLException sqle){
             printSQLException(sqle);
         }
     }
+	
+	public void reset()
+	{
+		destroyEverything();
+		createTables();
+	}
+	
+	public void exit()
+	{
+		conn.close();
+	}
+	
+	public int insertEntry(String n, String d, Timestamp st)
+	{
+		ps = conn.prepareStatement("INSERT INTO entry (name, description, startTime) VALUES ( ?, ?, ? )", Statement.RETURN_GENERATED_KEYS);
+		
+		ps.setString(1, n);
+		ps.setString(2, d);
+		ps.setTimestamp(3, st);
+		ps.execute();
+		
+		rs = ps.getGeneratedKeys();
+		
+		int key = 0;
+		
+		while(rs.next())
+		{
+			key = rs.geInt(1);
+		}
+		
+		ps.close();
+		
+		return key;
+	}
+	
+	public int insertEvent(String n, String d, Timestamp st, int r, int rk)
+	{
+		int key = insertEntry(n, d, st);
+		
+		ps = conn.prepareStatement("INSERT INTO event (id, repeating, repeatKey) VALUES (?, ?, ?)");
+		ps.setInt(1, key);
+		ps.setInt(2, r);
+		ps.setInt(3, rk);
+		ps.execute();
+		
+		ps.close();
+		
+		return key;
+	}
+	
+	public int insertTask(String n, String d, Timestamp st, int s, int p)
+	{
+		int key = insertEntry(n, d, st);
+		
+		ps = conn.prepareStatement("INSERT INTO event (id, status, priority) VALUES (?, ?, ?)");
+		ps.setInt(1, key);
+		ps.setInt(2, s);
+		ps.setInt(3, p);
+		ps.execute();
+		
+		ps.close();
+		
+		return key;
+	}
+	
+	public int updateEntry(int i, int n, int d, Timestamp ts)
+	{
+		ps = conn.prepareStatement("UPDATE entry SET name = ?, description = ?, startTime = ts WHERE id = ?");
+		ps.setString(1, n);
+		ps.setString(2, d);
+		ps.setTimestamp(3, ts);
+		ps.setInt(4, i);
+		
+		int returny = ps.executeUpdate();
+		
+		ps.close();
+		
+		return returny;
+	}
+	
+	public int updateEvent(int i, int n, int d, Timestamp ts, int r, int rk)
+	{
+		updateEntry(i, n, d, ts);
+		
+		ps = conn.prepareStatement("UPDATE event SET repeating = ?, repeatKey = ? WHERE id = ?");
+		ps.setInt(1, r);
+		ps.setInt(2, rk);
+		ps.setInt(3, i);
+		
+		int returny = ps.executeUpdate();
+		
+		ps.close();
+		
+		return returny;
+	}
+	
+	public int updateTask(int i, int n, int d, Timestamp ts, int s, int p)
+	{
+		updateEntry(i, n, d, ts);
+		
+		ps = conn.prepareStatement("UPDATE event SET status = ?, priority = ? WHERE id = ?");
+		ps.setInt(1, s);
+		ps.setInt(2, p);
+		ps.setInt(3, i);
+		
+		int returny = ps.executeUpdate();
+		
+		ps.close();
+		
+		return returny;
+	}
+
+    /*=====================================*/
+    /** All statements are prepared here **/
+    /*===================================*/
+    // NOPE NOT ANYMORE
 
     /*=======================/
         11 = insert task
@@ -184,111 +206,8 @@ public class Derby
         41 = query task
         42 = query event
     /*=====================*/
-    public void doStatement(int m){
-        try{
-			//System.out.println("passing values: " + name + " " + desc);
-			ResultSet id = null;
-			int key = 0;
-			switch(m)
-			{
-				case 11:
-					entryInsert.setString(1, name);
-					entryInsert.setString(2, desc);
-					entryInsert.setTimestamp(3, startTime);
-					entryInsert.executeUpdate();
-					id = getId.executeQuery();
-					id.next();
-					key = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
-					taskInsert.setInt(1, key);
-					taskInsert.setInt(2, status);
-					taskInsert.setInt(3, priority);
-					taskInsert.executeUpdate();
-					System.out.println("Insert Task Succesful! Inserted at ID: " + key);
-					break;
-				case 12:
-					entryInsert.setString(1, name);
-					entryInsert.setString(2, desc);
-					entryInsert.setTimestamp(3, startTime);
-					entryInsert.executeUpdate();
-					id = getId.executeQuery();
-					id.next();
-					key = id.getInt(1); //Grab the Primary Key of the Entry to be used as a Foreign Key for Event
-					eventInsert.setInt(1, key);
-					eventInsert.setBoolean(2, isAllDay);
-					eventInsert.setInt(3,repeating);
-					eventInsert.executeUpdate();
-                    System.out.println("Insert Event Succesful! Inserted at ID: " + key);
-					break;
-				case 21:
-					// entryUpdate.setString(1, name);
-					// entryUpdate.setString(2, desc);
-					// entryUpdate.setTimestamp(3, startTime);
-					// entryUpdate.setInt(4, id);
-					// entryUpdate.executeUpdate();
-					// taskUpdate.setInt(1, status);
-					// taskUpdate.setInt(2, priority);
-					// taskUpdate.setInt(3, id);
-					// taskUpdate.executeUpdate();
-					break;
-				case 22:
-					// entryUpdate.setString(1, name);
-					// entryUpdate.setString(2, desc);
-					//entryInsert.setTimestamp(3, startTime);
-					// entryUpdate.setInt(4, id);
-					// entryUpdate.executeUpdate();
-					// eventUpdate.setBoolean(1, isAllDay);
-					// eventUpdate.setInt(2, repeating);
-					// eventUpdate.setInt(3, id);
-					// eventUpdate.executeUpdate();
-					break;
-				case 31:
-					// key = id.getInt(1);
-					// entryDelete.setInt(1, key);
-					// entryDelete.executeUpdate();
-					// taskDelete.setInt(1,key);
-					// taskDelete.executeUpdate();
-					break;
-				case 32:
-					// key = id.getInt(1);
-					// entryDelete.setInt(1, key);
-					// entryDelete.executeUpdate();
-					// eventDelete.setInt(1,key);
-					// eventDelete.executeUpdate();
-					break;
-				case 41:
-					rs = s.executeQuery("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
-					System.out.println("=========================================");
-					while(rs.next()){
-						System.out.println(rs.getString(1)+"::::"+rs.getString(2));
-						System.out.println(rs.getString(3));
-					}
-					System.out.println("=========================================");
-					rs.close();
-					break;
-				case 42:
-					// rs = s.executeQuery("SELECT entry.E_id, entry.name, entry.description, entry.startTime, task.status, task.priority FROM entry JOIN task ON entry.E_id=task.E_id");
-					// System.out.println("=========================================");
-					// while(rs.next()){
-					//     //System.out.println(rs.getWhatever(1)+"::::"+rs.getWhatever());
-					// }
-					// System.out.println("=========================================");
-					// rs.close();
-					break;
-			}
-        } catch(SQLException sqle){
-            printSQLException(sqle);
-        }
-    }
-
-    public void destroyEverything(){
-        try{
-            s.execute("drop table entry");
-            s.execute("drop table event");
-            s.execute("drop table task");
-        } catch(SQLException sqle){
-            printSQLException(sqle);
-        }
-    }
+	// NO METHOD IS SAFE FROM THE KILLER
+    
     
     /*=================================================*/
     /** The following are copypasta from Derby sauce **/
