@@ -165,16 +165,14 @@ public class DatabaseRW
 					increCal.add(Calendar.YEAR, yearP);
 					break;
 			}
-<<<<<<< HEAD
 			
 			Timestamp newTime = new Timestamp(increCal.getTimeInMillis());
 			
 			database.insertEvent(n, desc, newTime, r, key);
-=======
+
 			//System.out.println(limit);
-			iterateTime = intToTimestamp(y, mo, d, hr, min);
-			database.insertEvent(n, desc, iterateTime, r, key);
->>>>>>> 139bcce0965dc2ad96e75d3075be59b1378ade02
+			//iterateTime = intToTimestamp(y, mo, d, hr, min);
+			//database.insertEvent(n, desc, iterateTime, r, key);
 		}
 	}
 	
