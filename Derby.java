@@ -35,7 +35,7 @@ public class Derby
             String dbName = "derbyDB"; // the name of the database
             conn = DriverManager.getConnection(protocol + dbName + ";create=true");
             System.out.println("Connected to and created database " + dbName);
-            conn.setAutoCommit(false);
+            //conn.setAutoCommit(false);
 
             /* Creating a statement object that we can use for running various
              * SQL statements commands against the database.*/
