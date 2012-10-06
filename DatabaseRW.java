@@ -80,7 +80,7 @@ public class DatabaseRW
 		return queryEvents(start, end);
 	}
 	
-	public static ArrayList<Task> queryDayTask(int y, int m, int d)
+	public static ArrayList<Task> queryDayTasks(int y, int m, int d)
 	{
 		Timestamp start = intToTimestamp(y, m, d, 0, 0);
 		Timestamp end = intToTimestamp(y, m, d + 1, 0, 0);
