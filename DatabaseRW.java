@@ -32,7 +32,7 @@ public class DatabaseRW
 		answer = 11;
 
 		System.out.println("Task table has been updated.");
-		database.go();
+		//database.go();
 	}
 	
 	public static void updateTask(int id, String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority)
@@ -56,7 +56,7 @@ public class DatabaseRW
 		answer = 12;
 
 		System.out.println("Event table has been updated.");
-		database.go();
+		//database.go();
 	}
 	
 	public static void updateEvent(int id, String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
@@ -71,7 +71,7 @@ public class DatabaseRW
 
 	public static void queryTask(){
 		answer = 41;
-		database.go();
+		//database.go();
 	}
 
 	/*==================================*/

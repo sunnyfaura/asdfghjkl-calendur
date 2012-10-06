@@ -88,7 +88,11 @@ public class Derby
 	
 	public void exit()
 	{
-		conn.close();
+        try{
+		  conn.close();
+        } catch(SQLException e){
+            printSQLException(e);
+        }
 	}
 	
 	public int insertEntry(String n, String d, Timestamp st)
@@ -107,7 +111,7 @@ public class Derby
 			
 			while(rs.next())
 			{
-				key = rs.geInt(1);
+				key = rs.getInt(1);
 			}
 			
 			ps.close();
@@ -156,7 +160,7 @@ public class Derby
 		return 0;
 	}
 	
-	public int updateEntry(int i, int n, int d, Timestamp ts)
+	public int updateEntry(int i, String n, String d, Timestamp ts)
 	{
 		try {
 			ps = conn.prepareStatement("UPDATE entry SET name = ?, description = ?, startTime = ts WHERE id = ?");
@@ -175,7 +179,7 @@ public class Derby
 		return 0;
 	}
 	
-	public int updateEvent(int i, int n, int d, Timestamp ts, int r, int rk)
+	public int updateEvent(int i, String n, String d, Timestamp ts, int r, int rk)
 	{
 		try{
 			updateEntry(i, n, d, ts);
@@ -195,7 +199,7 @@ public class Derby
 		return 0;
 	}
 	
-	public int updateTask(int i, int n, int d, Timestamp ts, int s, int p)
+	public int updateTask(int i, String n, String d, Timestamp ts, int s, int p)
 	{
 		try {
 			updateEntry(i, n, d, ts);
@@ -224,7 +228,7 @@ public class Derby
 			
 			rs = ps.executeQuery();
 			
-			ps.close()
+			ps.close();
 			
 			return rs;
 		} catch (SQLException balls) {}
@@ -241,7 +245,7 @@ public class Derby
 			
 			rs = ps.executeQuery();
 			
-			ps.close()
+			ps.close();
 			
 			return rs;
 		} catch (SQLException balls) {}

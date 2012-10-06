@@ -324,13 +324,13 @@ public class AddEntry extends JPanel {
 			int h = (int)hour1.getSelectedIndex()+1; //returns exact hour
 			int mi = (int)minute1.getSelectedIndex(); //returns exact minutes
 			int ap = (int)ampm1.getSelectedIndex(); // am = 0; pm = 1;
-			boolean iad = repeatingLabel.isSelected();
+			//boolean iad = repeatingLabel.isSelected();
 
 			if(ap == 1)
 			{
 				h = h + 12;
 			}
-			boolean iad = allDay.isSelected();
+			//boolean iad = allDay.isSelected();
 			int r = (int)repeating.getSelectedIndex();
 			
 			System.out.println(n);
@@ -338,14 +338,14 @@ public class AddEntry extends JPanel {
 			System.out.println(mo);
 			System.out.println(da);
 			System.out.println(y);
-			System.out.println(iad);
+			//System.out.println(iad);
 			System.out.println(h);
 			System.out.println(mi);
 			Calendar.addEntryOpen++;
 			
 			if( n.length()>0 && n.length()<=255 && de.length()>0 && de.length() <= 255 )
 			{
-				DatabaseRW.addEvent(n, de, y, mo, da, h, mi, iad, r);
+				//DatabaseRW.addEvent(n, de, y, mo, da, h, mi, iad, r);
 				frame.dispose();
 			}
 			else if(n.length() > 255)

@@ -11,7 +11,7 @@ public class SysTray {
     public static void main(String[] asdf) {
         Derby database = new Derby();
         DatabaseRW.setDatabase(database);
-        database.init();
+        //database.init();
 
         trayIcon.setImageAutoSize(true);
 
