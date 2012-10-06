@@ -345,7 +345,7 @@ public class AddEntry extends JPanel {
 			
 			if( n.length()>0 && n.length()<=255 && de.length()>0 && de.length() <= 255 )
 			{
-				//DatabaseRW.insertEvent(n, de, y, mo, da, h, mi, r,);
+				DatabaseRW.insertRepeatingEvent(n, de, y, mo, da, h, mi, r);
 				frame.dispose();
 			}
 			else if(n.length() > 255)
