@@ -33,7 +33,14 @@ public class DayView
 		day = new JLabel( days[iday]+"" );
 		String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 		date = new JLabel( months[imonth]+" "+idate+", "+iyear ); // <---connect to calendar or something
-		tasks = new JList();
+
+		ArrayList<Task> t = DatabaseRW.queryDayTasks(iyear, imonth, idate);
+		String[] taskNames = new String[t.size()];
+		for(int i = 0; i < t.size(); i++)
+		{
+			taskNames[i] = t.get(i).name;
+		}
+		tasks = new JList(taskNames);
 		events = new JList();
 		panel = new JPanel(new GridLayout(2, 1));
 		taskscroll = new JScrollPane(tasks);

@@ -291,7 +291,7 @@ public class AddEntry extends JPanel {
 
 			if( n.length()>0 && n.length()<=255 && dsc.length()>0 && dsc.length() <= 255 )
 			{
-				DatabaseRW.addTask(n,dsc,yr,mnth,dy,hr,mins,stat,prt);
+				DatabaseRW.insertTask(n,dsc,yr,mnth,dy,hr,mins,stat,prt);
 				frame.dispose();
 			}
 			else if(n.length() > 255)
@@ -330,7 +330,7 @@ public class AddEntry extends JPanel {
 			{
 				h = h + 12;
 			}
-			boolean iad = allDay.isSelected();
+			//boolean iad = allDay.isSelected();
 			int r = (int)repeating.getSelectedIndex();
 			
 			System.out.println(n);
@@ -345,7 +345,7 @@ public class AddEntry extends JPanel {
 			
 			if( n.length()>0 && n.length()<=255 && de.length()>0 && de.length() <= 255 )
 			{
-				DatabaseRW.addEvent(n, de, y, mo, da, h, mi, iad, r);
+				//DatabaseRW.insertEvent(n, de, y, mo, da, h, mi, r,);
 				frame.dispose();
 			}
 			else if(n.length() > 255)
