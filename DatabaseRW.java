@@ -70,7 +70,7 @@ public class DatabaseRW
 	{
 		ResultSet results = database.queryEvents(start, end);
 		ArrayList<Event> output = toEventArray(results);
-		//results.close();
+		results.close();
 		
 		return output;
 	}
@@ -79,7 +79,7 @@ public class DatabaseRW
 	{
 		ResultSet results = database.queryEvents(start, end);
 		ArrayList<Task> output = toTaskArray(results);
-		//results.close();
+		results.close();
 		
 		return output;
 	}
