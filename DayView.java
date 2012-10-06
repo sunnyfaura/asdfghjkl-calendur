@@ -34,10 +34,9 @@ public class DayView
 		String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 		date = new JLabel( months[imonth]+" "+idate+", "+iyear ); // <---connect to calendar or something
 
-		ArrayList<Task> t = null;
+		ArrayList<Task> t = DatabaseRW.queryDayTasks(iyear, imonth, idate);
 		try
 		{
-			t = DatabaseRW.queryDayTasks(iyear, imonth, idate);
 			System.out.println("Successfully Queried Day Task: " + iyear + " " + imonth + " " + idate);
 			if(t == null) System.out.println("No ArrayList returned.");
 		} catch (Exception e) {}
