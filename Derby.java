@@ -336,6 +336,7 @@ public class Derby
 			
 			if(!rs.next())
 			{
+				ps.close();
 				return;
 			}
 			
