@@ -35,7 +35,7 @@ public class Derby
             String dbName = "derbyDB"; // the name of the database
             conn = DriverManager.getConnection(protocol + dbName + ";create=true");
             System.out.println("Connected to and created database " + dbName);
-            conn.setAutoCommit(false);
+            //conn.setAutoCommit(false);
 
             /* Creating a statement object that we can use for running various
              * SQL statements commands against the database.*/
@@ -294,9 +294,91 @@ public class Derby
 	public ResultSet queryTasks(Timestamp start, Timestamp end)
 	{
 		try{
-			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM task JOIN event ON entry.id = task.id ORDER BY timeStart WHERE timeStart BETWEEN ? and ?");
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM task JOIN task ON entry.id = task.id ORDER BY timeStart WHERE timeStart BETWEEN ? and ?");
 			ps.setTimestamp(1, start);
 			ps.setTimestamp(2, end);
+			
+			rs = ps.executeQuery();
+			
+			ps.close();
+			
+			return rs;
+		} catch (SQLException balls) {}
+		
+		return null;
+	}
+	
+	public int insertRepeatingEvent(String n, String d, Timestamp st, int r)
+	{
+		try{
+			int key = insertEntry(n, d, st);
+			
+			ps = conn.prepareStatement("INSERT INTO event (id, repeating, repeatKey) VALUES (?, ?, ?)");
+			ps.setInt(1, key);
+			ps.setInt(2, r);
+			ps.setInt(3, key);
+			ps.execute();
+			
+			ps.close();
+			
+			return key;
+		} catch (SQLException balls) {}
+		
+		return 0;
+	}
+	
+	public void deleteRepeatingEvent(int i)
+	{
+		try{
+			ps = conn.prepareStatement("SELECT startTime, repeatKey FROM entry JOIN event ON entry.id = event.id WHERE entry.id = ?");
+			ps.setInt(1, i);
+			rs = ps.executeQuery();
+			
+			if(!rs.next())
+			{
+				ps.close();
+				return;
+			}
+			
+			Timestamp st = rs.getTimestamp(1);
+			int rk = rs.getInt(2);
+			
+			ps.close();
+			
+			deleteEvent(i);
+			
+			ps = conn.prepareStatement("DELETE FROM event WHERE repeatKey = ? AND startTime >= ?");
+			ps.setInt(1, rk);
+			ps.setTimestamp(2, st);
+			
+			int returny = ps.executeUpdate();
+			
+			ps.close();
+		} catch (SQLException balls) {}
+	}
+	
+	public ResultSet queryPinboardEvents(Timestamp start)
+	{
+		try{
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, repeating, repeatKey FROM entry JOIN event ON entry.id = event.id ORDER BY timeStart WHERE timeStart >= ?");
+			ps.setTimestamp(1, start);
+			
+			rs = ps.executeQuery();
+			
+			ps.close();
+			
+			return rs;
+		} catch (SQLException balls) {}
+		
+		return null;
+	}
+	
+	public ResultSet queryPinboardTasks(Timestamp start, int status)
+	{
+		try{
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM entry JOIN task ON entry.id = task.id ORDER BY timeStart WHERE timeStart >= ? AND status = ?");
+			ps.setTimestamp(1, start);
+			ps.setInt(2, status);
 			
 			rs = ps.executeQuery();
 			
