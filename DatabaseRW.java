@@ -70,7 +70,7 @@ public class DatabaseRW
 	{
 		ResultSet results = database.queryEvents(start, end);
 		ArrayList<Event> output = toEventArray(results);
-		results.close();
+		//results.close();
 		
 		return output;
 	}
@@ -79,7 +79,7 @@ public class DatabaseRW
 	{
 		ResultSet results = database.queryTasks(start, end);
 		ArrayList<Task> output = toTaskArray(results);
-		results.close();
+		//results.close();
 		
 		return output;
 	}
@@ -123,16 +123,16 @@ public class DatabaseRW
 		
 		int key = database.insertRepeatingEvent(n, desc, start, r);
 		
-		Calendar temp = Calendar.getInstance();
-		temp.add(Calendar.YEAR, 100);
+		//Calendar temp = Calendar.getInstance();
+		//temp.add(Calendar.YEAR, 100);
 		
-		Calendar temp2 = Calendar.getInstance();
-		temp2.clear();
-		temp2.set(Calendar.YEAR, temp.get(Calendar.YEAR));
+		//Calendar temp2 = Calendar.getInstance();
+		//temp2.clear();
+		//temp2.set(Calendar.YEAR, temp.get(Calendar.YEAR));
 		
-		Timestamp limit = new Timestamp(temp2.getTimeInMillis());
+		//Timestamp limit = new Timestamp(temp2.getTimeInMillis());
 		
-		while(limit.compareTo(iterateTime) > 0)
+		for(int i = 0; i < 100; i++)
 		{
 			switch(r)
 			{
