@@ -294,7 +294,7 @@ public class Derby
 	public ResultSet queryTasks(Timestamp start, Timestamp end)
 	{
 		try{
-			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM entry JOIN event ON entry.id = event.id ORDER BY timeStart WHERE timeStart BETWEEN ? and ?");
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM task JOIN event ON entry.id = task.id ORDER BY timeStart WHERE timeStart BETWEEN ? and ?");
 			ps.setTimestamp(1, start);
 			ps.setTimestamp(2, end);
 			
