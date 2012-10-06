@@ -308,21 +308,52 @@ public class Derby
 		return null;
 	}
 	
-	public void deleteRepeatingEvent(int rk, Timestamp start)
+	public int insertRepeatingEvent(String n, String d, Timestamp st, int r)
 	{
 		try{
-			ps = conn.prepareStatement("DELETE FROM event WHERE repeatKey = ? AND startTime > ?");
+			int key = insertEntry(n, d, st);
+			
+			ps = conn.prepareStatement("INSERT INTO event (id, repeating, repeatKey) VALUES (?, ?, ?)");
+			ps.setInt(1, key);
+			ps.setInt(2, r);
+			ps.setInt(3, key);
+			ps.execute();
+			
+			ps.close();
+			
+			return key;
+		} catch (SQLException balls) {}
+		
+		return 0;
+	}
+	
+	public void deleteRepeatingEvent(int i)
+	{
+		try{
+			ps = conn.prepareStatement("SELECT startTime, repeatKey FROM entry JOIN event ON entry.id = event.id WHERE entry.id = ?");
+			ps.setInt(1, i);
+			rs = ps.executeQuery();
+			
+			if(!rs.next())
+			{
+				return;
+			}
+			
+			Timestamp st = rs.getTimestamp(1);
+			int rk = rs.getInt(2);
+			
+			ps.close();
+			
+			deleteEvent(i);
+			
+			ps = conn.prepareStatement("DELETE FROM event WHERE repeatKey = ? AND startTime >= ?");
 			ps.setInt(1, rk);
-			ps.setTimestamp(2, start);
+			ps.setTimestamp(2, st);
 			
 			int returny = ps.executeUpdate();
 			
 			ps.close();
-			
-			return returny;
 		} catch (SQLException balls) {}
-		
-		return null;
 	}
 
     /*=====================================*/

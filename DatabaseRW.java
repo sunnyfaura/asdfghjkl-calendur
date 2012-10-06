@@ -22,6 +22,7 @@ public class DatabaseRW
 		return key;
 	}
 	
+	//use insertRepeatingEvent instead
 	public static int insertEvent(String n, String de, int y, int mo, int da, int h, int mi, int r, int rk)
 	{
 		Timestamp startTime = intToTimestamp(y, mo, da, h, mi);
@@ -30,6 +31,7 @@ public class DatabaseRW
 		return key;
 	}
 	
+	//use updateRepeatingEvent instead
 	public static int updateEvent(int i, String n, String d, int y, int m, int da, int h, int mi, int r, int rk)
 	{
 		Timestamp startTime = intToTimestamp(y, m, da, h, mi);
@@ -48,6 +50,7 @@ public class DatabaseRW
 		return returny;
 	}
 	
+	//use deleteRepeatingEvent instead
 	public static int deleteEvent(int id)
 	{
 		int returny = database.deleteEvent(id);
@@ -96,12 +99,64 @@ public class DatabaseRW
 		return queryEvents(start, end);
 	}
 	
-	public static ArrayList<Task> queryMonthTass(int y, int m, int d)
+	public static ArrayList<Task> queryMonthTasks(int y, int m, int d)
 	{
 		Timestamp start = intToTimestamp(y, m, 0, 0, 0);
 		Timestamp end = intToTimestamp(y, m + 1, 0, 0, 0);
 		
 		return queryTasks(start, end);
+	}
+	
+	public static void insertRepeatingEvent(String n, String desc, int y, int mo, int d, int hr, int min, int r)
+	{
+		Timestamp start = intToTimestamp(y, mo, d, hr, min);
+		Timestamp iterateTime = intToTimestamp(y, mo, d, hr, min);
+		
+		int key = database.insertRepeatingEvent(n, desc, start, r);
+		
+		Calendar temp = Calendar.getInstance();
+		temp.add(Calendar.YEAR, 100);
+		
+		Calendar temp2 = Calendar.getInstance();
+		temp2.clear();
+		temp2.set(Calendar.YEAR, temp.get(Calendar.YEAR));
+		
+		Timestamp limit = new Timestamp(temp2.getTimeInMillis());
+		
+		while(limit.compareTo(iterateTime) > 0)
+		{
+			switch(r)
+			{
+				case 0:
+					return;
+				case 1:
+					d++;
+					break;
+				case 2:
+					d += 7;
+					break;
+				case 3:
+					mo++;
+					break;
+				case 4:
+					y++;
+					break;
+			}
+			
+			iterateTime = intToTimestamp(y, mo, d, hr, min);
+			database.insertEvent(n, desc, iterateTime, r, key);
+		}
+	}
+	
+	public static void deleteRepeatingEvent(int i)
+	{
+		database.deleteRepeatingEvent(i);
+	}
+	
+	public static void updateRepeatingEvent(int id, String n, String dsc, int y, int mo, int d, int hr, int min, int r)
+	{
+		database.deleteRepeatingEvent(id);
+		insertRepeatingEvent(n, dsc, y, mo, d, hr, min, r);
 	}
 	
 	/*==================================*/
@@ -116,6 +171,7 @@ public class DatabaseRW
 	public static Timestamp intToTimestamp(int year, int month, int day, int hour, int minute)
 	{
 		Calendar tempCal = Calendar.getInstance();
+		tempCal.clear();
 		tempCal.set(year, month, day, hour, minute);
 		
 		return new Timestamp(tempCal.getTimeInMillis());
