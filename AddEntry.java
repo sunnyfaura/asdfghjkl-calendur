@@ -158,7 +158,7 @@ public class AddEntry extends JPanel {
 					eventBody.add(eventDescMain);
 					JPanel eventProp = new JPanel(new GridLayout(5,1));
 						JPanel eventDeadlineMain = new JPanel(new BorderLayout());
-							eventDeadlineMain.add(new JLabel("Deadline: \t"), BorderLayout.LINE_START);
+							eventDeadlineMain.add(new JLabel("Start Date: \t"), BorderLayout.LINE_START);
 							JPanel eventDate = new JPanel(new FlowLayout()); //DATE
 									eventDate.add(month1);
 									eventDate.add(day1);
