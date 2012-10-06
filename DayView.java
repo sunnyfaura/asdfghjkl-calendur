@@ -34,14 +34,27 @@ public class DayView
 		String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 		date = new JLabel( months[imonth]+" "+idate+", "+iyear ); // <---connect to calendar or something
 
-		ArrayList<Task> t = DatabaseRW.queryDayTasks(iyear, imonth, idate);
+		ArrayList<Task> t = null;
+		ArrayList<Event> ev = null;
+		//t = DatabaseRW.queryDayTasks(iyear, imonth, idate);
 		try
 		{
-			System.out.println("Successfully Queried Day Task: " + iyear + " " + imonth + " " + idate);
+			t = DatabaseRW.queryDayTasks(iyear, (imonth+1), idate);
+			System.out.println("Successfully Queried Day Task: " + iyear + " " + (imonth+1) + " " + idate);
 			if(t == null) System.out.println("No ArrayList returned.");
+			else System.out.println("ArrayList size: " + t.size());
+		} catch (Exception e) {}
+		try
+		{
+			ev = DatabaseRW.queryDayEvents(iyear, (imonth+1), idate);
+			System.out.println("Successfully Queried Day Event: " + iyear + " " + (imonth+1) + " " + idate);
+			if(ev == null) System.out.println("No ArrayList returned.");
+			else System.out.println("ArrayList size: " + ev.size());
 		} catch (Exception e) {}
 		String[] taskNames = new String[1];
 		taskNames[0] = "No tasks found";
+		String[] eventNames = new String[1];
+		eventNames[0] = "No tasks found";
 		boolean clickable = false;
 		if(t != null && t.size() > 0)
 		{
@@ -53,9 +66,19 @@ public class DayView
 			}
 			clickable = true;
 		}
+		if(ev != null && ev.size() > 0)
+		{
+			System.out.println("Returned arrayList size > 0");
+			eventNames = new String[ev.size()];
+			for(int i = 0; i < ev.size(); i++)
+			{
+				eventNames[i] = ev.get(i).name;
+			}
+			clickable = true;
+		}
 		tasks = new JList(taskNames);
 		//tasks = new JList();
-		events = new JList();
+		events = new JList(eventNames);
 		panel = new JPanel(new GridLayout(2, 1));
 		taskscroll = new JScrollPane(tasks);
 		eventscroll = new JScrollPane(events);

@@ -70,7 +70,8 @@ public class DatabaseRW
 	{
 		ResultSet results = database.queryEvents(start, end);
 		ArrayList<Event> output = toEventArray(results);
-		//results.close();
+
+		try {results.close();} catch (Exception e) {}
 		
 		return output;
 	}
@@ -79,7 +80,8 @@ public class DatabaseRW
 	{
 		ResultSet results = database.queryTasks(start, end);
 		ArrayList<Task> output = toTaskArray(results);
-		//results.close();
+
+		try{results.close();} catch (Exception e) {}
 		
 		return output;
 	}
@@ -96,7 +98,7 @@ public class DatabaseRW
 	{
 		Timestamp start = intToTimestamp(y, m, d, 0, 0);
 		Timestamp end = intToTimestamp(y, m, d + 1, 0, 0);
-		
+
 		return queryTasks(start, end);
 	}
 	
@@ -163,10 +165,16 @@ public class DatabaseRW
 					increCal.add(Calendar.YEAR, yearP);
 					break;
 			}
+<<<<<<< HEAD
 			
 			Timestamp newTime = new Timestamp(increCal.getTimeInMillis());
 			
 			database.insertEvent(n, desc, newTime, r, key);
+=======
+			//System.out.println(limit);
+			iterateTime = intToTimestamp(y, mo, d, hr, min);
+			database.insertEvent(n, desc, iterateTime, r, key);
+>>>>>>> 139bcce0965dc2ad96e75d3075be59b1378ade02
 		}
 	}
 	
@@ -248,9 +256,10 @@ public class DatabaseRW
 				
 				returny.add(new Task(id, n, d, start, s, p));
 			}
-			
 			return returny;
-		} catch (Exception balls){}
+		} catch (Exception balls){
+			System.out.println(balls);
+		}
 		
 		return null;
 	}

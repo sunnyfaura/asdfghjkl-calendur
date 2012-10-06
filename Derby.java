@@ -303,7 +303,9 @@ public class Derby
 			//ps.close();
 			
 			return rs;
-		} catch (SQLException balls) {}
+		} catch (SQLException balls) {
+			printSQLException(balls);
+		}
 		
 		return null;
 	}
