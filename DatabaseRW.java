@@ -14,14 +14,6 @@ public class DatabaseRW
 	{
 		database = db;
 	}
-
-	public static int insertTask(String n, String de, int y, int mo, int da, int h, int mi, int s, int p)
-	{
-		Timestamp startTime = intToTimestamp(y, mo, da, h, mi);
-		
-		int key = database.insertTask(n, de, startTime, s, p);
-		return key;
-	}
 	
 	//use insertRepeatingEvent instead
 	public static int insertEvent(String n, String de, int y, int mo, int da, int h, int mi, int r, int rk)
@@ -31,13 +23,21 @@ public class DatabaseRW
 		int key = database.insertEvent(n, de, startTime, r, rk);
 		return key;
 	}
+
+	public static int insertTask(String n, String de, int y, int mo, int da, int h, int mi, int s, int p)
+	{
+		Timestamp startTime = intToTimestamp(y, mo, da, h, mi);
+		
+		int key = database.insertTask(n, de, startTime, s, p);
+		return key;
+	}
 	
 	//use updateRepeatingEvent instead
 	public static int updateEvent(int i, String n, String d, int y, int m, int da, int h, int mi, int r, int rk)
 	{
 		Timestamp startTime = intToTimestamp(y, m, da, h, mi);
 		
-		int returny = database.updateTask(i, n, d, startTime, r, rk);
+		int returny = database.updateEvent(i, n, d, startTime, r, rk);
 		
 		return returny;
 	}
@@ -77,7 +77,7 @@ public class DatabaseRW
 	
 	public static ArrayList<Task> queryTasks(Timestamp start, Timestamp end)
 	{
-		ResultSet results = database.queryEvents(start, end);
+		ResultSet results = database.queryTasks(start, end);
 		ArrayList<Task> output = toTaskArray(results);
 		results.close();
 		
