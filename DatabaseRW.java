@@ -119,7 +119,11 @@ public class DatabaseRW
 	public static void insertRepeatingEvent(String n, String desc, int y, int mo, int d, int hr, int min, int r)
 	{
 		Timestamp start = intToTimestamp(y, mo, d, hr, min);
-		Timestamp iterateTime = intToTimestamp(y, mo, d, hr, min);
+		
+		
+		int yearP = 0;
+		int monthP = 0;
+		int dayP = 0;
 		
 		int key = database.insertRepeatingEvent(n, desc, start, r);
 		
@@ -134,26 +138,35 @@ public class DatabaseRW
 		
 		for(int i = 0; i < 100; i++)
 		{
+			Calendar increCal = Calendar.getInstance();
+			increCal.clear();
+			increCal.set(y, mo, d, hr, min);
+			
 			switch(r)
 			{
 				case 0:
 					return;
 				case 1:
-					d++;
+					dayP++;
+					increCal.add(Calendar.DATE, dayP);
 					break;
 				case 2:
-					d += 7;
+					dayP += 7;
+					increCal.add(Calendar.DATE, dayP);
 					break;
 				case 3:
-					mo++;
+					monthP++;
+					increCal.add(Calendar.MONTH, monthP);
 					break;
 				case 4:
-					y++;
+					yearP++;
+					increCal.add(Calendar.YEAR, yearP);
 					break;
 			}
 			
-			iterateTime = intToTimestamp(y, mo, d, hr, min);
-			database.insertEvent(n, desc, iterateTime, r, key);
+			Timestamp newTime = new Timestamp(increCal.getTimeInMillis());
+			
+			database.insertEvent(n, desc, newTime, r, key);
 		}
 	}
 	
