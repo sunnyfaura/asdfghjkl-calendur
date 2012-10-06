@@ -71,7 +71,9 @@ public class DatabaseRW
 		ResultSet results = database.queryEvents(start, end);
 		ArrayList<Event> output = toEventArray(results);
 
-		try {results.close();} catch (Exception e) {}
+		try {results.close();} catch (Exception e) {
+			System.out.println(e);
+		}
 		
 		return output;
 	}
