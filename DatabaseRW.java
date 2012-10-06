@@ -68,17 +68,11 @@ public class DatabaseRW
 	
 	public static ArrayList<Event> queryEvents(Timestamp start, Timestamp end)
 	{
-		try{
-			ResultSet results = database.queryEvents(start, end);
-			ArrayList<Event> output = toEventArray(results);
-			results.close();
-			
-			return output;
-		} catch (SQLException balls) {
-			System.out.println("Something's wrong here");
-		}
+		ResultSet results = database.queryEvents(start, end);
+		ArrayList<Event> output = toEventArray(results);
+		//results.close();
 		
-		return null;
+		return output;
 	}
 	
 	public static ArrayList<Task> queryTasks(Timestamp start, Timestamp end)
@@ -226,6 +220,8 @@ public class DatabaseRW
 				
 				returny.add(new Event(id, n, d, start, r, rk));
 			}
+			
+			return returny;
 		} catch (Exception balls){}
 		
 		return null;
@@ -247,6 +243,8 @@ public class DatabaseRW
 				
 				returny.add(new Task(id, n, d, start, s, p));
 			}
+			
+			return returny;
 		} catch (Exception balls){}
 		
 		return null;
