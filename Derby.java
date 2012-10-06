@@ -294,7 +294,7 @@ public class Derby
 	public ResultSet queryTasks(Timestamp start, Timestamp end)
 	{
 		try{
-			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM task JOIN event ON entry.id = task.id ORDER BY timeStart WHERE timeStart BETWEEN ? and ?");
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM task JOIN task ON entry.id = task.id ORDER BY timeStart WHERE timeStart BETWEEN ? and ?");
 			ps.setTimestamp(1, start);
 			ps.setTimestamp(2, end);
 			
@@ -354,6 +354,38 @@ public class Derby
 			
 			ps.close();
 		} catch (SQLException balls) {}
+	}
+	
+	public ResultSet queryPinboardEvents(Timestamp start)
+	{
+		try{
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, repeating, repeatKey FROM entry JOIN event ON entry.id = event.id ORDER BY timeStart WHERE timeStart >= ?");
+			ps.setTimestamp(1, start);
+			
+			rs = ps.executeQuery();
+			
+			ps.close();
+			
+			return rs;
+		} catch (SQLException balls) {}
+		
+		return null;
+	}
+	
+	public ResultSet queryPinboardTasks(Timestamp start)
+	{
+		try{
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM entry JOIN task ON entry.id = task.id ORDER BY timeStart WHERE timeStart >= ?");
+			ps.setTimestamp(1, start);
+			
+			rs = ps.executeQuery();
+			
+			ps.close();
+			
+			return rs;
+		} catch (SQLException balls) {}
+		
+		return null;
 	}
 
     /*=====================================*/
