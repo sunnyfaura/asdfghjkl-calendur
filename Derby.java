@@ -307,6 +307,23 @@ public class Derby
 		
 		return null;
 	}
+	
+	public void deleteRepeatingEvent(int rk, Timestamp start)
+	{
+		try{
+			ps = conn.prepareStatement("DELETE FROM event WHERE repeatKey = ? AND startTime > ?");
+			ps.setInt(1, rk);
+			ps.setTimestamp(2, start);
+			
+			int returny = ps.executeUpdate();
+			
+			ps.close();
+			
+			return returny;
+		} catch (SQLException balls) {}
+		
+		return null;
+	}
 
     /*=====================================*/
     /** All statements are prepared here **/
