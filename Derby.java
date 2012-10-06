@@ -222,10 +222,62 @@ public class Derby
 		return 0;
 	}
 	
+	public int deleteEntry(int i);
+	{
+		try{
+			ps = conn.prepareStatement("DELETE FROM entry WHERE id = ?");
+			ps.setInt(1, i);
+			
+			int returny = ps.executeUpdate();
+			
+			ps.close();
+			
+			return returny;
+		} catch (SQLException balls) {}
+		
+		return 0;
+	}
+	
+	public int deleteEvent(int i )
+	{
+		try{
+			ps = conn.prepareStatement("DELETE FROM event WHERE id = ?");
+			ps.setInt(1, i);
+			
+			int returny = ps.executeUpdate();
+			
+			ps.close();
+			
+			deleteEntry(i);
+			
+			return returny;
+		} catch (SQLException balls) {}
+		
+		return 0;
+	}
+	
+	public int deleteTask(int i )
+	{
+		try{
+			ps = conn.prepareStatement("DELETE FROM task WHERE id = ?");
+			ps.setInt(1, i);
+			
+			int returny = ps.executeUpdate();
+			
+			ps.close();
+			
+			deleteEntry(i);
+			
+			return returny;
+		} catch (SQLException balls) {}
+		
+		return 0;
+	}
+	
 	public ResultSet queryEvents(Timestamp start, Timestamp end)
 	{
 		try{
-			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, repeating, repeatKey FROM entry JOIN event ON entry.id = event.id WHERE timeStart BETWEEN ? and ?");
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, repeating, repeatKey FROM entry JOIN event ON entry.id = event.id ORDER BY timeStart WHERE timeStart BETWEEN ? and ?");
 			ps.setTimestamp(1, start);
 			ps.setTimestamp(2, end);
 			
@@ -242,7 +294,7 @@ public class Derby
 	public ResultSet queryTasks(Timestamp start, Timestamp end)
 	{
 		try{
-			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM entry JOIN event ON entry.id = event.id WHERE timeStart BETWEEN ? and ?");
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM entry JOIN event ON entry.id = event.id ORDER BY timeStart WHERE timeStart BETWEEN ? and ?");
 			ps.setTimestamp(1, start);
 			ps.setTimestamp(2, end);
 			

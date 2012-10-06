@@ -7,13 +7,6 @@ import java.sql.Timestamp;
 
 public class DatabaseRW
 {
-	public static int answer;
-	public static String name, desc;
-	public static int status, priority;
-	public static boolean isAllDay;
-	public static int endYear, endMonth, endDay, endHour, endMinute, repeating;
-	public static Timestamp startTime, endTime, queryStart, queryEnd;
-
 	static Derby database = null;
 
 	public static void setDatabase(Derby db)
@@ -21,52 +14,78 @@ public class DatabaseRW
 		database = db;
 	}
 
-	public static void addTask(String n, String de, int y, int mo, int da, int h, int mi, int s, int p)
+	public static int addTask(String n, String de, int y, int mo, int da, int h, int mi, int s, int p)
 	{
-		name = n;
-		desc = de;
-		status = s;
-		priority = p;
-		startTime = intToTimestamp(y, mo, da, h, mi);
-
-		answer = 11;
-		database.insertTask(name,desc,startTime,status,priority);		
-		System.out.println("Task table has been updated.");
+		Timestamp startTime = intToTimestamp(y, mo, da, h, mi);
 		
+		int key = database.addTask(n, de, startTime, s, p);
+		return key;
 	}
 	
-	public static void updateTask(int id, String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority)
+	public static int addEvent(String n, String de, int y, int mo, int da, int h, int mi, int r, int rk)
 	{
+		Timestamp startTime = intToTimestamp(y, mo, da, h, mi);
 		
+		int key = database.addEvent(n, de, startTime, r, k);
+		return key;
 	}
 	
-	public static void deleteTask(int id)
+	public static int updateEvent(int i, String n, String d, int y, int m, int da, int h, int mi, int r, int rk);
 	{
-
-	}
-
-	public static void addEvent(String n, String de, int y, int mo, int da, int h, int mi, boolean iad, int r)
-	{
-		name = n;
-		desc = de;
-		startTime = intToTimestamp(y, mo, da, h, mi);
-		isAllDay = iad;
-		repeating = r;
+		Timestamp startTIme = intToTimestamp(y, m, da, h, mi);
 		
-		answer = 12;
-
-		System.out.println("Event table has been updated.");
-		//database.go();
+		int returny = database.updateTask(i, n, d, startTime, r, rk);
+		
+		return returny;
 	}
 	
-	public static void updateEvent(int id, String name, String desc, int year, int month, int day, int hour, int minute, boolean isAllDay, int endYear, int endMonth, int endDay, int endHour, int endMinute, int repeating)
+	public static int updateTask(int i, String n, String d, int y, int m, int da, int h, int mi, int s, int p);
 	{
-
+		Timestamp startTIme = intToTimestamp(y, m, da, h, mi);
+		
+		int returny = database.updateTask(i, n, d, startTime, s, p);
+		
+		return returny;
 	}
 	
-	public static void deleteEvent(int id)
+	public static int deleteEvent(int id)
 	{
+		int returny = database.deleteEvent(id);
 		
+		return returny;
+	}
+	
+	public static int deleteTask(int id);
+	{
+		int returny = database.deleteTask(id);
+		
+		return returny;
+	}
+	
+	public static ArrayList<Event> queryEvents(Timestamp start, Timestamp end)
+	{
+		return toEventArray(queryEvents(start, end));
+	}
+	
+	public static ArrayList<Task> queryTasks(Timestamp start, Timestamp end)
+	{
+		return toTaskArray(queryTasks(start, end);
+	}
+	
+	public static ArrayList<Event> queryDayEvents(int y, int m, int d)
+	{
+		Timestamp start = intToTimestamp(y, m, d, 0, 0);
+		Timestamp end = intToTimestamp(y, m, d + 1, 0, 0);
+		
+		return queryEvents(start, end);
+	}
+	
+	public static ArrayList<Task> queryDayTask(int y, int m, int d)
+	{
+		Timestamp start = intToTimestamp(y, m, d, 0, 0);
+		Timestamp end = intToTimestamp(y, m, d + 1, 0, 0);
+		
+		return queryTasks(start, end);
 	}
 
 	public static void queryTask(){
@@ -77,42 +96,7 @@ public class DatabaseRW
 	/*==================================*/
 	/* Beginning of getValue() methods */
 	/*================================*/
-
-	public static int getAnswer(){
-		return answer;
-	}
-
-	public static String getName(){
-		return name;
-	}
-
-	public static String getDesc(){
-		return desc;
-	}
-
-	public static int getStatus(){
-		return status;
-	}
-
-	public static int getPriority(){
-		return priority;
-	}
-
-	public static boolean getIsAllDay(){
-		return isAllDay;
-	}
-
-	public static int getRepeating(){
-		return repeating;
-	}
-
-	public static Timestamp getStartTime(){
-		return startTime;
-	}
-	
-	public static Timestamp getTimestamp(){
-		return startTime;
-	}
+	//KILLED
 	
 	/*===========================*/
 	/* Conveniece methods! Yay! */
@@ -124,5 +108,47 @@ public class DatabaseRW
 		tempCal.set(year, month, day, hour, minute);
 		
 		return new Timestamp(tempCal.getTimeInMillis());
+	}
+	
+	public static ArrayList<Event> toEventArray(ResultSet rs)
+	{
+		ArrayList<Event> returny = new ArrayList<Event>();
+		
+		try{
+			while(rs.next())
+			{
+				int id = rs.getInt(1);
+				String n = rs.getString(2);
+				String d = rs.getString(3);
+				Timestamp start = rs.getTimeStamp(4);
+				int r = rs.getInt(5);
+				int rk = rs.getInt(6);
+				
+				returny.add(new Event(id, n, d, start, r, rk);
+			}
+		} catch (SQLException balls){}
+		
+		return null;
+	}
+	
+	public static ArrayList<Task> toEventArray(ResultSet rs)
+	{
+		ArrayList<Task> returny = new ArrayList<Task>();
+		
+		try{
+			while(rs.next())
+			{
+				int id = rs.getInt(1);
+				String n = rs.getString(2);
+				String d = rs.getString(3);
+				Timestamp start = rs.getTimeStamp(4);
+				int s = rs.getInt(5);
+				int p = rs.getInt(6);
+				
+				returny.add(new Task(id, n, d, start, s, p);
+			}
+		} catch (SQLException balls){}
+		
+		return null;
 	}
 }
