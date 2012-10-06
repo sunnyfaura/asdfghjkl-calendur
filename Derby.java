@@ -146,16 +146,19 @@ public class Derby
 		try{
 			int key = insertEntry(n, d, st);
 			
-			ps = conn.prepareStatement("INSERT INTO event (id, status, priority) VALUES (?, ?, ?)");
+			ps = conn.prepareStatement("INSERT INTO task(id, status, priority) VALUES (?, ?, ?)");
 			ps.setInt(1, key);
 			ps.setInt(2, s);
 			ps.setInt(3, p);
 			ps.execute();
+            System.out.println("Insert task successful");
 			
 			ps.close();
-			
+
 			return key;
-		} catch (SQLException balls) {}
+		} catch (SQLException balls) {
+            printSQLException(balls);
+        }
 		
 		return 0;
 	}

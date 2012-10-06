@@ -30,9 +30,9 @@ public class DatabaseRW
 		startTime = intToTimestamp(y, mo, da, h, mi);
 
 		answer = 11;
-
+		database.insertTask(name,desc,startTime,status,priority);		
 		System.out.println("Task table has been updated.");
-		//database.go();
+		
 	}
 	
 	public static void updateTask(int id, String name, String desc, int year, int month, int day, int hour, int minute, int status, int priority)
