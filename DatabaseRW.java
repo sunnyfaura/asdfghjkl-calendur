@@ -2,6 +2,7 @@ import java.util.Calendar;
 import java.util.ArrayList;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.sql.SQLException;
 
 //call this thingy with DatabaseRW.[functionwhatever] from anywhar
 
@@ -67,12 +68,32 @@ public class DatabaseRW
 	
 	public static ArrayList<Event> queryEvents(Timestamp start, Timestamp end)
 	{
-		return toEventArray(database.queryEvents(start, end));
+		try{
+			ResultSet results = database.queryEvents(start, end);
+			ArrayList<Event> output = toEventArray(results);
+			results.close();
+			
+			return output;
+		} catch (SQLException balls) {
+			System.out.println("Something's wrong here");
+		}
+		
+		return null;
 	}
 	
 	public static ArrayList<Task> queryTasks(Timestamp start, Timestamp end)
 	{
-		return toTaskArray(database.queryTasks(start, end));
+		try{
+			ResultSet results = database.queryEvents(start, end);
+			ArrayList<Task> output = toTaskArray(results);
+			results.close();
+			
+			return output;
+		} catch (SQLException balls) {
+			System.out.println("Something's wrong here");
+		}
+		
+		return null;
 	}
 	
 	public static ArrayList<Event> queryDayEvents(int y, int m, int d)
