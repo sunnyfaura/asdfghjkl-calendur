@@ -159,6 +159,16 @@ public class DatabaseRW
 		insertRepeatingEvent(n, dsc, y, mo, d, hr, min, r);
 	}
 	
+	public static ArrayList<Event> queryPinboardEvents(Timestamp start)
+	{
+		return(toEventArray(database.queryPinboardEvents(start)));
+	}
+	
+	public static ArrayList<Task> queryPinboardTasks(Timestamp start, int status)
+	{
+		return(toTaskArray(database.queryPinboardTasks(start, status)));
+	}
+	
 	/*==================================*/
 	/* Beginning of getValue() methods */
 	/*================================*/

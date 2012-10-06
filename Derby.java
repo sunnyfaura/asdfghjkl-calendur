@@ -372,11 +372,12 @@ public class Derby
 		return null;
 	}
 	
-	public ResultSet queryPinboardTasks(Timestamp start)
+	public ResultSet queryPinboardTasks(Timestamp start, int status)
 	{
 		try{
-			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM entry JOIN task ON entry.id = task.id ORDER BY timeStart WHERE timeStart >= ?");
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM entry JOIN task ON entry.id = task.id ORDER BY timeStart WHERE timeStart >= ? AND status = ?");
 			ps.setTimestamp(1, start);
+			ps.setInt(2, status);
 			
 			rs = ps.executeQuery();
 			
