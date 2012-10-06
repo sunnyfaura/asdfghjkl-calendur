@@ -14,34 +14,34 @@ public class DatabaseRW
 		database = db;
 	}
 
-	public static int addTask(String n, String de, int y, int mo, int da, int h, int mi, int s, int p)
+	public static int insertTask(String n, String de, int y, int mo, int da, int h, int mi, int s, int p)
 	{
 		Timestamp startTime = intToTimestamp(y, mo, da, h, mi);
 		
-		int key = database.addTask(n, de, startTime, s, p);
+		int key = database.insertTask(n, de, startTime, s, p);
 		return key;
 	}
 	
-	public static int addEvent(String n, String de, int y, int mo, int da, int h, int mi, int r, int rk)
+	public static int insertEvent(String n, String de, int y, int mo, int da, int h, int mi, int r, int rk)
 	{
 		Timestamp startTime = intToTimestamp(y, mo, da, h, mi);
 		
-		int key = database.addEvent(n, de, startTime, r, k);
+		int key = database.insertEvent(n, de, startTime, r, rk);
 		return key;
 	}
 	
-	public static int updateEvent(int i, String n, String d, int y, int m, int da, int h, int mi, int r, int rk);
+	public static int updateEvent(int i, String n, String d, int y, int m, int da, int h, int mi, int r, int rk)
 	{
-		Timestamp startTIme = intToTimestamp(y, m, da, h, mi);
+		Timestamp startTime = intToTimestamp(y, m, da, h, mi);
 		
 		int returny = database.updateTask(i, n, d, startTime, r, rk);
 		
 		return returny;
 	}
 	
-	public static int updateTask(int i, String n, String d, int y, int m, int da, int h, int mi, int s, int p);
+	public static int updateTask(int i, String n, String d, int y, int m, int da, int h, int mi, int s, int p)
 	{
-		Timestamp startTIme = intToTimestamp(y, m, da, h, mi);
+		Timestamp startTime = intToTimestamp(y, m, da, h, mi);
 		
 		int returny = database.updateTask(i, n, d, startTime, s, p);
 		
@@ -55,7 +55,7 @@ public class DatabaseRW
 		return returny;
 	}
 	
-	public static int deleteTask(int id);
+	public static int deleteTask(int id)
 	{
 		int returny = database.deleteTask(id);
 		
@@ -64,12 +64,12 @@ public class DatabaseRW
 	
 	public static ArrayList<Event> queryEvents(Timestamp start, Timestamp end)
 	{
-		return toEventArray(queryEvents(start, end));
+		return toEventArray(database.queryEvents(start, end));
 	}
 	
 	public static ArrayList<Task> queryTasks(Timestamp start, Timestamp end)
 	{
-		return toTaskArray(queryTasks(start, end);
+		return toTaskArray(database.queryTasks(start, end));
 	}
 	
 	public static ArrayList<Event> queryDayEvents(int y, int m, int d)
@@ -87,12 +87,7 @@ public class DatabaseRW
 		
 		return queryTasks(start, end);
 	}
-
-	public static void queryTask(){
-		answer = 41;
-		//database.go();
-	}
-
+	
 	/*==================================*/
 	/* Beginning of getValue() methods */
 	/*================================*/
@@ -120,18 +115,18 @@ public class DatabaseRW
 				int id = rs.getInt(1);
 				String n = rs.getString(2);
 				String d = rs.getString(3);
-				Timestamp start = rs.getTimeStamp(4);
+				Timestamp start = rs.getTimestamp(4);
 				int r = rs.getInt(5);
 				int rk = rs.getInt(6);
 				
-				returny.add(new Event(id, n, d, start, r, rk);
+				returny.add(new Event(id, n, d, start, r, rk));
 			}
-		} catch (SQLException balls){}
+		} catch (Exception balls){}
 		
 		return null;
 	}
 	
-	public static ArrayList<Task> toEventArray(ResultSet rs)
+	public static ArrayList<Task> toTaskArray(ResultSet rs)
 	{
 		ArrayList<Task> returny = new ArrayList<Task>();
 		
@@ -141,13 +136,13 @@ public class DatabaseRW
 				int id = rs.getInt(1);
 				String n = rs.getString(2);
 				String d = rs.getString(3);
-				Timestamp start = rs.getTimeStamp(4);
+				Timestamp start = rs.getTimestamp(4);
 				int s = rs.getInt(5);
 				int p = rs.getInt(6);
 				
-				returny.add(new Task(id, n, d, start, s, p);
+				returny.add(new Task(id, n, d, start, s, p));
 			}
-		} catch (SQLException balls){}
+		} catch (Exception balls){}
 		
 		return null;
 	}

@@ -222,7 +222,7 @@ public class Derby
 		return 0;
 	}
 	
-	public int deleteEntry(int i);
+	public int deleteEntry(int i)
 	{
 		try{
 			ps = conn.prepareStatement("DELETE FROM entry WHERE id = ?");
