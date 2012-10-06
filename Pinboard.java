@@ -15,15 +15,16 @@ public class Pinboard extends JPanel {
     public Pinboard() {
     super(new GridLayout(1, 1));
 
+        PinboardData pd = new PinboardData();
 		todolabel = new JLabel("To Do");
 		doinglabel = new JLabel("Doing");
-		todo = new JList();
-		doing = new JList();
-		events = new JList();
+		todo = new JList(pd.toDoNames);
+		doing = new JList(pd.doingNames);
+		events = new JList(pd.eventNames);
 		todoscroll = new JScrollPane(todo);
 		doingscroll = new JScrollPane(doing);
 		eventscroll = new JScrollPane(events);
-        
+
         JTabbedPane tabbedPane = new JTabbedPane();
         ImageIcon icon = createImageIcon("tray.jpg");
         

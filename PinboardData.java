@@ -8,9 +8,9 @@ public class PinboardData
 	public ArrayList<Task> toDoTasks = null;
 	public ArrayList<Task> doingTasks = null;
 	
-	public ArrayList<String> eventNames = null;
-	public ArrayList<String> toDoNames = null;
-	public ArrayList<String> doingNames = null;
+	public String[] eventNames = null;
+	public String[] toDoNames = null;
+	public String[] doingNames = null;
 	
 	public PinboardData()
 	{
@@ -21,25 +21,28 @@ public class PinboardData
 		doingTasks = DatabaseRW.queryPinboardTasks(start, 1);
 		
 		
-		eventNames = new ArrayList<String>();
-		
+		eventNames = new String[events.size()];
+		int i = 0;
 		for(Event e : events)
 		{
-			eventNames.add(e.name);
+			eventNames[i] = e.name;
+			i++;
 		}
 		
-		toDoNames = new ArrayList<String>();
-		
+		toDoNames = new String[toDoTasks.size()];
+		i = 0;
 		for(Task t : toDoTasks)
 		{
-			toDoNames.add(t.name);
+			toDoNames[i] = t.name;
+			i++;
 		}
 		
-		doingNames = new ArrayList<String>();
-		
+		doingNames = new String[doingTasks.size()];
+		i = 0;
 		for(Task t : doingTasks)
 		{
-			doingNames.add(t.name);
+			doingNames[i] = t.name;
+			i++;
 		}
 	}
 }

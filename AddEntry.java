@@ -226,7 +226,7 @@ public class AddEntry extends JPanel {
      */
     public static void createAndShowGUI() {
         //Create and set up the window.
-        frame = new JFrame("AddEntry");
+        frame = new JFrame("Add Entry");
         
         //Add content to the window.
         frame.add(new AddEntry(), BorderLayout.CENTER);
