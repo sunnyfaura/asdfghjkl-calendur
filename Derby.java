@@ -277,7 +277,7 @@ public class Derby
 	public ResultSet queryEvents(Timestamp start, Timestamp end)
 	{
 		try{
-			ps = conn.prepareStatement("SELECT id, name, description, timeStart, repeating, repeatKey FROM entry JOIN event ON entry.id = event.id WHERE timeStart BETWEEN ? and ? ORDER BY timeStart ");
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, repeating, repeatKey FROM entry JOIN event ON entry.id = event.id WHERE timeStart BETWEEN ? and ? ORDER BY timeStart ");
 			ps.setTimestamp(1, start);
 			ps.setTimestamp(2, end);
 			
@@ -294,7 +294,7 @@ public class Derby
 	public ResultSet queryTasks(Timestamp start, Timestamp end)
 	{
 		try{
-			ps = conn.prepareStatement("SELECT id, name, description, timeStart, status, priority FROM task JOIN task ON entry.id = task.id WHERE timeStart BETWEEN ? and ? ORDER BY timeStart");
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM entry JOIN task ON entry.id = task.id WHERE timeStart BETWEEN ? and ? ORDER BY timeStart");
 			ps.setTimestamp(1, start);
 			ps.setTimestamp(2, end);
 			
@@ -362,7 +362,7 @@ public class Derby
 	public ResultSet queryPinboardEvents(Timestamp start)
 	{
 		try{
-			ps = conn.prepareStatement("SELECT id, name, description, timeStart, repeating, repeatKey FROM entry JOIN event ON entry.id = event.id WHERE timeStart >= ? ORDER BY timeStart");
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, repeating, repeatKey FROM entry JOIN event ON entry.id = event.id WHERE timeStart >= ? ORDER BY timeStart");
 			ps.setTimestamp(1, start);
 			
 			rs = ps.executeQuery();
@@ -378,7 +378,7 @@ public class Derby
 	public ResultSet queryPinboardTasks(Timestamp start, int status)
 	{
 		try{
-			ps = conn.prepareStatement("SELECT id, name, description, timeStart, status, priority FROM entry JOIN task ON entry.id = task.id WHERE timeStart >= ? AND status = ? ORDER BY timeStart");
+			ps = conn.prepareStatement("SELECT entry.id, name, description, timeStart, status, priority FROM entry JOIN task ON entry.id = task.id WHERE timeStart >= ? AND status = ? ORDER BY timeStart");
 			ps.setTimestamp(1, start);
 			ps.setInt(2, status);
 			
