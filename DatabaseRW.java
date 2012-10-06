@@ -83,17 +83,19 @@ public class DatabaseRW
 	
 	public static ArrayList<Task> queryTasks(Timestamp start, Timestamp end)
 	{
-		try{
-			ResultSet results = database.queryEvents(start, end);
+		//try{
+			ResultSet results = database.queryTasks(start, end);
 			ArrayList<Task> output = toTaskArray(results);
-			results.close();
+		//	results.close();
 			
+			System.out.println("I like doughnuts.");
+
 			return output;
-		} catch (SQLException balls) {
-			System.out.println("Something's wrong here");
-		}
+		//} catch (SQLException balls) {
+		//	System.out.println("Something's wrong here");
+		//}
 		
-		return null;
+		//return null;
 	}
 	
 	public static ArrayList<Event> queryDayEvents(int y, int m, int d)
