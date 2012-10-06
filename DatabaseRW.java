@@ -153,7 +153,7 @@ public class DatabaseRW
 					y++;
 					break;
 			}
-			System.out.println(limit);
+			//System.out.println(limit);
 			iterateTime = intToTimestamp(y, mo, d, hr, min);
 			database.insertEvent(n, desc, iterateTime, r, key);
 		}
