@@ -18,7 +18,7 @@ public class DatabaseRW
 	public static int insertTask(String n, String de, int y, int mo, int da, int h, int mi, int s, int p)
 	{
 		Timestamp startTime = intToTimestamp(y, mo, da, h, mi);
-		
+		System.out.println("Inserted at " + y + " " + mo + " " + da);
 		int key = database.insertTask(n, de, startTime, s, p);
 		return key;
 	}
@@ -70,26 +70,18 @@ public class DatabaseRW
 	{
 		ResultSet results = database.queryEvents(start, end);
 		ArrayList<Event> output = toEventArray(results);
-		//results.close();
+		try {results.close();} catch (Exception e) {}
 		
 		return output;
 	}
 	
 	public static ArrayList<Task> queryTasks(Timestamp start, Timestamp end)
 	{
-		//try{
-			ResultSet results = database.queryTasks(start, end);
-			ArrayList<Task> output = toTaskArray(results);
-		//	results.close();
-			
-			System.out.println("I like doughnuts.");
-
-			return output;
-		//} catch (SQLException balls) {
-		//	System.out.println("Something's wrong here");
-		//}
+		ResultSet results = database.queryTasks(start, end);
+		ArrayList<Task> output = toTaskArray(results);
+		try{results.close();} catch (Exception e) {}
 		
-		//return null;
+		return output;
 	}
 	
 	public static ArrayList<Event> queryDayEvents(int y, int m, int d)
@@ -104,7 +96,7 @@ public class DatabaseRW
 	{
 		Timestamp start = intToTimestamp(y, m, d, 0, 0);
 		Timestamp end = intToTimestamp(y, m, d + 1, 0, 0);
-		
+
 		return queryTasks(start, end);
 	}
 	
@@ -243,9 +235,10 @@ public class DatabaseRW
 				
 				returny.add(new Task(id, n, d, start, s, p));
 			}
-			
 			return returny;
-		} catch (Exception balls){}
+		} catch (Exception balls){
+			System.out.println(balls);
+		}
 		
 		return null;
 	}

@@ -283,7 +283,7 @@ public class Derby
 			
 			rs = ps.executeQuery();
 			
-			ps.close();
+			//ps.close();
 			
 			return rs;
 		} catch (SQLException balls) {}
@@ -300,7 +300,7 @@ public class Derby
 			
 			rs = ps.executeQuery();
 			
-			ps.close();
+			//ps.close();
 			
 			return rs;
 		} catch (SQLException balls) {
@@ -367,7 +367,7 @@ public class Derby
 			
 			rs = ps.executeQuery();
 			
-			ps.close();
+			//ps.close();
 			
 			return rs;
 		} catch (SQLException balls) {}
@@ -384,7 +384,7 @@ public class Derby
 			
 			rs = ps.executeQuery();
 			
-			ps.close();
+			//ps.close();
 			
 			return rs;
 		} catch (SQLException balls) {}

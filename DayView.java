@@ -35,12 +35,13 @@ public class DayView
 		date = new JLabel( months[imonth]+" "+idate+", "+iyear ); // <---connect to calendar or something
 
 		ArrayList<Task> t = null;
-		t = DatabaseRW.queryDayTasks(iyear, imonth, idate);
+		//t = DatabaseRW.queryDayTasks(iyear, imonth, idate);
 		try
 		{
-			t = DatabaseRW.queryDayTasks(iyear, imonth, idate);
-			System.out.println("Successfully Queried Day Task: " + iyear + " " + imonth + " " + idate);
+			t = DatabaseRW.queryDayTasks(iyear, (imonth+1), idate);
+			System.out.println("Successfully Queried Day Task: " + iyear + " " + (imonth+1) + " " + idate);
 			if(t == null) System.out.println("No ArrayList returned.");
+			else System.out.println("ArrayList size: " + t.size());
 		} catch (Exception e) {}
 		String[] taskNames = new String[1];
 		taskNames[0] = "No tasks found";
