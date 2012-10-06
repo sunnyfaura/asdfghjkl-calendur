@@ -34,13 +34,28 @@ public class DayView
 		String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 		date = new JLabel( months[imonth]+" "+idate+", "+iyear ); // <---connect to calendar or something
 
-		ArrayList<Task> t = DatabaseRW.queryDayTasks(iyear, imonth, idate);
-		String[] taskNames = new String[t.size()];
-		for(int i = 0; i < t.size(); i++)
+		ArrayList<Task> t = null;
+		try
 		{
-			taskNames[i] = t.get(i).name;
+			t = DatabaseRW.queryDayTasks(iyear, imonth, idate);
+			System.out.println("Successfully Queried Day Task: " + iyear + " " + imonth + " " + idate);
+			if(t == null) System.out.println("No ArrayList returned.");
+		} catch (Exception e) {}
+		String[] taskNames = new String[1];
+		taskNames[0] = "No tasks found";
+		boolean clickable = false;
+		if(t != null && t.size() > 0)
+		{
+			System.out.println("Returned arrayList size > 0");
+			taskNames = new String[t.size()];
+			for(int i = 0; i < t.size(); i++)
+			{
+				taskNames[i] = t.get(i).name;
+			}
+			clickable = true;
 		}
 		tasks = new JList(taskNames);
+		//tasks = new JList();
 		events = new JList();
 		panel = new JPanel(new GridLayout(2, 1));
 		taskscroll = new JScrollPane(tasks);
