@@ -88,6 +88,22 @@ public class DatabaseRW
 		return queryTasks(start, end);
 	}
 	
+	public static ArrayList<Event> queryMonthEvents(int y, int m, int d)
+	{
+		Timestamp start = intToTimestamp(y, m, 0, 0, 0);
+		Timestamp end = intToTimestamp(y, m + 1, 0, 0, 0);
+		
+		return queryEvents(start, end);
+	}
+	
+	public static ArrayList<Task> queryMonthTass(int y, int m, int d)
+	{
+		Timestamp start = intToTimestamp(y, m, 0, 0, 0);
+		Timestamp end = intToTimestamp(y, m + 1, 0, 0, 0);
+		
+		return queryTasks(start, end);
+	}
+	
 	/*==================================*/
 	/* Beginning of getValue() methods */
 	/*================================*/
