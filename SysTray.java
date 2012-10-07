@@ -1,13 +1,14 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.JFrame;
+import java.sql.Timestamp;
 
 public class SysTray {
     final static Calendar calendar =new Calendar();
     final static Image image = Toolkit.getDefaultToolkit().getImage("tray.jpg");
     final static PopupMenu popup = new PopupMenu();
     final static TrayIcon trayIcon = new TrayIcon(image, "The Life Planner", popup);
-    final static FileReadAgain fr = new FileReadAgain("hello.txt");
+    static Timestamp fin = new Timestamp(System.currentTimeMillis()-10000000);
     
     public static void main(String[] asdf) {
         Derby database = new Derby();
@@ -20,6 +21,7 @@ public class SysTray {
              public void run() {
                 if (SystemTray.isSupported()) {
                     final SystemTray tray = SystemTray.getSystemTray();
+                    final FileReadAgain fr = new FileReadAgain("hello.txt",fin);
                     
                     MenuItem item = new MenuItem();
                         PopupMenu comments = new PopupMenu("Choose a mood for commenter..  ");
@@ -39,7 +41,7 @@ public class SysTray {
                             public void actionPerformed(ActionEvent e){
                                 trayIcon.displayMessage("I am feeling responsible today","asasfdg",TrayIcon.MessageType.INFO);
                                 System.out.println("mood: Responsible");
-                                fr.run("responsible");
+                                //fr.run("responsible");
                             }
                         });
 
@@ -49,7 +51,7 @@ public class SysTray {
                             public void actionPerformed(ActionEvent e){
                                 trayIcon.displayMessage("I am feeling lazy today","asasfdg",TrayIcon.MessageType.INFO);
                                 System.out.println("mood: Lazy");
-                                fr.run("lazy");
+                                //fr.run("lazy");
                             }
                         });
 
@@ -59,7 +61,7 @@ public class SysTray {
                             public void actionPerformed(ActionEvent e){
                                 trayIcon.displayMessage("I am feeling like cramming today","asasfdg",TrayIcon.MessageType.INFO);
                                 System.out.println("mood: Cramming");
-                                fr.run("cramming");
+                                //fr.run("cramming");
                             }
                         });
                         
@@ -69,7 +71,7 @@ public class SysTray {
                             public void actionPerformed(ActionEvent e){
                                 trayIcon.displayMessage("I am feeling like cramming today","asasfdg",TrayIcon.MessageType.INFO);
                                 System.out.println("mood: Cramming");
-                                fr.run("normal");
+                                //fr.run("normal");
                             }
                         });
 
@@ -100,7 +102,6 @@ public class SysTray {
                     item.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             tray.remove(trayIcon);
-                            Timestamp fin = new Timestamp(System.currentTimeMillis());
                             calendar.closeCalendar();
                         }
                     });

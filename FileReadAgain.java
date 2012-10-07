@@ -6,8 +6,9 @@ import java.sql.Timestamp;
 
 public class FileReadAgain extends Thread
 {
-	static String fn;
+	static String fn = "hello.txt";
 	PinboardData pbd;
+
 	public FileReadAgain(String filename, Timestamp lastOpened)
 	{
 		fn = filename;
@@ -29,6 +30,8 @@ public class FileReadAgain extends Thread
 
 	public static void main(String[] args)
 	{
+		Derby database = new Derby();
+    	DatabaseRW.setDatabase(database);
 		Date today = new Date();
 		System.out.println(new java.sql.Timestamp(today.getTime()));
 		checkPastEvents(new java.sql.Timestamp(today.getTime()));
@@ -81,7 +84,6 @@ public class FileReadAgain extends Thread
 			{
 				if(compareDate(pbd.toDoTasks.get(i)))
 					readFile();
-
 			}
 		}
 	}
@@ -94,7 +96,6 @@ public class FileReadAgain extends Thread
 			{
 				if(compareDate(pbd.doingTasks.get(i)))
 					readFile();
-
 			}
 		}
 	}
@@ -107,7 +108,6 @@ public class FileReadAgain extends Thread
 			FileReader fr = new FileReader(fn);
 			BufferedReader br = new BufferedReader( fr );
 			String str;
-			
 				while( (str = br.readLine()) != null )
 				{
 					System.out.println(str);
@@ -165,7 +165,6 @@ public class FileReadAgain extends Thread
 			{
 				readForNotif(mood);
 				Thread.sleep(500);
-				
 			}
 		}
 		catch( Exception ex)
