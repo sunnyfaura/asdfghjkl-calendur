@@ -1,12 +1,14 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.JFrame;
+import java.sql.Timestamp;
 
 public class SysTray {
     final static Calendar calendar =new Calendar();
     final static Image image = Toolkit.getDefaultToolkit().getImage("tray.jpg");
     final static PopupMenu popup = new PopupMenu();
     final static TrayIcon trayIcon = new TrayIcon(image, "The Life Planner", popup);
+    static Timestamp fin = new Timestamp(System.currentTimeMillis()-10000000);
     
     public static void main(String[] asdf) {
         Derby database = new Derby();
@@ -19,29 +21,60 @@ public class SysTray {
              public void run() {
                 if (SystemTray.isSupported()) {
                     final SystemTray tray = SystemTray.getSystemTray();
+                    final FileReadAgain fr = new FileReadAgain("hello.txt",fin);
                     
                     MenuItem item = new MenuItem();
                         PopupMenu comments = new PopupMenu("Choose a mood for commenter..  ");
-                        MenuItem moods = new MenuItem("Happy");
+                        MenuItem moods = new MenuItem("Diligent");
                         comments.add(moods);
-                        moods = new MenuItem("Happy       ");
+                        moods.addActionListener(new ActionListener(){
+                            public void actionPerformed(ActionEvent e){
+                                trayIcon.displayMessage("I am feeling diligent today","asasfdg",TrayIcon.MessageType.INFO);
+                                System.out.println("mood: diligent");
+                                fr.run("diligent");
+                            }
+                        });
+
+                        moods = new MenuItem("Responsible       ");
                         comments.add(moods);
-                        moods = new MenuItem("Happy       ");
+                        moods.addActionListener(new ActionListener(){
+                            public void actionPerformed(ActionEvent e){
+                                trayIcon.displayMessage("I am feeling responsible today","asasfdg",TrayIcon.MessageType.INFO);
+                                System.out.println("mood: Responsible");
+                                //fr.run("responsible");
+                            }
+                        });
+
+                        moods = new MenuItem("Lazy       ");
                         comments.add(moods);
-                        moods = new MenuItem("Happy       ");
+                        moods.addActionListener(new ActionListener(){
+                            public void actionPerformed(ActionEvent e){
+                                trayIcon.displayMessage("I am feeling lazy today","asasfdg",TrayIcon.MessageType.INFO);
+                                System.out.println("mood: Lazy");
+                                //fr.run("lazy");
+                            }
+                        });
+
+                        moods = new MenuItem("Cramming Mode       ");
                         comments.add(moods);
-                        moods = new MenuItem("Happy       ");
+                        moods.addActionListener(new ActionListener(){
+                            public void actionPerformed(ActionEvent e){
+                                trayIcon.displayMessage("I am feeling like cramming today","asasfdg",TrayIcon.MessageType.INFO);
+                                System.out.println("mood: Cramming");
+                                //fr.run("cramming");
+                            }
+                        });
+                        
+                        moods = new MenuItem("Normal       ");
                         comments.add(moods);
-                        moods = new MenuItem("Happy       ");
-                        comments.add(moods);
-                        moods = new MenuItem("Happy       ");
-                        comments.add(moods);
-                        moods = new MenuItem("Happy       ");
-                        comments.add(moods);
-                        moods = new MenuItem("Happy       ");
-                        comments.add(moods);
-                        moods = new MenuItem("Happy       ");
-                        comments.add(moods);
+                        moods.addActionListener(new ActionListener(){
+                            public void actionPerformed(ActionEvent e){
+                                trayIcon.displayMessage("I am feeling like cramming today","asasfdg",TrayIcon.MessageType.INFO);
+                                System.out.println("mood: Cramming");
+                                //fr.run("normal");
+                            }
+                        });
+
                     popup.add(comments);
                     popup.addSeparator();
 
