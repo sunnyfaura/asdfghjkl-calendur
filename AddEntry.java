@@ -269,7 +269,7 @@ public class AddEntry extends JPanel {
 		public void actionPerformed(ActionEvent e){
 			String n = name.getText();
 			String dsc = desc.getText();
-			int mnth = ((int)month.getSelectedIndex())+1; //January = 0; December = 11;
+			int mnth = ((int)month.getSelectedIndex()); //January = 0; December = 11;
 			int dy = (int)day.getSelectedIndex()+1;
 			int yr = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
 			int stat = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
@@ -294,7 +294,7 @@ public class AddEntry extends JPanel {
     					options,
     					options[1]);
 				if(choice == 0){
-					DatabaseRW.insertTask(n,dsc,yr,mnth,dy,hr,mins,stat,prt);
+					DatabaseRW.insertTask(n,dsc,yr,mnth+1,dy,hr,mins,stat,prt);
 					frame.dispose();
 					Calendar.addEntryOpen++;
 				}

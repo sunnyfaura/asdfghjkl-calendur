@@ -3,6 +3,7 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.sql.Timestamp;
 
 public class EditTask extends JPanel
 {
@@ -11,37 +12,46 @@ public class EditTask extends JPanel
 	JComboBox month, day, year, hour, minute, ampm, status, priority;
 	public static JFrame frame;
 	JScrollPane dscScroll;
+	final int id;
 
-	public EditTask()
+	public EditTask(Task tsk)
 	{
 		super(new GridLayout(1, 1));
+
+		id = tsk.id;
 		name = new JTextField();
-		name.setText("<insert name of task here>");
+		name.setText(tsk.name);
 		desc = new JTextArea();
 		desc.setLineWrap(true);
-		desc.setText("<insert desc of task here>");
+		desc.setText(tsk.desc);
 		dscScroll = new JScrollPane(desc);
+
+		String tempDate = tsk.startTime.toString();
+		int tempMonth = Integer.parseInt(tempDate.substring(5,7))-2;
+		int tempDay = Integer.parseInt(tempDate.substring(8, 10));
+		int tempYear = Integer.parseInt(tempDate.substring(0,4));
+
 		String[] months = { "January", "February", "March","April","May","June","July","August","September","October","November","December"};
 		month = new JComboBox(months);
-		java.util.Calendar cal = java.util.Calendar.getInstance();
-		month.setSelectedIndex(cal.get(java.util.Calendar.MONTH)); //CHANGE THIS TO MONTH OF TASK
+		month.setSelectedIndex(tempMonth);
 
 		Integer[] days = new Integer[31];
 		for( int i=0; i<=30; i++ )
 			days[i] = i+1;
 		day = new JComboBox(days);
-		day.setSelectedIndex(cal.get(java.util.Calendar.DAY_OF_MONTH)-1); //CHANGE THIS TO DAY OF TASK
+		day.setSelectedIndex(tempDay);
 
 		Integer[] years = new Integer[100];
 		for( int i=0; i<100; i++ )
 			years[i] = 2012+i;
 		year = new JComboBox(years);
-		year.setSelectedIndex((cal.get(java.util.Calendar.YEAR)-2012));
+		//year.setSelectedIndex(tempYear);
 
 		Integer[] hours = new Integer[12];
 		for( int i=0; i<12; i++)
 			hours[i] = i+1;
 		hour = new JComboBox(hours);
+		//hour.setSelectedIndex(tempHours);
 
 		String[] minutes = new String[60];
 		for( int i=0; i<60; i++ )
@@ -51,15 +61,18 @@ public class EditTask extends JPanel
 			minutes[i] = "0"+Integer.toString(i);
 		}
 		minute = new JComboBox(minutes);
+		//minute.setSelectedIndex(tempMins);
 
 		String[] time = { "AM", "PM"};
 		ampm = new JComboBox(time);
 		
 		String[] status0 = { "To Do", "Doing", "Done" };
 		status = new JComboBox(status0);
+		//status.setSelectedIndex(tsk.status);
 
 		String[] priority0 = { "Very High", "High", "Normal", "Low", "Very Low" };
 		priority = new JComboBox(priority0);
+		//priority.setSelectedIndex(tsk.priority);
 
 		JTabbedPane tabbedPane = new JTabbedPane();
         ImageIcon icon = createImageIcon("tray.jpg");
@@ -103,7 +116,7 @@ public class EditTask extends JPanel
 								taskDeadlineInfo.add(taskTime);
 							taskDeadlineMain.add(taskDeadlineInfo, BorderLayout.CENTER);
 						taskProp.add(taskDeadlineMain);
-						JPanel taskButtons = new JPanel(new GridLayout(5,1));
+						JPanel taskButtons = new JPanel(new GridLayout(3,1));
 							JPanel taskStatusMain = new JPanel( new BorderLayout());
 								taskStatusMain.add(new JLabel("Status:   \t"), BorderLayout.LINE_START);
 								taskStatusMain.add(status, BorderLayout.CENTER);
@@ -114,13 +127,7 @@ public class EditTask extends JPanel
 							taskButtons.add(taskPriorityMain);
 							JButton save = new JButton("Save Changes");
 							save.addActionListener(new saveChanges_Action());
-							JButton delete = new JButton("Delete Task");
-							delete.addActionListener(new deleteTask_Action());
-							JButton cancel = new JButton("Cancel");
-							cancel.addActionListener(new cancel_Action());
 							taskButtons.add(save);
-							taskButtons.add(delete);
-							taskButtons.add(cancel);
 						taskProp.add(taskButtons);
 					taskBody.add(taskProp);
 				taskPane.add(taskBody);
@@ -156,17 +163,13 @@ public class EditTask extends JPanel
      * this method should be invoked from
      * the event dispatch thread.
      */
-    public static void createAndShowGUI() {
+    public static void createAndShowGUI(Task tsk) {
         //Create and set up the window.
         frame = new JFrame("Edit Task");
         
         //Add content to the window.
-        frame.add(new EditTask(), BorderLayout.CENTER);
-        frame.addWindowListener(new java.awt.event.WindowAdapter() {
-    		public void windowClosing(WindowEvent winEvt) {
-    			Calendar.addEntryOpen++;
-       		}
-		});
+        //Task e = null;
+        frame.add(new EditTask(tsk), BorderLayout.CENTER);
         
         //Display the window.
         frame.pack();
@@ -175,39 +178,35 @@ public class EditTask extends JPanel
 		frame.setResizable(false);
     }
     
-    public static void main(String[] args) {
-        //Schedule a job for the event dispatch thread:
-        //creating and showing this application's GUI.
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                //Turn off metal's use of bold fonts
-		UIManager.put("swing.boldMetal", Boolean.FALSE);
-		createAndShowGUI();
-            }
-        });
-    }
+  //   public static void main(String[] args) {
+  //       //Schedule a job for the event dispatch thread:
+  //       //creating and showing this application's GUI.
+  //       SwingUtilities.invokeLater(new Runnable() {
+  //           public void run() {
+  //               //Turn off metal's use of bold fonts
+		// UIManager.put("swing.boldMetal", Boolean.FALSE);
+		// createAndShowGUI();
+  //           }
+  //       });
+  //   }
 
     class saveChanges_Action implements ActionListener
     {
     	public void actionPerformed(ActionEvent ae)
     	{
-    		System.out.println("save changes");
-    	}
-    }
-
-    class deleteTask_Action implements ActionListener
-    {
-    	public void actionPerformed(ActionEvent ae)
-    	{
-    		System.out.println("delete task");
-    	}
-    }
-
-    class cancel_Action implements ActionListener
-    {
-    	public void actionPerformed(ActionEvent ae)
-    	{
-    		System.out.println("cancel");
+    		String n = name.getText();
+			String d = desc.getText();
+			int m = ((int)month.getSelectedIndex()); //January = 0; December = 11;
+			int da = (int)day.getSelectedIndex()+1;
+			int y = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
+			int s = (int)status.getSelectedIndex(); // to-do = 0; doing = 1; done = 2;
+			int h = (int)hour.getSelectedIndex()+1; //returns exact hour
+			int mi = (int)minute.getSelectedIndex(); //returns exact minutes
+			int p = (int)priority.getSelectedIndex();
+    		//System.out.println("save changes");
+    		DatabaseRW.updateTask(id, n, d, y, m, da, h, mi, s, p);
+    		frame.dispose();
+    		frame.setVisible(false);
     	}
     }
 }

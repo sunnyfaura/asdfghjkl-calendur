@@ -1,4 +1,4 @@
- import javax.swing.*;
+import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 import java.awt.*;
@@ -102,6 +102,8 @@ public class Pinboard extends JPanel {
                             frame.dispose();
                             Calendar.pinboardOpen++;
                             //open the edit frame
+                            //EditTask edit = new EditTask(td.get(index));
+                            EditTask.createAndShowGUI(td.get(index));
                         } else if(choice == 1){
                             Object[] delOpts = {"Back","Delete"};
                             int delChoice = JOptionPane.showOptionDialog(frame,
@@ -145,6 +147,8 @@ public class Pinboard extends JPanel {
                             frame.dispose();
                             Calendar.pinboardOpen++;
                             //open the edit frame
+                            //EditTask edit = new EditTask(td.get(index));
+                            EditTask.createAndShowGUI(td.get(index));
                         } else if(choice == 1){
                             Object[] delOpts = {"Back","Delete"};
                             int delChoice = JOptionPane.showOptionDialog(frame,
@@ -188,6 +192,7 @@ public class Pinboard extends JPanel {
                             frame.dispose();
                             Calendar.pinboardOpen++;
                             //open the edit frame
+                            EditEvent.createAndShowGUI(td.get(index));
                         } else if(choice == 1){
                             Object[] delOpts = {"Back","Delete"};
                             int delChoice = JOptionPane.showOptionDialog(frame,

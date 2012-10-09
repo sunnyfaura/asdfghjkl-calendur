@@ -14,14 +14,14 @@ public class EditEvent extends JPanel
 	JLabel repeatingLabel;
 	JScrollPane dscScroll;
 
-	public EditEvent()
+	public EditEvent(Event eve)
 	{
 		super(new GridLayout(1, 1));
 		name = new JTextField();
-		name.setText("<insert name of event here>");
+		name.setText(eve.name);
 		desc = new JTextArea();
 		desc.setLineWrap(true);
-		desc.setText("<insert desc of event here>");
+		desc.setText(eve.desc);
 		dscScroll = new JScrollPane(desc);
 		String[] months = { "January", "February", "March","April","May","June","July","August","September","October","November","December"};
 		month = new JComboBox(months);
@@ -87,7 +87,7 @@ public class EditEvent extends JPanel
 						eventDescMain.add(new JLabel("Description:   \t"), BorderLayout.LINE_START);
 						eventDescMain.add(dscScroll, BorderLayout.CENTER);
 					eventBody.add(eventDescMain);
-					JPanel eventProp = new JPanel(new GridLayout(7,1));
+					JPanel eventProp = new JPanel(new GridLayout(5,1));
 						JPanel eventDeadlineMain = new JPanel(new BorderLayout());
 							eventDeadlineMain.add(new JLabel("Start Date: \t"), BorderLayout.LINE_START);
 							JPanel eventDate = new JPanel(new FlowLayout()); //DATE
@@ -120,13 +120,7 @@ public class EditEvent extends JPanel
 						eventProp.add(isRepeating);
 						JButton save = new JButton("Save Changes");
 						save.addActionListener(new save_Action());
-						JButton delete = new JButton("Delete Task");
-						delete.addActionListener(new delete_Action());
-						JButton cancel = new JButton("Cancel");
-						cancel.addActionListener(new cancel_Action());
 						eventProp.add(save);
-						eventProp.add(delete);
-						eventProp.add(cancel); //BUTTON1
 					eventBody.add(eventProp);
 				eventPane.add(eventBody);
 			eventsPanelMain.add(eventPane, BorderLayout.CENTER);
@@ -162,17 +156,12 @@ public class EditEvent extends JPanel
      * this method should be invoked from
      * the event dispatch thread.
      */
-    public static void createAndShowGUI() {
+    public static void createAndShowGUI(Event eve) {
         //Create and set up the window.
         frame = new JFrame("Edit Event");
         
         //Add content to the window.
-        frame.add(new EditEvent(), BorderLayout.CENTER);
-        frame.addWindowListener(new java.awt.event.WindowAdapter() {
-    		public void windowClosing(WindowEvent winEvt) {
-    			Calendar.addEntryOpen++;
-       		}
-		});
+        frame.add(new EditEvent(eve), BorderLayout.CENTER);
         
         //Display the window.
         frame.pack();
@@ -181,17 +170,17 @@ public class EditEvent extends JPanel
 		frame.setResizable(false);
     }
     
-    public static void main(String[] args) {
-        //Schedule a job for the event dispatch thread:
-        //creating and showing this application's GUI.
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                //Turn off metal's use of bold fonts
-		UIManager.put("swing.boldMetal", Boolean.FALSE);
-		createAndShowGUI();
-            }
-        });
-    }
+  //   public static void main(String[] args) {
+  //       //Schedule a job for the event dispatch thread:
+  //       //creating and showing this application's GUI.
+  //       SwingUtilities.invokeLater(new Runnable() {
+  //           public void run() {
+  //               //Turn off metal's use of bold fonts
+		// UIManager.put("swing.boldMetal", Boolean.FALSE);
+		// createAndShowGUI();
+  //           }
+  //       });
+  //   }
 
     class time_Select implements ItemListener
 	{
@@ -225,24 +214,6 @@ public class EditEvent extends JPanel
 		public void actionPerformed(ActionEvent ae)
 		{
 			System.out.println("save changes");
-		}
-	}
-
-	class delete_Action implements ActionListener
-	{
-		public void actionPerformed(ActionEvent ae)
-		{
-			System.out.println("delete event");
-		}
-	}
-
-	class cancel_Action implements ActionListener
-	{
-		public void actionPerformed(ActionEvent ae)
-		{
-			int n = JOptionPane.showConfirmDialog(frame,"Are you sure you want to cancel editing?","Edit Event",JOptionPane.YES_NO_OPTION);
-			if( n == JOptionPane.YES_OPTION || n == JOptionPane.CLOSED_OPTION)
-				frame.setVisible(false);
 		}
 	}
 }

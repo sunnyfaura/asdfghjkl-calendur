@@ -118,8 +118,8 @@ public class DayView
     						frmMain.dispose();
 							Calendar.addEntryOpen++;
     						//open the edit frame
-    						EditTask edit = new EditTask();
-    						edit.createAndShowGUI();
+    						//EditTask edit = new EditTask(t.get(index));
+    						EditTask.createAndShowGUI(t.get(index));
     					} else if(choice == 1){
 				    		Object[] delOpts = {"Back","Delete"};
     						int delChoice = JOptionPane.showOptionDialog(frmMain,
@@ -163,8 +163,7 @@ public class DayView
     						frmMain.dispose();
 							Calendar.addEntryOpen++;
     						//open the edit frame
-    						EditTask edit = new EditTask();
-    						edit.createAndShowGUI();
+    						EditEvent.createAndShowGUI(t.get(index));
     					} else if(choice == 1){
 				    		Object[] delOpts = {"Back","Delete"};
     						int delChoice = JOptionPane.showOptionDialog(frmMain,
