@@ -15,7 +15,7 @@ public class DayView
 	private JScrollPane taskscroll, eventscroll;
 	
 	
-	public DayView(int iday, int imonth, int idate, int iyear)
+	public DayView(final int iday,final int imonth,final int idate,final int iyear)
 	{
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
@@ -52,8 +52,13 @@ public class DayView
 			else System.out.println("ArrayList size: " + ev.size());
 		} catch (Exception e) {}
 		String[] taskNames = new String[1];
+		//String[] taskDescs = new String[1];
+		//String[] taskTstamp = new String[1];
 		taskNames[0] = "No tasks found";
+		
 		String[] eventNames = new String[1];
+		//String[] eventDescs = new String[1];
+		//String[] eventTstamp = new String[1];
 		eventNames[0] = "No tasks found";
 		boolean clickable = false;
 		if(t != null && t.size() > 0)
@@ -63,6 +68,8 @@ public class DayView
 			for(int i = 0; i < t.size(); i++)
 			{
 				taskNames[i] = t.get(i).name;
+				//taskDescs[i] = t.get(i).desc;
+				//taskTstamp[i] = t.get(i).startTime;
 			}
 			clickable = true;
 		}
@@ -73,15 +80,56 @@ public class DayView
 			for(int i = 0; i < ev.size(); i++)
 			{
 				eventNames[i] = ev.get(i).name;
+				//eventDescs[i] = ev.get(i).descs;
+				//eventTstamp[i] = ev.get(i).startTime;
 			}
 			clickable = true;
 		}
+
+
 		tasks = new JList(taskNames);
 		//tasks = new JList();
 		events = new JList(eventNames);
 		panel = new JPanel(new GridLayout(2, 1));
 		taskscroll = new JScrollPane(tasks);
 		eventscroll = new JScrollPane(events);
+
+		//if JList item has been clicked
+		tasks.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent evt) {
+		    	JList list = (JList)evt.getSource();
+		    	Rectangle r = list.getCellBounds(0, list.getLastVisibleIndex());
+		    	if (r != null && r.contains(evt.getPoint())) {
+		     		int index = list.locationToIndex(evt.getPoint()); 
+			    	//System.out.println(index);
+			    	try{
+				    	ArrayList<Task> t =
+				    	DatabaseRW.queryDayTasks(iyear, (imonth+1), idate);
+				    	JOptionPane.showMessageDialog(frmMain,
+				    	t.get(index).desc,
+				    	t.get(index).name,JOptionPane.INFORMATION_MESSAGE);	
+			    	}catch(Exception e){}
+		 		}
+		    }
+		});
+
+		events.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent evt) {
+		    	JList list = (JList)evt.getSource();
+		    	Rectangle r = list.getCellBounds(0, list.getLastVisibleIndex());
+		    	if (r != null && r.contains(evt.getPoint())) {
+		     		int index = list.locationToIndex(evt.getPoint()); 
+			    	//System.out.println(index);
+			    	try{
+				    	ArrayList<Event> t =
+				    	DatabaseRW.queryDayEvents(iyear, (imonth+1), idate);
+				    	JOptionPane.showMessageDialog(frmMain,
+				    	t.get(index).desc,
+				    	t.get(index).name,JOptionPane.INFORMATION_MESSAGE);	
+			    	}catch(Exception e){}
+		 		}
+		    }
+		});
 
 		//frame stuff
 		frmMain = new JFrame( months[imonth]+" "+idate+", "+iyear );
