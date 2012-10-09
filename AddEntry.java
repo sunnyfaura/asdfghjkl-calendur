@@ -30,13 +30,19 @@ public class AddEntry extends JPanel {
 		String[] months = { "January", "February", "March","April","May","June","July","August","September","October","November","December"};
 		month = new JComboBox(months);
 		month1 = new JComboBox(months);
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		month.setSelectedIndex(cal.get(java.util.Calendar.MONTH));
+		month1.setSelectedIndex(cal.get(java.util.Calendar.MONTH));
+		//System.out.println(String.valueOf(cal.get(java.util.Calendar.MONTH)));
 		
 		Integer[] days = new Integer[31];
 		for( int i=0; i<=30; i++ )
 			days[i] = i+1;
 		day = new JComboBox(days);
 		day1 = new JComboBox(days);
-		
+		day.setSelectedIndex(cal.get(java.util.Calendar.DAY_OF_MONTH)-1);
+		day1.setSelectedIndex(cal.get(java.util.Calendar.DAY_OF_MONTH)-1);
+
 		Integer[] years = new Integer[100];
 		for( int i=0; i<100; i++ )
 			years[i] = 2012+i;

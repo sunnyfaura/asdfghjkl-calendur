@@ -41,7 +41,7 @@ public class SysTray {
                             public void actionPerformed(ActionEvent e){
                                 trayIcon.displayMessage("I am feeling responsible today","asasfdg",TrayIcon.MessageType.INFO);
                                 System.out.println("mood: Responsible");
-                                //fr.run("responsible");
+                                fr.run("responsible");
                             }
                         });
 
@@ -51,7 +51,7 @@ public class SysTray {
                             public void actionPerformed(ActionEvent e){
                                 trayIcon.displayMessage("I am feeling lazy today","asasfdg",TrayIcon.MessageType.INFO);
                                 System.out.println("mood: Lazy");
-                                //fr.run("lazy");
+                                fr.run("lazy");
                             }
                         });
 
@@ -61,7 +61,7 @@ public class SysTray {
                             public void actionPerformed(ActionEvent e){
                                 trayIcon.displayMessage("I am feeling like cramming today","asasfdg",TrayIcon.MessageType.INFO);
                                 System.out.println("mood: Cramming");
-                                //fr.run("cramming");
+                                fr.run("cramming");
                             }
                         });
                         
@@ -71,7 +71,7 @@ public class SysTray {
                             public void actionPerformed(ActionEvent e){
                                 trayIcon.displayMessage("I am feeling like cramming today","asasfdg",TrayIcon.MessageType.INFO);
                                 System.out.println("mood: Cramming");
-                                //fr.run("normal");
+                                fr.run("normal");
                             }
                         });
 

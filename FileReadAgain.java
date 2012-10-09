@@ -3,6 +3,7 @@ import java.util.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.sql.Timestamp;
+import java.awt.TrayIcon;
 
 public class FileReadAgain extends Thread
 {
@@ -110,7 +111,8 @@ public class FileReadAgain extends Thread
 			String str;
 				while( (str = br.readLine()) != null )
 				{
-					System.out.println(str);
+					//System.out.println(str);
+					SysTray.trayIcon.displayMessage("NOTE!",str,TrayIcon.MessageType.INFO);
 				}
 			fr.close();
 				
