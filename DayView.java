@@ -105,9 +105,34 @@ public class DayView
 			    	try{
 				    	ArrayList<Task> t =
 				    	DatabaseRW.queryDayTasks(iyear, (imonth+1), idate);
-				    	JOptionPane.showMessageDialog(frmMain,
+				    	Object[] options = {"Edit","Delete","Back"};
+				    	int choice = JOptionPane.showOptionDialog(frmMain,
 				    	t.get(index).desc,
-				    	t.get(index).name,JOptionPane.INFORMATION_MESSAGE);	
+				    	t.get(index).name,
+				    	JOptionPane.YES_NO_CANCEL_OPTION,
+				    	JOptionPane.INFORMATION_MESSAGE,
+    					null,
+    					options,
+    					options[2]);
+    					if(choice==0){
+    						frmMain.dispose();
+							Calendar.addEntryOpen++;
+    						//open the edit frame
+    					} else if(choice == 1){
+				    		Object[] delOpts = {"Back","Delete"};
+    						int delChoice = JOptionPane.showOptionDialog(frmMain,
+    					 	"Delete "+t.get(index).name+"?","Confirm Delete",
+    						JOptionPane.YES_NO_CANCEL_OPTION,
+    						JOptionPane.QUESTION_MESSAGE,
+    						null,
+    						delOpts,
+    						delOpts[1]);
+							if(delChoice == 1){
+								DatabaseRW.deleteTask(t.get(index).id);
+								frmMain.dispose();
+								Calendar.addEntryOpen++;
+							}
+    					}
 			    	}catch(Exception e){}
 		 		}
 		    }
@@ -123,9 +148,34 @@ public class DayView
 			    	try{
 				    	ArrayList<Event> t =
 				    	DatabaseRW.queryDayEvents(iyear, (imonth+1), idate);
-				    	JOptionPane.showMessageDialog(frmMain,
+				    	Object[] options = {"Edit","Delete","Back"};
+				    	int choice = JOptionPane.showOptionDialog(frmMain,
 				    	t.get(index).desc,
-				    	t.get(index).name,JOptionPane.INFORMATION_MESSAGE);	
+				    	t.get(index).name,
+				    	JOptionPane.YES_NO_CANCEL_OPTION,
+				    	JOptionPane.INFORMATION_MESSAGE,
+    					null,
+    					options,
+    					options[2]);
+    					if(choice==0){
+    						frmMain.dispose();
+							Calendar.addEntryOpen++;
+    						//open the edit frame
+    					} else if(choice == 1){
+				    		Object[] delOpts = {"Back","Delete"};
+    						int delChoice = JOptionPane.showOptionDialog(frmMain,
+    					 	"Delete "+t.get(index).name+"?","Confirm Delete",
+    						JOptionPane.YES_NO_CANCEL_OPTION,
+    						JOptionPane.QUESTION_MESSAGE,
+    						null,
+    						delOpts,
+    						delOpts[1]);
+							if(delChoice == 1){
+								DatabaseRW.deleteEvent(t.get(index).id);
+								frmMain.dispose();
+								Calendar.addEntryOpen++;
+							}
+    					}
 			    	}catch(Exception e){}
 		 		}
 		    }
