@@ -348,7 +348,7 @@ public class AddEntry extends JPanel {
     					options,
     					options[1]);
 				if(choice == 0){
-					DatabaseRW.insertRepeatingEvent(n, de, y, mo, da, h, mi, r);				
+					DatabaseRW.insertRepeatingEvent(n, de, y, mo+1, da, h, mi, r);				
 					frame.dispose();
 					Calendar.addEntryOpen++;
 				}

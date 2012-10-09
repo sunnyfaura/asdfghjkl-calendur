@@ -1,4 +1,4 @@
-import javax.swing.*;
+ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ public class Pinboard extends JPanel {
 	private JLabel todolabel, doinglabel;
 	private JList todo, doing, events;
 	private JScrollPane todoscroll, doingscroll, eventscroll;
-	
+	static private JFrame frame;
 	
     public Pinboard() {
     super(new GridLayout(1, 1));
@@ -77,6 +77,136 @@ public class Pinboard extends JPanel {
         
         //The following line enables to use scrolling tabs.
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
+        //set clickies
+        todo.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList)evt.getSource();
+                Rectangle r = list.getCellBounds(0, list.getLastVisibleIndex());
+                if (r != null && r.contains(evt.getPoint())) {
+                    int index = list.locationToIndex(evt.getPoint()); 
+                    //System.out.println(index);
+                    try{
+                        PinboardData pd = new PinboardData();
+                        ArrayList<Task> td = pd.toDoTasks;
+                        Object[] options = {"Edit","Delete","Back"};
+                        int choice = JOptionPane.showOptionDialog(frame,
+                        td.get(index).desc+"\n"+
+                        "Timestamp: "+td.get(index).startTime,td.get(index).name,
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE,
+                        null,
+                        options,
+                        options[2]);
+                        if(choice==0){
+                            frame.dispose();
+                            Calendar.pinboardOpen++;
+                            //open the edit frame
+                        } else if(choice == 1){
+                            Object[] delOpts = {"Back","Delete"};
+                            int delChoice = JOptionPane.showOptionDialog(frame,
+                            "Delete "+td.get(index).name+"?","Confirm Delete",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            delOpts,
+                            delOpts[1]);
+                            if(delChoice == 1){
+                                DatabaseRW.deleteEvent(td.get(index).id);
+                                frame.dispose();
+                                Calendar.pinboardOpen++;
+                            }
+                        }
+                    }catch(Exception e){}
+                }
+            }
+        });
+
+        doing.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList)evt.getSource();
+                Rectangle r = list.getCellBounds(0, list.getLastVisibleIndex());
+                if (r != null && r.contains(evt.getPoint())) {
+                    int index = list.locationToIndex(evt.getPoint()); 
+                    //System.out.println(index);
+                    try{
+                        PinboardData pd = new PinboardData();
+                        ArrayList<Task> td = pd.doingTasks;
+                        Object[] options = {"Edit","Delete","Back"};
+                        int choice = JOptionPane.showOptionDialog(frame,
+                        td.get(index).desc+"\n"+
+                        "Timestamp: "+td.get(index).startTime,td.get(index).name,
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE,
+                        null,
+                        options,
+                        options[2]);
+                        if(choice==0){
+                            frame.dispose();
+                            Calendar.pinboardOpen++;
+                            //open the edit frame
+                        } else if(choice == 1){
+                            Object[] delOpts = {"Back","Delete"};
+                            int delChoice = JOptionPane.showOptionDialog(frame,
+                            "Delete "+td.get(index).name+"?","Confirm Delete",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            delOpts,
+                            delOpts[1]);
+                            if(delChoice == 1){
+                                DatabaseRW.deleteEvent(td.get(index).id);
+                                frame.dispose();
+                                Calendar.pinboardOpen++;
+                            }
+                        }
+                    }catch(Exception e){}
+                }
+            }
+        });
+
+        events.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList)evt.getSource();
+                Rectangle r = list.getCellBounds(0, list.getLastVisibleIndex());
+                if (r != null && r.contains(evt.getPoint())) {
+                    int index = list.locationToIndex(evt.getPoint()); 
+                    //System.out.println(index);
+                   try{
+                        PinboardData pd = new PinboardData();
+                        ArrayList<Event> td = pd.events;
+                        Object[] options = {"Edit","Delete","Back"};
+                        int choice = JOptionPane.showOptionDialog(frame,
+                        td.get(index).desc+"\n"+
+                        "Timestamp: "+td.get(index).startTime,td.get(index).name,
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE,
+                        null,
+                        options,
+                        options[2]);
+                        if(choice==0){
+                            frame.dispose();
+                            Calendar.pinboardOpen++;
+                            //open the edit frame
+                        } else if(choice == 1){
+                            Object[] delOpts = {"Back","Delete"};
+                            int delChoice = JOptionPane.showOptionDialog(frame,
+                            "Delete "+td.get(index).name+"?","Confirm Delete",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            delOpts,
+                            delOpts[1]);
+                            if(delChoice == 1){
+                                DatabaseRW.deleteEvent(td.get(index).id);
+                                frame.dispose();
+                                Calendar.pinboardOpen++;
+                            }
+                        }
+                    }catch(Exception e){}
+                }
+            }
+        });
     }
     
     protected JComponent makeTextPanel() {
@@ -103,7 +233,7 @@ public class Pinboard extends JPanel {
      */
     public static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("Pinboard");
+        frame = new JFrame("Pinboard");
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE); //Close when X is clicked
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(WindowEvent winEvt) {
