@@ -203,7 +203,13 @@ public class EditTask extends JPanel
 			int h = (int)hour.getSelectedIndex()+1; //returns exact hour
 			int mi = (int)minute.getSelectedIndex(); //returns exact minutes
 			int p = (int)priority.getSelectedIndex();
-    		//System.out.println("save changes");
+			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
+			if( ap == 1 )
+			{
+				h = h + 12;
+			}			
+
+			//System.out.println(">>>>>>>>>>>>>>>>>"+id);
     		DatabaseRW.updateTask(id, n, d, y, m, da, h, mi, s, p);
     		frame.dispose();
     		frame.setVisible(false);

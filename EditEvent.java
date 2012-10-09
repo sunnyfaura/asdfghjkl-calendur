@@ -13,10 +13,12 @@ public class EditEvent extends JPanel
 	public JRadioButtonMenuItem allDay, timeSelection;
 	JLabel repeatingLabel;
 	JScrollPane dscScroll;
+	final int id;
 
 	public EditEvent(Event eve)
 	{
 		super(new GridLayout(1, 1));
+		id = eve.id;
 		name = new JTextField();
 		name.setText(eve.name);
 		desc = new JTextArea();
@@ -213,7 +215,24 @@ public class EditEvent extends JPanel
 	{
 		public void actionPerformed(ActionEvent ae)
 		{
-			System.out.println("save changes");
+			String n = name.getText();
+			String de = desc.getText();
+			int mo = (int)month.getSelectedIndex(); //January = 0; December = 11;
+			int da = (int)day.getSelectedIndex()+1;
+			int y = Integer.parseInt(year.getSelectedItem()+""); //returns exact year
+			int h = (int)hour.getSelectedIndex()+1; //returns exact hour
+			int mi = (int)minute.getSelectedIndex(); //returns exact minutes
+			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
+			int r = (int)repeating.getSelectedIndex();
+
+			if(ap == 1)
+			{
+				h = h + 12;
+			}
+			//System.out.println(">>>>>>>>>>>>>>>>>"+id);
+			DatabaseRW.updateRepeatingEvent(id, n, de, y, mo, da, h, mi, r);
+    		frame.dispose();
+    		frame.setVisible(false);
 		}
 	}
 }
