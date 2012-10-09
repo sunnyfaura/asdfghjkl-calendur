@@ -15,6 +15,8 @@ public class AddEntry extends JPanel {
 	JLabel repeatingLabel;
 	JButton addTaskB, addEventB;
 	JScrollPane dscScroll, dsc1Scroll;
+	String[] months = { "January", "February", "March","April","May","June","July","August","September","October","November","December"};
+
 
     public AddEntry() {
 		super(new GridLayout(1, 1));
@@ -27,7 +29,6 @@ public class AddEntry extends JPanel {
 		desc1.setLineWrap(true);
 		dsc1Scroll = new JScrollPane(desc1);
 		
-		String[] months = { "January", "February", "March","April","May","June","July","August","September","October","November","December"};
 		month = new JComboBox(months);
 		month1 = new JComboBox(months);
 		java.util.Calendar cal = java.util.Calendar.getInstance();
@@ -280,25 +281,23 @@ public class AddEntry extends JPanel {
 			if( ap == 1 )
 			{
 				hr = hr + 12;
-			}
-
-			System.out.println(n);
-			System.out.println(dsc);
-			System.out.println(yr);
-			System.out.println(mnth);
-			System.out.println(dy);
-			System.out.println(stat);
-			System.out.println(hr);
-			System.out.println(mins);
-			System.out.println(ap);
-			System.out.println(prt);
-			Calendar.addEntryOpen++;
-			
+			}			
 
 			if( n.length()>0 && n.length()<=255 && dsc.length()>0 && dsc.length() <= 255 )
 			{
-				DatabaseRW.insertTask(n,dsc,yr,mnth,dy,hr,mins,stat,prt);
-				frame.dispose();
+				Object[] options = {"Confirm","Cancel"};
+				int choice = JOptionPane.showOptionDialog(frame,
+    					 n +  "\n on " + months[mnth] + " "+ dy + ", "+ yr,"Confirm Task",
+    					JOptionPane.YES_NO_CANCEL_OPTION,
+    					JOptionPane.QUESTION_MESSAGE,
+    					null,
+    					options,
+    					options[1]);
+				if(choice == 0){
+					DatabaseRW.insertTask(n,dsc,yr,mnth,dy,hr,mins,stat,prt);
+					frame.dispose();
+					Calendar.addEntryOpen++;
+				}
 			}
 			else if(n.length() > 255)
 			{
@@ -316,7 +315,6 @@ public class AddEntry extends JPanel {
 			{
 				JOptionPane.showMessageDialog(frame,"Please enter a description.","Message",JOptionPane.ERROR_MESSAGE);
 			}
-
 		}
     }
 
@@ -339,20 +337,21 @@ public class AddEntry extends JPanel {
 			//boolean iad = allDay.isSelected();
 			int r = (int)repeating.getSelectedIndex();
 			
-			System.out.println(n);
-			System.out.println(de);
-			System.out.println(mo);
-			System.out.println(da);
-			System.out.println(y);
-			//System.out.println(iad);
-			System.out.println(h);
-			System.out.println(mi);
-			Calendar.addEntryOpen++;
-			
 			if( n.length()>0 && n.length()<=255 && de.length()>0 && de.length() <= 255 )
 			{
-				DatabaseRW.insertRepeatingEvent(n, de, y, mo, da, h, mi, r);
-				frame.dispose();
+				Object[] options = {"Confirm","Cancel"};
+				int choice = JOptionPane.showOptionDialog(frame,
+    					 n +  "\n on " + months[mo] + " "+ da + ", "+ y,"Confirm Event",
+    					JOptionPane.YES_NO_CANCEL_OPTION,
+    					JOptionPane.QUESTION_MESSAGE,
+    					null,
+    					options,
+    					options[1]);
+				if(choice == 0){
+					DatabaseRW.insertRepeatingEvent(n, de, y, mo, da, h, mi, r);				
+					frame.dispose();
+					Calendar.addEntryOpen++;
+				}
 			}
 			else if(n.length() > 255)
 			{
