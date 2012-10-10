@@ -25,22 +25,27 @@ public class EditEvent extends JPanel
 		desc.setLineWrap(true);
 		desc.setText(eve.desc);
 		dscScroll = new JScrollPane(desc);
+
+		String tempDate = eve.startTime.toString();
+		int tempMonth = Integer.parseInt(tempDate.substring(5,7))-2;
+		int tempDay = Integer.parseInt(tempDate.substring(8, 10))-1;
+		int tempYear = Integer.parseInt(tempDate.substring(0,4));
+
 		String[] months = { "January", "February", "March","April","May","June","July","August","September","October","November","December"};
 		month = new JComboBox(months);
-		java.util.Calendar cal = java.util.Calendar.getInstance();
-		month.setSelectedIndex(cal.get(java.util.Calendar.MONTH)); //CHANGE THIS TO MONTH OF TASK
+		month.setSelectedIndex(tempMonth); 
 
 		Integer[] days = new Integer[31];
 		for( int i=0; i<=30; i++ )
 			days[i] = i+1;
 		day = new JComboBox(days);
-		day.setSelectedIndex(cal.get(java.util.Calendar.DAY_OF_MONTH)-1); //CHANGE THIS TO DAY OF TASK
+		day.setSelectedIndex(tempDay);
 
 		Integer[] years = new Integer[100];
 		for( int i=0; i<100; i++ )
 			years[i] = 2012+i;
 		year = new JComboBox(years);
-		year.setSelectedIndex((cal.get(java.util.Calendar.YEAR)-2012));
+		//year.setSelectedIndex(tempYear);
 
 		Integer[] hours = new Integer[12];
 		for( int i=0; i<12; i++)
@@ -61,6 +66,7 @@ public class EditEvent extends JPanel
 		
 		String[] repeating0 = { "None","Daily", "Weekly", "Monthly", "Yearly" };
 		repeating = new JComboBox(repeating0);
+		repeating.setSelectedIndex(eve.repeating);
 		repeating.setEnabled(true);
 
 		JTabbedPane tabbedPane = new JTabbedPane();

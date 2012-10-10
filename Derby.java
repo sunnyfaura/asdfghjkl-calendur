@@ -211,7 +211,7 @@ public class Derby
 		try {
 			updateEntry(i, n, d, ts);
 			
-			ps = conn.prepareStatement("UPDATE event SET status = ?, priority = ? WHERE id = ?");
+			ps = conn.prepareStatement("UPDATE task SET status = ?, priority = ? WHERE id = ?");
 			ps.setInt(1, s);
 			ps.setInt(2, p);
 			ps.setInt(3, i);
@@ -221,7 +221,9 @@ public class Derby
 			ps.close();
 			
 			return returny;
-		} catch (SQLException balls) {}
+		} catch (SQLException balls) {
+			printSQLException(balls);
+		}
 		
 		return 0;
 	}

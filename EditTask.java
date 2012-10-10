@@ -68,11 +68,12 @@ public class EditTask extends JPanel
 		
 		String[] status0 = { "To Do", "Doing", "Done" };
 		status = new JComboBox(status0);
-		//status.setSelectedIndex(tsk.status);
+		status.setSelectedIndex(tsk.status);
+		//System.out.println("status:::::::::::::"+tsk.status);
 
 		String[] priority0 = { "Very High", "High", "Normal", "Low", "Very Low" };
 		priority = new JComboBox(priority0);
-		//priority.setSelectedIndex(tsk.priority);
+		priority.setSelectedIndex(tsk.priority);
 
 		JTabbedPane tabbedPane = new JTabbedPane();
         ImageIcon icon = createImageIcon("tray.jpg");
@@ -210,7 +211,7 @@ public class EditTask extends JPanel
 				h = h + 12;
 			}			
 
-			//System.out.println(">>>>>>>>>>>>>>>>>"+id);
+			//System.out.println(">>>>>>>>>>>>>>>>>"+s);
     		DatabaseRW.updateTask(id, n, d, y, m+1, da, h, mi, s, p);
     		frame.dispose();
     		frame.setVisible(false);
