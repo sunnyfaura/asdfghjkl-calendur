@@ -90,8 +90,24 @@ public class Pinboard extends JPanel {
                         PinboardData pd = new PinboardData();
                         ArrayList<Task> td = pd.toDoTasks;
                         Object[] options = {"Edit","Delete","Back"};
+                        String[] mos = { "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"};
+                        String stuff = "Date: " + (td.get(index).startTime + "").substring(0, 4) + " ";
+                        int mos0 = Integer.parseInt((td.get(index).startTime + "").substring(5,7));
+                        stuff = stuff + mos[(mos0-1)] + " " + (td.get(index).startTime + "").substring(8, 10);
+                        System.out.println(td.get(index).startTime + "");
+                        int taymH = Integer.parseInt((td.get(index).startTime + "").substring(11, 13));
+                        int taymM = Integer.parseInt((td.get(index).startTime + "").substring(14, 16));
+                        stuff = stuff + "\nTime: ";
+                        if(taymH%12 == 0) stuff = stuff + "12:";
+                        else if (taymH%12 < 10) stuff = stuff + "0" + (taymH%12) +":";
+                        else stuff = stuff + (taymH%12) +":";
+                        if(taymM < 10) stuff = stuff + "0" + taymM;
+                        else stuff = stuff + taymM;
+                        if(taymH > 11) stuff = stuff + " PM";
+                        else stuff = stuff + " AM";
+                        stuff = stuff + "\nDescription: " + td.get(index).desc;
                         int choice = JOptionPane.showOptionDialog(frame,
-                        td.get(index).desc+"\n",
+                        stuff,
                         td.get(index).name,
                         JOptionPane.YES_NO_CANCEL_OPTION,
                         JOptionPane.INFORMATION_MESSAGE,
@@ -135,8 +151,16 @@ public class Pinboard extends JPanel {
                         PinboardData pd = new PinboardData();
                         ArrayList<Task> td = pd.doingTasks;
                         Object[] options = {"Edit","Delete","Back"};
+                        String[] mos = { "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"};
+                        String stuff = "Date: " + (td.get(index).startTime + "").substring(0, 4) + " ";
+                        int mos0 = Integer.parseInt((td.get(index).startTime + "").substring(5,7));
+                        stuff = stuff + mos[(mos0-1)] + " " + (td.get(index).startTime + "").substring(8, 10);
+                        System.out.println(td.get(index).startTime + "");
+                        int taymH = Integer.parseInt((td.get(index).startTime + "").substring(11, 13));
+                        int taymM = Integer.parseInt((td.get(index).startTime + "").substring(14, 16));
+                        stuff = stuff + "\nDescription: " + td.get(index).desc;
                         int choice = JOptionPane.showOptionDialog(frame,
-                        td.get(index).desc+"\n",//+
+                        stuff,//+
                         //"Timestamp: "+td.get(index).startTime,
                         td.get(index).name,
                         JOptionPane.YES_NO_CANCEL_OPTION,
@@ -181,8 +205,24 @@ public class Pinboard extends JPanel {
                         PinboardData pd = new PinboardData();
                         ArrayList<Event> td = pd.events;
                         Object[] options = {"Edit","Delete","Back"};
+                        String[] mos = { "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"};
+                        String stuff = "Date: " + (td.get(index).startTime + "").substring(0, 4) + " ";
+                        int mos0 = Integer.parseInt((td.get(index).startTime + "").substring(5,7));
+                        stuff = stuff + mos[(mos0-1)] + " " + (td.get(index).startTime + "").substring(8, 10);
+                        System.out.println(td.get(index).startTime + "");
+                        int taymH = Integer.parseInt((td.get(index).startTime + "").substring(11, 13));
+                        int taymM = Integer.parseInt((td.get(index).startTime + "").substring(14, 16));
+                        stuff = stuff + "\nTime: ";
+                        if(taymH%12 == 0) stuff = stuff + "12:";
+                        else if (taymH%12 < 10) stuff = stuff + "0" + (taymH%12) +":";
+                        else stuff = stuff + (taymH%12) +":";
+                        if(taymM < 10) stuff = stuff + "0" + taymM;
+                        else stuff = stuff + taymM;
+                        if(taymH > 11) stuff = stuff + " PM";
+                        else stuff = stuff + " AM";
+                        stuff = stuff + "\nDescription: " + td.get(index).desc;
                         int choice = JOptionPane.showOptionDialog(frame,
-                        td.get(index).desc+"\n",//+
+                        stuff,//+
                         //"Timestamp: "+td.get(index).startTime,
                         td.get(index).name,
                         JOptionPane.YES_NO_CANCEL_OPTION,

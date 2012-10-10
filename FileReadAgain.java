@@ -86,14 +86,12 @@ public class FileReadAgain extends Thread
 			FileReader fr = new FileReader(fn);
 			BufferedReader br = new BufferedReader( fr );
 			String str;
-			String out[] = new String[4];
+			String out[] = new String[100];
 			int i=0;
 				while( (str = br.readLine()) != null )
 				{
 					out[i] = str.substring(2,str.length());
 					i++;
-
-
 				}
 
 			fr.close();
@@ -102,7 +100,8 @@ public class FileReadAgain extends Thread
 		}
 		catch(Exception e)
 		{
-			System.err.println("Error: "+e.getMessage());
+			System.err.println("Read file error: "+e.getMessage());
+			System.err.println("Read file error: "+e);
 		}
 	return null;
 	}

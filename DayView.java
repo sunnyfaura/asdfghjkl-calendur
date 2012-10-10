@@ -72,8 +72,7 @@ public class DayView
 			}
 			clickable = true;
 		}
-		if(ev != null && ev.size() > 0)
-		{
+		if(ev != null && ev.size() > 0) {
 			//System.out.println("Returned Event List size > 0");
 			eventNames = new String[ev.size()];
 			for(int i = 0; i < ev.size(); i++)
@@ -106,8 +105,20 @@ public class DayView
 				    	ArrayList<Task> t =
 				    	DatabaseRW.queryDayTasks(iyear, (imonth+1), idate);
 				    	Object[] options = {"Edit","Delete","Back"};
+				    	//System.out.println(t.get(index).startTime + "");
+				    	int taymH = Integer.parseInt((t.get(index).startTime + "").substring(11, 13));
+				    	int taymM = Integer.parseInt((t.get(index).startTime + "").substring(14, 16));
+				    	String stuff = "Time: ";
+				    	if(taymH%12 == 0) stuff = stuff + "12:";
+				    	else if (taymH%12 < 10) stuff = stuff + "0" + (taymH%12) +":";
+				    	else stuff = stuff + (taymH%12) +":";
+				    	if(taymM < 10) stuff = stuff + "0" + taymM;
+				    	else stuff = stuff + taymM;
+				    	if(taymH > 11) stuff = stuff + " PM";
+				    	else stuff = stuff + " AM";
+				    	stuff = stuff + "\nDescription: " + t.get(index).desc;
 				    	int choice = JOptionPane.showOptionDialog(frmMain,
-				    	t.get(index).desc,
+				    	stuff,
 				    	t.get(index).name,
 				    	JOptionPane.YES_NO_CANCEL_OPTION,
 				    	JOptionPane.INFORMATION_MESSAGE,

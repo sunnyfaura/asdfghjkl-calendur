@@ -1,9 +1,12 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.JFrame;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class SysTray {
-    final static Calendar calendar =new Calendar();
+    final static Calendar calendar = new Calendar();
     final static Image image = Toolkit.getDefaultToolkit().getImage("tray.jpg");
     final static PopupMenu popup = new PopupMenu();
     final static TrayIcon trayIcon = new TrayIcon(image, "The Life Planner", popup);
@@ -107,6 +110,13 @@ public class SysTray {
                     item.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             tray.remove(trayIcon);
+                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                            //get current date time with Date()
+                            Date date = new Date();
+                            String now = dateFormat.format(date) + "";
+                            WriteText wt = new WriteText();
+                            wt.addNewTimeClosed(now);
+                            //System.out.println("Added to TextFile: " + now);
                             calendar.closeCalendar();
                         }
                     });
