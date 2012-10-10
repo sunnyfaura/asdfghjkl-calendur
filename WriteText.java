@@ -21,7 +21,7 @@ public class WriteText{
 		catch(Exception e){}
 	}
 
-	public Timestamp getLastTimeClosed()
+	public static Timestamp getLastTimeClosed()
 	{
 		String str="";
 		String out="";
@@ -41,7 +41,7 @@ public class WriteText{
 		{
 			System.err.println("Error: "+e.getMessage());
 		}
-
+		System.out.println(">>>>>>>>>>>"+out);
 		Timestamp ts = Timestamp.valueOf(out);
 		return ts;
 	}

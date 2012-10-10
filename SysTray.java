@@ -1,27 +1,27 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.JFrame;
-import java.sql.Timestamp;
 
 public class SysTray {
     final static Calendar calendar =new Calendar();
     final static Image image = Toolkit.getDefaultToolkit().getImage("tray.jpg");
     final static PopupMenu popup = new PopupMenu();
     final static TrayIcon trayIcon = new TrayIcon(image, "The Life Planner", popup);
-    static Timestamp fin = new Timestamp(System.currentTimeMillis()-10000000);
-    
+
     public static void main(String[] asdf) {
         Derby database = new Derby();
         DatabaseRW.setDatabase(database);
         //database.init();
 
         trayIcon.setImageAutoSize(true);
+        final FileReadAgain fr = new FileReadAgain("hello.txt");
+        fr.checkPastEvents(WriteText.getLastTimeClosed());
 
         Runnable runner = new Runnable() {
              public void run() {
                 if (SystemTray.isSupported()) {
                     final SystemTray tray = SystemTray.getSystemTray();
-                    final FileReadAgain fr = new FileReadAgain("hello.txt",fin);
+                    fr.run();
                     
                     MenuItem item = new MenuItem();
                         PopupMenu comments = new PopupMenu("Choose a mood for commenter..  ");
@@ -30,8 +30,9 @@ public class SysTray {
                         moods.addActionListener(new ActionListener(){
                             public void actionPerformed(ActionEvent e){
                                 trayIcon.displayMessage("I am feeling diligent today","asasfdg",TrayIcon.MessageType.INFO);
-                                System.out.println("mood: diligent");
-                                fr.run("diligent");
+                                //System.out.println("mood: diligent");
+                                fr.getMood("diligent"); //run the thread depending on user's mood
+                                //for diligent: notify for events and to do list
                             }
                         });
 
@@ -41,7 +42,8 @@ public class SysTray {
                             public void actionPerformed(ActionEvent e){
                                 trayIcon.displayMessage("I am feeling responsible today","asasfdg",TrayIcon.MessageType.INFO);
                                 System.out.println("mood: Responsible");
-                                fr.run("responsible");
+                                fr.getMood("responsible");
+                                //for responsible: notify for to do and doing
                             }
                         });
 
@@ -51,7 +53,8 @@ public class SysTray {
                             public void actionPerformed(ActionEvent e){
                                 trayIcon.displayMessage("I am feeling lazy today","asasfdg",TrayIcon.MessageType.INFO);
                                 System.out.println("mood: Lazy");
-                                fr.run("lazy");
+                                fr.getMood("lazy");
+                                //for lazy: notify for events only
                             }
                         });
 
@@ -61,7 +64,8 @@ public class SysTray {
                             public void actionPerformed(ActionEvent e){
                                 trayIcon.displayMessage("I am feeling like cramming today","asasfdg",TrayIcon.MessageType.INFO);
                                 System.out.println("mood: Cramming");
-                                fr.run("cramming");
+                                fr.getMood("cramming");
+                                //cramming: doing
                             }
                         });
                         
@@ -71,7 +75,8 @@ public class SysTray {
                             public void actionPerformed(ActionEvent e){
                                 trayIcon.displayMessage("I am feeling like cramming today","asasfdg",TrayIcon.MessageType.INFO);
                                 System.out.println("mood: Cramming");
-                                fr.run("normal");
+                                fr.getMood("normal");
+                                //normal: events + doing
                             }
                         });
 
