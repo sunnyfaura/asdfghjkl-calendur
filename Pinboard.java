@@ -91,8 +91,8 @@ public class Pinboard extends JPanel {
                         ArrayList<Task> td = pd.toDoTasks;
                         Object[] options = {"Edit","Delete","Back"};
                         int choice = JOptionPane.showOptionDialog(frame,
-                        td.get(index).desc+"\n"+
-                        "Timestamp: "+td.get(index).startTime,td.get(index).name,
+                        td.get(index).desc+"\n",
+                        td.get(index).name,
                         JOptionPane.YES_NO_CANCEL_OPTION,
                         JOptionPane.INFORMATION_MESSAGE,
                         null,
@@ -136,8 +136,9 @@ public class Pinboard extends JPanel {
                         ArrayList<Task> td = pd.doingTasks;
                         Object[] options = {"Edit","Delete","Back"};
                         int choice = JOptionPane.showOptionDialog(frame,
-                        td.get(index).desc+"\n"+
-                        "Timestamp: "+td.get(index).startTime,td.get(index).name,
+                        td.get(index).desc+"\n",//+
+                        //"Timestamp: "+td.get(index).startTime,
+                        td.get(index).name,
                         JOptionPane.YES_NO_CANCEL_OPTION,
                         JOptionPane.INFORMATION_MESSAGE,
                         null,
@@ -181,8 +182,9 @@ public class Pinboard extends JPanel {
                         ArrayList<Event> td = pd.events;
                         Object[] options = {"Edit","Delete","Back"};
                         int choice = JOptionPane.showOptionDialog(frame,
-                        td.get(index).desc+"\n"+
-                        "Timestamp: "+td.get(index).startTime,td.get(index).name,
+                        td.get(index).desc+"\n",//+
+                        //"Timestamp: "+td.get(index).startTime,
+                        td.get(index).name,
                         JOptionPane.YES_NO_CANCEL_OPTION,
                         JOptionPane.INFORMATION_MESSAGE,
                         null,

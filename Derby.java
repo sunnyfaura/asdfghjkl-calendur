@@ -166,7 +166,7 @@ public class Derby
 	public int updateEntry(int i, String n, String d, Timestamp ts)
 	{
 		try {
-			ps = conn.prepareStatement("UPDATE entry SET name = ?, description = ?, startTime = ts WHERE id = ?");
+			ps = conn.prepareStatement("UPDATE entry SET name = ?, description = ?, startTime = ? WHERE id = ?");
 			ps.setString(1, n);
 			ps.setString(2, d);
 			ps.setTimestamp(3, ts);
@@ -177,7 +177,9 @@ public class Derby
 			ps.close();
 			
 			return returny;
-		} catch (SQLException balls) {}
+		} catch (SQLException balls) {
+			printSQLException(balls);
+		}
 		
 		return 0;
 	}
@@ -197,7 +199,9 @@ public class Derby
 			ps.close();
 			
 			return returny;
-		} catch (SQLException balls) {}
+		} catch (SQLException balls) {
+			printSQLException(balls);
+		}
 		
 		return 0;
 	}

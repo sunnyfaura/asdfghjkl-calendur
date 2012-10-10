@@ -28,7 +28,7 @@ public class EditTask extends JPanel
 
 		String tempDate = tsk.startTime.toString();
 		int tempMonth = Integer.parseInt(tempDate.substring(5,7))-2;
-		int tempDay = Integer.parseInt(tempDate.substring(8, 10));
+		int tempDay = Integer.parseInt(tempDate.substring(8, 10))-1;
 		int tempYear = Integer.parseInt(tempDate.substring(0,4));
 
 		String[] months = { "January", "February", "March","April","May","June","July","August","September","October","November","December"};
@@ -204,13 +204,14 @@ public class EditTask extends JPanel
 			int mi = (int)minute.getSelectedIndex(); //returns exact minutes
 			int p = (int)priority.getSelectedIndex();
 			int ap = (int)ampm.getSelectedIndex(); // am = 0; pm = 1;
+
 			if( ap == 1 )
 			{
 				h = h + 12;
 			}			
 
 			//System.out.println(">>>>>>>>>>>>>>>>>"+id);
-    		DatabaseRW.updateTask(id, n, d, y, m, da, h, mi, s, p);
+    		DatabaseRW.updateTask(id, n, d, y, m+1, da, h, mi, s, p);
     		frame.dispose();
     		frame.setVisible(false);
     	}

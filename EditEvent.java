@@ -230,7 +230,7 @@ public class EditEvent extends JPanel
 				h = h + 12;
 			}
 			//System.out.println(">>>>>>>>>>>>>>>>>"+id);
-			DatabaseRW.updateRepeatingEvent(id, n, de, y, mo, da, h, mi, r);
+			DatabaseRW.updateRepeatingEvent(id, n, de, y, mo+1, da, h, mi, r);
     		frame.dispose();
     		frame.setVisible(false);
 		}
