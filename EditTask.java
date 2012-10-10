@@ -30,6 +30,7 @@ public class EditTask extends JPanel
 		int tempMonth = Integer.parseInt(tempDate.substring(5,7))-2;
 		int tempDay = Integer.parseInt(tempDate.substring(8, 10))-1;
 		int tempYear = Integer.parseInt(tempDate.substring(0,4));
+		int tempHours = Integer.parseInt(tempDate.substring(11,13));
 
 		String[] months = { "January", "February", "March","April","May","June","July","August","September","October","November","December"};
 		month = new JComboBox(months);
@@ -39,7 +40,7 @@ public class EditTask extends JPanel
 		for( int i=0; i<=30; i++ )
 			days[i] = i+1;
 		day = new JComboBox(days);
-		day.setSelectedIndex(tempDay);
+		day.setSelectedIndex(tempDay-1);
 
 		Integer[] years = new Integer[100];
 		for( int i=0; i<100; i++ )
@@ -51,7 +52,14 @@ public class EditTask extends JPanel
 		for( int i=0; i<12; i++)
 			hours[i] = i+1;
 		hour = new JComboBox(hours);
-		//hour.setSelectedIndex(tempHours);
+
+		boolean pmcheck = false;
+		if(tempHours!= 0 && tempHours > 12){
+			tempHours -= 12;
+			pmcheck = true;
+		}
+		//System.out.println(">>>>>>>>>>>>>>>"+tempHours);
+		hour.setSelectedIndex(tempHours-1);
 
 		String[] minutes = new String[60];
 		for( int i=0; i<60; i++ )
@@ -65,6 +73,8 @@ public class EditTask extends JPanel
 
 		String[] time = { "AM", "PM"};
 		ampm = new JComboBox(time);
+		if(pmcheck)
+			ampm.setSelectedIndex(1);
 		
 		String[] status0 = { "To Do", "Doing", "Done" };
 		status = new JComboBox(status0);

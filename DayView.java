@@ -40,14 +40,14 @@ public class DayView
 		try
 		{
 			t = DatabaseRW.queryDayTasks(iyear, (imonth+1), idate);
-			System.out.println("Successfully Queried Day Task: " + iyear + " " + (imonth+1) + " " + idate);
-			if(t == null) System.out.println("No ArrayList returned.");
-			else System.out.println("ArrayList size: " + t.size());
+			//System.out.println("Successfully Queried Day Task: " + iyear + " " + (imonth+1) + " " + idate);
+			//if(t == null) System.out.println("No ArrayList returned.");
+			//else System.out.println("ArrayList size: " + t.size());
 
 			ev = DatabaseRW.queryDayEvents(iyear, (imonth+1), idate);
-			System.out.println("Successfully Queried Day Event: " + iyear + " " + (imonth+1) + " " + idate);
-			if(ev == null) System.out.println("No ArrayList returned.");
-			else System.out.println("ArrayList size: " + ev.size());
+			//System.out.println("Successfully Queried Day Event: " + iyear + " " + (imonth+1) + " " + idate);
+			//if(ev == null) System.out.println("No ArrayList returned.");
+			//else System.out.println("ArrayList size: " + ev.size());
 		} catch (Exception e) {}
 
 		String[] taskNames = new String[1];
@@ -62,7 +62,7 @@ public class DayView
 		boolean clickable = false;
 		if(t != null && t.size() > 0)
 		{
-			System.out.println("Returned Task List size > 0");
+			//System.out.println("Returned Task List size > 0");
 			taskNames = new String[t.size()];
 			for(int i = 0; i < t.size(); i++)
 			{
@@ -74,7 +74,7 @@ public class DayView
 		}
 		if(ev != null && ev.size() > 0)
 		{
-			System.out.println("Returned Event List size > 0");
+			//System.out.println("Returned Event List size > 0");
 			eventNames = new String[ev.size()];
 			for(int i = 0; i < ev.size(); i++)
 			{
