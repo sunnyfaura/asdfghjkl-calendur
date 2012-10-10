@@ -79,7 +79,7 @@ public class DayView
 			for(int i = 0; i < ev.size(); i++)
 			{
 				eventNames[i] = ev.get(i).name;
-				System.out.println( ev.get(i).name);
+				//System.out.println( ev.get(i).name);
 				//eventDescs[i] = ev.get(i).descs;
 				//eventTstamp[i] = ev.get(i).startTime;
 			}

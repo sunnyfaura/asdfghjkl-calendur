@@ -40,7 +40,8 @@ public class EditEvent extends JPanel
 		for( int i=0; i<=30; i++ )
 			days[i] = i+1;
 		day = new JComboBox(days);
-		day.setSelectedIndex(tempDay);
+		if(tempHours!=0)
+			day.setSelectedIndex(tempDay);
 
 		Integer[] years = new Integer[100];
 		for( int i=0; i<100; i++ )
